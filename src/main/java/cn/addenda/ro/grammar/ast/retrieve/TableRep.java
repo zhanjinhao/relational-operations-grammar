@@ -14,7 +14,7 @@ public class TableRep extends Curd {
     private Token alias;
 
     /**
-     * operator是别名，curd 是真实表
+     * alias 是别名，curd 是真实表
      */
     public TableRep(Curd curd, Token alias) {
         this.curd = curd;
@@ -22,7 +22,7 @@ public class TableRep extends Curd {
     }
 
     /**
-     * select 是真实表
+     * curd 是真实表
      */
     public TableRep(Curd curd) {
         this.curd = curd;

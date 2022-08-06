@@ -14,9 +14,6 @@ public class TableSeg extends Binary {
     // cross or left or right or null
     private Token qualifier;
 
-    // join or ,
-//    private Token token;
-
     /**
      * logic
      */

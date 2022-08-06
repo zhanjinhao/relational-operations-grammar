@@ -90,14 +90,14 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             // * 不能存在别名
             Token token = ((Identifier) curd).getName();
             if (TokenType.STAR.equals(token.getType())) {
-                error(AstROErrorReporterDelegate.SELECT_columnRep_PARSE);
+                error(AstROErrorReporterDelegate.SELECT_columnRep_VALIDATION);
                 return null;
             }
         }
 
         // 当值不是Literal或Identifier时，必须存在别名
         if (!(curd instanceof Literal || curd instanceof Identifier) && alias == null) {
-            error(AstROErrorReporterDelegate.SELECT_columnRep_PARSE);
+            error(AstROErrorReporterDelegate.SELECT_columnRep_VALIDATION);
         }
         curd.accept(this);
         return null;
@@ -137,7 +137,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
 
         Curd leftCurd = tableSeg.getLeftCurd();
         if (leftCurd == null) {
-            error(AstROErrorReporterDelegate.SELECT_tableRep_VALIDATION);
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         } else {
             leftCurd.accept(this);
         }
@@ -148,17 +148,17 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         Curd rightCurd = tableSeg.getRightCurd();
         //  , 做连接条件时，不能被修饰，不能加连接条件
         if ((condition != null || qualifier != null) && TokenType.COMMA.equals(token.getType())) {
-            error(AstROErrorReporterDelegate.SELECT_tableRep_VALIDATION);
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         }
 
         // cross join 不能加连接条件
         if (condition != null && qualifier != null && TokenType.CROSS.equals(qualifier.getType())) {
-            error(AstROErrorReporterDelegate.SELECT_tableRep_VALIDATION);
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         }
 
         // 不存在右表时不能存在连接条件
         if (rightCurd == null && condition != null) {
-            error(AstROErrorReporterDelegate.SELECT_tableRep_VALIDATION);
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         }
 
         if (rightCurd != null) {
@@ -168,7 +168,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         if (condition != null) {
             // 连接条件需要是如下格式：A.a1 = B.b1 and A.a2 > B.b2 or B.b3 > C.c1
             if (!LogicGrammarValidationDelegate.checkComparisonResult(condition)) {
-                error(AstROErrorReporterDelegate.SELECT_tableRep_VALIDATION);
+                error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
             } else {
                 condition.accept(this);
             }

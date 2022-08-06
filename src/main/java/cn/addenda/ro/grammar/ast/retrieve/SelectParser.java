@@ -192,7 +192,7 @@ public class SelectParser extends ExpressionParser {
      */
     private Curd tableSeg() {
         if (!tokenSequence.curEqual(TokenType.FROM)) {
-            return null;
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_PARSE);
         }
         tokenSequence.advance();
         Curd left = tableRep();
