@@ -18,12 +18,12 @@ import java.util.List;
  * isNot               ->  "is" ("not")?
  * binaryArithmetic    ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
  * unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary
- * primary             ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+ * primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
  * grouping            ->  "(" logic ")"
  * <p>
  * function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"
  * functionParameter   ->  logic | timeInterval | timeUnit | function
- * timeInterval        ->  "interval" NUMBER IDENTIFIER
+ * timeInterval        ->  "interval" INTEGER IDENTIFIER
  * timeUnit            ->  IDENTIFIER "from" primary
  * <p>
  * whereSeg            ->  "where" logic
@@ -154,11 +154,11 @@ public class ExpressionParser extends AbstractCurdParser {
 
 
     /**
-     * #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+     * #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
      */
     protected Curd primary() {
         if (tokenSequence.equalThenAdvance(TokenType.HASH_MARK_PLACEHOLDER, TokenType.PARAMETER,
-                TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.NUMBER, TokenType.STRING)) {
+                TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER, TokenType.DECIMAL, TokenType.STRING)) {
             return new Literal(tokenSequence.takePre());
         }
 
@@ -229,7 +229,7 @@ public class ExpressionParser extends AbstractCurdParser {
 
 
     /**
-     * "interval" NUMBER IDENTIFIER
+     * "interval" INTEGER IDENTIFIER
      */
     protected Curd timeInterval() {
         consume(TokenType.INTERVAL, AstROErrorReporterDelegate.EXPRESSION_timeInterval_PARSE);
@@ -237,7 +237,7 @@ public class ExpressionParser extends AbstractCurdParser {
         Token time;
         Token token;
 
-        if (tokenSequence.curEqual(TokenType.NUMBER)) {
+        if (tokenSequence.curEqual(TokenType.INTEGER)) {
             time = tokenSequence.takeCur();
             tokenSequence.advance();
         } else {

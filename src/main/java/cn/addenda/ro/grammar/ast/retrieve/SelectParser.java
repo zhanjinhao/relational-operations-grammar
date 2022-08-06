@@ -36,7 +36,7 @@ public class SelectParser extends ExpressionParser {
      * whereSeg ↑          ->  "where" logic
      * groupBySeg          ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
      * orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
-     * limitSeg            ->  "limit" NUMBER ("," NUMBER)?
+     * limitSeg            ->  "limit" INTEGER ("," INTEGER)?
      * <p>
      * logic ↑             ->  condition (("or" | "and") condition)*
      * condition ↑+        ->  inCondition | existsCondition | comparison
@@ -46,11 +46,11 @@ public class SelectParser extends ExpressionParser {
      * isNot ↑             ->  "is" ("not")?
      * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
      * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function | "(" singleSelect ")" | groupFunction
+     * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | "(" singleSelect ")" | groupFunction
      * grouping ↑          ->  "(" logic ")"
      * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
      * functionParameter ↑ ->  logic | timeInterval | timeUnit | function
-     * timeInterval ↑      ->  "interval" NUMBER IDENTIFIER
+     * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
      * timeUnit ↑          ->  IDENTIFIER "from" primary
      * groupFunction       ->  ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
      * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
@@ -312,17 +312,17 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * "limit" number ("," number)?
+     * "limit" INTEGER ("," INTEGER)?
      */
     private Curd limitSeg() {
         consume(TokenType.LIMIT, AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
-        if (!tokenSequence.curEqual(TokenType.NUMBER)) {
+        if (!tokenSequence.curEqual(TokenType.INTEGER)) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
         }
         Token token = tokenSequence.takeCur();
         tokenSequence.advance();
         if (tokenSequence.equalThenAdvance(TokenType.COMMA)) {
-            if (!tokenSequence.curEqual(TokenType.NUMBER)) {
+            if (!tokenSequence.curEqual(TokenType.INTEGER)) {
                 error(AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
             }
             // 此时token是跳过的数量
@@ -442,7 +442,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | "(" singleSelect ")" | "(" logic ")" | groupFunction
+     * #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | function | "(" singleSelect ")" | "(" logic ")" | groupFunction
      */
     @Override
     protected Curd primary() {

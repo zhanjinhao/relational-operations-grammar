@@ -5,12 +5,12 @@ comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" 
 isNot               ->  "is" ("not")?
 binaryArithmetic    ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary
-primary             ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
 grouping            ->  "(" logic ")"
 
 function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"
 functionParameter   ->  logic | timeInterval | timeUnit | function
-timeInterval        ->  "interval" NUMBER IDENTIFIER
+timeInterval        ->  "interval" INTEGER IDENTIFIER
 timeUnit            ->  IDENTIFIER "from" primary
 
 whereSeg            ->  "where" logic
@@ -29,7 +29,7 @@ tableRep            ->  ("(" select ")" | IDENTIFIER) (IDENTIFIER)?
 whereSeg ↑          ->  "where" logic
 groupBySeg          ->  "group" "by" columnList ("having" logic)?
 orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
-limitSeg            ->  "limit" NUMBER ("," NUMBER)?
+limitSeg            ->  "limit" INTEGER ("," INTEGER)?
 
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑+        ->  inCondition | existsCondition | comparison
@@ -39,11 +39,11 @@ comparison ↑        ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=
 isNot ↑             ->  "is" ("not")?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction
+primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction
 grouping ↑          ->  "(" logic ")"
 function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
 functionParameter ↑ ->  logic | timeInterval | timeUnit | function
-timeInterval ↑      ->  "interval" NUMBER IDENTIFIER
+timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
 timeUnit ↑          ->  IDENTIFIER "from" primary
 groupFunction       ->  ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
 columnList			->  IDENTIFIER ("," IDENTIFIER)*
@@ -56,7 +56,7 @@ insertSetRep        ->  "set" assignmentList
 insertSelectRep     ->  "(" columnList ")" select
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
 function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
 onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
 assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
@@ -70,7 +70,7 @@ condition ↑         ->  comparison
 comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
 function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 UpdateParser
@@ -82,5 +82,5 @@ condition ↑         ->  comparison
 comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
 function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"

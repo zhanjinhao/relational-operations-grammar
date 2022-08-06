@@ -145,7 +145,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String EXPRESSION_unaryArithmetic_PARSE_MSG = "The grammar of unaryArithmetic is : '(\"!\"|\"-\") unaryArithmetic | primary'.";
 
     public static final int EXPRESSION_primary_PARSE = 21007;
-    public static final String EXPRESSION_primary_PARSE_MSG = "The grammar of primary is : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | NUMBER | STRING | IDENTIFIER | grouping | function'.";
+    public static final String EXPRESSION_primary_PARSE_MSG = "The grammar of primary is : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function'.";
 
     public static final int EXPRESSION_grouping_PARSE = 21008;
     public static final String EXPRESSION_grouping_PARSE_MSG = "The grammar of grouping is : '\"where\" logic'.";
@@ -157,7 +157,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String EXPRESSION_functionParameter_PARSE_MSG = "The grammar of functionParameter is : 'logic | timeInterval | timeUnit | function'.";
 
     public static final int EXPRESSION_timeInterval_PARSE = 21011;
-    public static final String EXPRESSION_timeInterval_PARSE_MSG = "The grammar of timeInterval is : '\"interval\" NUMBER IDENTIFIER'.";
+    public static final String EXPRESSION_timeInterval_PARSE_MSG = "The grammar of timeInterval is : '\"interval\" INTEGER IDENTIFIER'.";
 
     public static final int EXPRESSION_timeUnit_PARSE = 21012;
     public static final String EXPRESSION_timeUnit_PARSE_MSG = "The grammar of timeUnit is : 'unit \"from\" binaryArithmetic'.";
@@ -193,7 +193,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String EXPRESSION_unaryArithmetic_VALIDATION_MSG = "unaryArithmetic grammar validation failed  : '(\"!\"|\"-\") unaryArithmetic | primary'.";
 
     public static final int EXPRESSION_primary_VALIDATION = 21507;
-    public static final String EXPRESSION_primary_VALIDATION_MSG = "primary grammar validation failed : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | NUMBER | STRING | IDENTIFIER | grouping | function'.";
+    public static final String EXPRESSION_primary_VALIDATION_MSG = "primary grammar validation failed : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function'.";
 
     public static final int EXPRESSION_grouping_VALIDATION = 21508;
     public static final String EXPRESSION_grouping_VALIDATION_MSG = "grouping grammar validation failed : '\"where\" logic'.";
@@ -205,7 +205,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String EXPRESSION_functionParameter_VALIDATION_MSG = "functionParameter grammar validation failed : 'logic | timeInterval | timeUnit | function'.";
 
     public static final int EXPRESSION_timeInterval_VALIDATION = 21511;
-    public static final String EXPRESSION_timeInterval_VALIDATION_MSG = "timeInterval grammar validation failed : '\"interval\" NUMBER IDENTIFIER'.";
+    public static final String EXPRESSION_timeInterval_VALIDATION_MSG = "timeInterval grammar validation failed : '\"interval\" INTEGER IDENTIFIER'.";
 
     public static final int EXPRESSION_timeUnit_VALIDATION = 21512;
     public static final String EXPRESSION_timeUnit_VALIDATION_MSG = "timeUnit grammar validation failed : 'unit \"from\" binaryArithmetic'.";
@@ -317,7 +317,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_orderBySeg_PARSE_MSG = "The grammar of orderBySeg is : '\"order\" \"by\" IDENTIFIER (\"desc\" | \"asc\") (\",\" IDENTIFIER (\"desc\" | \"asc\"))*'.";
 
     public static final int SELECT_limitSeg_PARSE = 25010;
-    public static final String SELECT_limitSeg_PARSE_MSG = "The grammar of limitSeg is : '\"limit\" number (\",\" number)?'.";
+    public static final String SELECT_limitSeg_PARSE_MSG = "The grammar of limitSeg is : '\"limit\" INTEGER (\",\" INTEGER)?'.";
 
     public static final int SELECT_condition_PARSE = 25011;
     public static final String SELECT_condition_PARSE_MSG = "The grammar of condition is : 'inCondition | existsCondition | comparison'.";
@@ -329,7 +329,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_existsCondition_PARSE_MSG = "The grammar of existsCondition is : '(\"not\")? \"exists\" \"(\" singleSelect \")\"'.";
 
     public static final int SELECT_primary_PARSE = 25014;
-    public static final String SELECT_primary_PARSE_MSG = "The grammar of primary is : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | NUMBER | STRING | IDENTIFIER | grouping | function | \"(\" singleSelect \")\" | groupFunction'.";
+    public static final String SELECT_primary_PARSE_MSG = "The grammar of primary is : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | \"(\" singleSelect \")\" | groupFunction'.";
 
     public static final int SELECT_groupFunction_PARSE = 25015;
     public static final String SELECT_groupFunction_PARSE_MSG = "The grammar of groupFunction is : '(\"avg\" | \"max\" | \"min\" | \"count\" | \"sum\" | \"flat\") \"(\" binaryArithmetic \")\"'.";
@@ -365,7 +365,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_orderBySeg_VALIDATION_MSG = "orderBySeg grammar validation failed : '\"order\" \"by\" IDENTIFIER (\"desc\" | \"asc\") (\",\" IDENTIFIER (\"desc\" | \"asc\"))*'.";
 
     public static final int SELECT_limitSeg_VALIDATION = 25510;
-    public static final String SELECT_limitSeg_VALIDATION_MSG = "limitSeg grammar validation failed : '\"limit\" number (\",\" number)?'.";
+    public static final String SELECT_limitSeg_VALIDATION_MSG = "limitSeg grammar validation failed : '\"limit\" INTEGER (\",\" INTEGER)?'.";
 
     public static final int SELECT_condition_VALIDATION = 25511;
     public static final String SELECT_condition_VALIDATION_MSG = "condition grammar validation failed : 'inCondition | existsCondition | comparison'.";
@@ -377,7 +377,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_existsCondition_VALIDATION_MSG = "existsCondition grammar validation failed : '(\"not\")? \"exists\" \"(\" singleSelect \")\"'.";
 
     public static final int SELECT_primary_VALIDATION = 25514;
-    public static final String SELECT_primary_VALIDATION_MSG = "primary grammar validation failed : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | NUMBER | STRING | IDENTIFIER | grouping | function | \"(\" singleSelect \")\" | groupFunction'.";
+    public static final String SELECT_primary_VALIDATION_MSG = "primary grammar validation failed : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | \"(\" singleSelect \")\" | groupFunction'.";
 
     public static final int SELECT_groupFunction_VALIDATION = 25515;
     public static final String SELECT_groupFunction_VALIDATION_MSG = "groupFunction grammar validation failed is : '(\"avg\" | \"max\" | \"min\" | \"count\" | \"sum\" | \"flat\") \"(\" binaryArithmetic \")\"'.";

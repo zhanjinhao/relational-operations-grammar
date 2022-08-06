@@ -12,7 +12,7 @@ public class Token implements ROError {
 
     private final TokenType type;
     /**
-     * 存 number、string、true、false、null
+     * 存 INTEGER、 DECIMAL、STRING、TRUE、FALSE、NULL
      */
     private Object literal;
 
@@ -64,7 +64,7 @@ public class Token implements ROError {
     }
 
     public boolean checkSimplePrimary() {
-        return this.type != null && (this.type.equals(TokenType.NUMBER) || this.type.equals(TokenType.STRING) ||
+        return this.type != null && (this.type.equals(TokenType.INTEGER) || this.type.equals(TokenType.DECIMAL) || this.type.equals(TokenType.STRING) ||
                 this.type.equals(TokenType.FALSE) || this.type.equals(TokenType.TRUE) || this.type.equals(TokenType.NULL));
     }
 

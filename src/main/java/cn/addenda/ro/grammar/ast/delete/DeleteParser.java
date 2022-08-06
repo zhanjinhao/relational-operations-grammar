@@ -27,7 +27,7 @@ public class DeleteParser extends ExpressionParser {
      * comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
      * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
      * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
      * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
      */
     @Override

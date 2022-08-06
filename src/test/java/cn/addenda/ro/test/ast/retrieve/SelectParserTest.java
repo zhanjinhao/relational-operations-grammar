@@ -205,10 +205,13 @@ public class SelectParserTest {
 
             "select * from A where a is null",
 
+            "select * from A where a is not null",
+
             "select case a when b+1 then '1' when b+2 then '2' else '3' end as A from (select 2 as a, 1 as b from dual) A",
 
-            "select t1.*, t2.* from t1, t2 where t1.id = t2.outerId"
+            "select t1.*, t2.* from t1, t2 where t1.id = t2.outerId",
 
+            "select * from A where a = 1.12"
     };
 
     public static void main(String[] args) {

@@ -34,7 +34,7 @@ public class InsertParser extends ExpressionParser {
      * insertSelectRep     ->  ("(" IDENTIFIER (, IDENTIFIER)* ")")? select
      * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
      * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function
+     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
      * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
      * onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
      * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*

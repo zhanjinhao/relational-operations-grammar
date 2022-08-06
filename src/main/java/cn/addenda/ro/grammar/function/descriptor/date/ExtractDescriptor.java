@@ -27,7 +27,7 @@ public class ExtractDescriptor extends AbstractFunctionDescriptor {
 
     @Override
     public int innerType() {
-        return DataTypeConst.NUMBER;
+        return DataTypeConst.INTEGER;
     }
 
     @Override

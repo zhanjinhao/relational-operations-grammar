@@ -111,12 +111,6 @@ public class DefaultScanner extends AbstractScanner {
         addToken(TokenType.STRING, value);
     }
 
-    private static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
-    private static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
-
-    private static final BigDecimal MIN_DOUBLE = BigDecimal.valueOf(Double.MIN_VALUE);
-    private static final BigDecimal MAX_DOUBLE = BigDecimal.valueOf(Double.MAX_VALUE);
-
     private void number() {
         while (charSequence.curTest(CharUtil::isDigit)) {
             charSequence.advance();
@@ -128,26 +122,14 @@ public class DefaultScanner extends AbstractScanner {
             while (charSequence.curTest(CharUtil::isDigit)) {
                 charSequence.advance();
             }
-        } else if (charSequence.curEqual('L') && !charSequence.nextTest(CharUtil::isDigit)) {
-            charSequence.advance();
         }
 
         // 处理数字的类型
         String s = charSequence.curLiteral();
         if (s.contains(".")) {
-            BigDecimal bigDecimal = new BigDecimal(s);
-            if (bigDecimal.compareTo(MIN_DOUBLE) > 0 && bigDecimal.compareTo(MAX_DOUBLE) < 0) {
-                addToken(TokenType.NUMBER, Double.parseDouble(s));
-            } else {
-                addToken(TokenType.NUMBER, bigDecimal);
-            }
+            addToken(TokenType.DECIMAL, new BigDecimal(s));
         } else {
-            BigInteger bigInteger = new BigInteger(s);
-            if (bigInteger.compareTo(MIN_LONG) > 0 && bigInteger.compareTo(MAX_LONG) < 0) {
-                addToken(TokenType.NUMBER, Long.parseLong(s));
-            } else {
-                addToken(TokenType.NUMBER, bigInteger);
-            }
+            addToken(TokenType.INTEGER, new BigInteger(s));
         }
     }
 
@@ -162,19 +144,6 @@ public class DefaultScanner extends AbstractScanner {
         }
         addToken(type, text);
     }
-
-
-//    @Override
-//    protected void addToken(TokenType type, Object literal) {
-//        if (literal.equals("left")) {
-//            literal = "left join";
-//        } else if (literal.equals("right")) {
-//            literal = "right join";
-//        } else if (literal.equals("outer")) {
-//            literal = "outer join";
-//        }
-//        super.addToken(type, literal);
-//    }
 
 
     private static class CharUtil {

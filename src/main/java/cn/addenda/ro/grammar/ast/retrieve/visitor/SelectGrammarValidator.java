@@ -254,12 +254,12 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
             return null;
         }
-        if (!TokenType.NUMBER.equals(num.getType())) {
+        if (!TokenType.INTEGER.equals(num.getType())) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
             return null;
         }
         Token offset = limitSeg.getOffset();
-        if (offset != null && !TokenType.NUMBER.equals(offset.getType())) {
+        if (offset != null && !TokenType.INTEGER.equals(offset.getType())) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
         }
         return null;
