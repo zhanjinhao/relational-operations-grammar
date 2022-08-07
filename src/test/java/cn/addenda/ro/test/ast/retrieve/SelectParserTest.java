@@ -211,7 +211,9 @@ public class SelectParserTest {
 
             "select t1.*, t2.* from t1, t2 where t1.id = t2.outerId",
 
-            "select * from A where a = 1.12"
+            "select * from A where a = 1.12",
+
+            "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5\n"
     };
 
     public static void main(String[] args) {

@@ -174,6 +174,11 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             }
         }
 
+        if (condition == null && qualifier != null &&
+                (TokenType.LEFT.equals(qualifier.getType()) || TokenType.RIGHT.equals(qualifier.getType()))) {
+            error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
+        }
+
         return null;
     }
 
