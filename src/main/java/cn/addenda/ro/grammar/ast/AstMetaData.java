@@ -1,7 +1,6 @@
 package cn.addenda.ro.grammar.ast;
 
 import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.expression.Identifier;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.*;
@@ -14,20 +13,9 @@ import java.util.*;
  */
 public class AstMetaData {
 
+    public static final String UNDETERMINED_TABLE = "UNDETERMINED";
+
     private Curd curd;
-
-    private static final String UNDETERMINED_TABLE = "UNDETERMINED";
-
-    // 存返回的值
-    private final List<Token> resultColumnList = new ArrayList<>();
-
-    private final Map<String, List<String>> conditionColumnReference = new HashMap<>();
-    private final Map<String, List<String>> resultColumnReference = new HashMap<>();
-    private final Map<String, List<String>> joinColumnReference = new HashMap<>();
-    private final Map<String, List<String>> groupByColumnReference = new HashMap<>();
-    private final Map<String, List<String>> orderByColumnReference = new HashMap<>();
-
-    private Map<String, Curd> aliasTableMap = new HashMap<>();
 
     private AstMetaData parent;
 
@@ -39,6 +27,17 @@ public class AstMetaData {
 
     // 存Select语句的SingleSelect集合
     private final List<AstMetaData> subSegments = new ArrayList<>();
+
+    // 存返回的值
+    private final List<Token> resultColumnList = new ArrayList<>();
+
+    private final Map<String, List<String>> conditionColumnReference = new HashMap<>();
+    private final Map<String, List<String>> resultColumnReference = new HashMap<>();
+    private final Map<String, List<String>> joinColumnReference = new HashMap<>();
+    private final Map<String, List<String>> groupByColumnReference = new HashMap<>();
+    private final Map<String, List<String>> orderByColumnReference = new HashMap<>();
+
+    private Map<String, Curd> aliasTableMap = new HashMap<>();
 
     public AstMetaData() {
         conditionColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
@@ -174,21 +173,7 @@ public class AstMetaData {
         }
     }
 
-    public Map<String, List<String>> getConditionColumnReference() {
-        return conditionColumnReference;
-    }
 
-    public Map<String, List<String>> getResultColumnReference() {
-        return resultColumnReference;
-    }
-
-    public List<AstMetaData> getConditionChildren() {
-        return conditionChildren;
-    }
-
-    public List<AstMetaData> getTableChildren() {
-        return tableChildren;
-    }
 
     public Curd getCurd() {
         return curd;
@@ -206,6 +191,14 @@ public class AstMetaData {
         this.parent = parent;
     }
 
+    public List<AstMetaData> getConditionChildren() {
+        return conditionChildren;
+    }
+
+    public List<AstMetaData> getTableChildren() {
+        return tableChildren;
+    }
+
     public List<AstMetaData> getSubSegments() {
         return subSegments;
     }
@@ -214,12 +207,12 @@ public class AstMetaData {
         return resultColumnList;
     }
 
-    public Map<String, Curd> getAliasTableMap() {
-        return aliasTableMap;
+    public Map<String, List<String>> getConditionColumnReference() {
+        return conditionColumnReference;
     }
 
-    public void setAliasTableMap(Map<String, Curd> aliasTableMap) {
-        this.aliasTableMap = aliasTableMap;
+    public Map<String, List<String>> getResultColumnReference() {
+        return resultColumnReference;
     }
 
     public Map<String, List<String>> getJoinColumnReference() {
@@ -232,6 +225,15 @@ public class AstMetaData {
 
     public Map<String, List<String>> getOrderByColumnReference() {
         return orderByColumnReference;
+    }
+
+
+    public Map<String, Curd> getAliasTableMap() {
+        return aliasTableMap;
+    }
+
+    public void setAliasTableMap(Map<String, Curd> aliasTableMap) {
+        this.aliasTableMap = aliasTableMap;
     }
 
     public void sortMetaData() {
@@ -305,57 +307,6 @@ public class AstMetaData {
                 columnReference.put(tableName, new ArrayList<>());
             }
         }
-    }
-
-    public boolean checkViewExists(String viewName) {
-        Set<String> strings = conditionColumnReference.keySet();
-        return strings.contains(viewName);
-    }
-
-    public String getViewAliasName(Curd curd) {
-        Set<Map.Entry<String, Curd>> entries = aliasTableMap.entrySet();
-        for (Map.Entry<String, Curd> entry : entries) {
-            if (entry.getValue().equals(curd)) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * from A  ->  A
-     * from A a  ->  a
-     * from (select a from A) B  ->  null
-     */
-    public Set<String> getAvailableTableNameSet() {
-        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
-        strings.remove(UNDETERMINED_TABLE);
-
-        // 查出来所有的不需要执行的
-        Set<String> needRemove = new HashSet<>();
-        Set<Map.Entry<String, Curd>> entries = aliasTableMap.entrySet();
-        Iterator<Map.Entry<String, Curd>> iterator = entries.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Curd> next = iterator.next();
-            if (!next.getValue().getClass().equals(Identifier.class)) {
-                needRemove.add(next.getKey());
-            }
-        }
-
-        strings.removeAll(needRemove);
-
-        return strings;
-    }
-
-    /**
-     * from A  ->  A
-     * from A a  ->  a
-     * from (select a from A) B  ->  B
-     */
-    public Set<String> getAvailableViewNameSet() {
-        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
-        strings.remove(UNDETERMINED_TABLE);
-        return strings;
     }
 
 
