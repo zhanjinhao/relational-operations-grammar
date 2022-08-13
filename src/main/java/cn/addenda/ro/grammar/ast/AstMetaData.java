@@ -56,29 +56,18 @@ public class AstMetaData {
         } else {
             // condition要存表存字段
             String tableName = column.substring(0, i);
-            if (!conditionColumnReference.containsKey(tableName)) {
-                conditionColumnReference.put(tableName, new ArrayList<>());
-            }
+            conditionColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
             conditionColumnReference.get(tableName).add(column);
 
             // resultColumnReference 要存表
-            if (!resultColumnReference.containsKey(tableName)) {
-                resultColumnReference.put(tableName, new ArrayList<>());
-            }
+            resultColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
             // joinColumnReference 要存表
-            if (!joinColumnReference.containsKey(tableName)) {
-                joinColumnReference.put(tableName, new ArrayList<>());
-            }
+            joinColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
             // groupByColumnReference 要存表
-            if (!groupByColumnReference.containsKey(tableName)) {
-                groupByColumnReference.put(tableName, new ArrayList<>());
-            }
+            groupByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
             // orderByColumnReference 要存表
-            if (!orderByColumnReference.containsKey(tableName)) {
-                orderByColumnReference.put(tableName, new ArrayList<>());
-            }
+            orderByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
         }
-
     }
 
 
@@ -174,7 +163,6 @@ public class AstMetaData {
     }
 
 
-
     public Curd getCurd() {
         return curd;
     }
@@ -249,9 +237,7 @@ public class AstMetaData {
         // 需要将表建到引用中去
         Set<String> aliasTableEntries = aliasTableMap.keySet();
         for (String tableName : aliasTableEntries) {
-            if (!columnReference.containsKey(tableName)) {
-                columnReference.put(tableName, new ArrayList<>());
-            }
+            columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
         }
         // 只有一个表时，认为字段都是这个表的
         if (columnReference.size() == 2) {
@@ -303,11 +289,8 @@ public class AstMetaData {
     private void doCreateTable(Map<String, List<String>> columnReferenceForSaveTable, Map<String, List<String>> columnReference) {
         Set<String> tableNames = columnReferenceForSaveTable.keySet();
         for (String tableName : tableNames) {
-            if (!columnReference.containsKey(tableName)) {
-                columnReference.put(tableName, new ArrayList<>());
-            }
+            columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
         }
     }
-
 
 }
