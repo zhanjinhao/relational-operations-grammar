@@ -1,6 +1,5 @@
 package cn.addenda.ro.test.ast.expression;
 
-import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
@@ -23,7 +22,7 @@ public class ExpressionDetectorTest {
         for (String sql : sqls) {
             ExpressionParser expressionParser = CurdParserFactory.createExpressionParser(sql);
             Curd parse = expressionParser.parse();
-            parse.accept(new ExpressionAstMetaDataDetector(null, new DumbROErrorReporterDelegate()));
+            parse.accept(new ExpressionAstMetaDataDetector(null));
             System.out.println(parse.getAstMetaData());
 
         }

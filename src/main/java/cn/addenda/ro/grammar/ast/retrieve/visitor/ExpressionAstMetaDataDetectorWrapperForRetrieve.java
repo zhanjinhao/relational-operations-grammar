@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.retrieve.visitor;
 
-import cn.addenda.ro.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 import cn.addenda.ro.grammar.ast.expression.*;
@@ -16,10 +16,10 @@ public class ExpressionAstMetaDataDetectorWrapperForRetrieve extends ExpressionV
 
     private final ExpressionAstMetaDataDetector expressionAstMetaDataDetector;
 
-    public ExpressionAstMetaDataDetectorWrapperForRetrieve(CurdVisitor<AstMetaData> client, ROErrorReporter roErrorReporter) {
+    public ExpressionAstMetaDataDetectorWrapperForRetrieve(CurdVisitor<AstMetaData> client) {
         super(client);
-        setErrorReporter(roErrorReporter);
-        expressionAstMetaDataDetector = new ExpressionAstMetaDataDetector(client, roErrorReporter);
+        setErrorReporter(DumbROErrorReporterDelegate.getInstance());
+        expressionAstMetaDataDetector = new ExpressionAstMetaDataDetector(client);
     }
 
     @Override

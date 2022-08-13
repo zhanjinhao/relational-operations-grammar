@@ -8,6 +8,21 @@ import cn.addenda.ro.ROException;
  */
 public class DumbROErrorReporterDelegate extends AbstractROErrorReporterDelegate {
 
+    private static volatile ROErrorReporter roErrorReporter;
+
+    public static ROErrorReporter getInstance() {
+
+        if (roErrorReporter == null) {
+            synchronized (DumbROErrorReporterDelegate.class) {
+                if (roErrorReporter == null) {
+                    roErrorReporter = new DumbROErrorReporterDelegate();
+                }
+            }
+        }
+
+        return roErrorReporter;
+    }
+
     @Override
     public void error(int errorCode) {
         throw new ROException(0, "runtime error.");

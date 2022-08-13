@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.retrieve.visitor;
 
-import cn.addenda.ro.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.AstMetaDataHelper;
 import cn.addenda.ro.grammar.ast.expression.Curd;
@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMetaData> {
 
-    public SelectAstMetaDataDetector(ROErrorReporter roErrorReporter) {
-        super.init(new ExpressionAstMetaDataDetectorWrapperForRetrieve(this, roErrorReporter));
-        setErrorReporter(roErrorReporter);
+    public SelectAstMetaDataDetector() {
+        super.init(new ExpressionAstMetaDataDetectorWrapperForRetrieve(this));
+        setErrorReporter(DumbROErrorReporterDelegate.getInstance());
     }
 
     @Override

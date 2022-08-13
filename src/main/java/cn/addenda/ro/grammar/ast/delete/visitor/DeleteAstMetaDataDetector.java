@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.delete.visitor;
 
-import cn.addenda.ro.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.delete.Delete;
 import cn.addenda.ro.grammar.ast.delete.DeleteAstMetaData;
@@ -14,9 +14,9 @@ import cn.addenda.ro.grammar.lexical.token.Token;
  */
 public class DeleteAstMetaDataDetector extends DeleteVisitorWithDelegate<AstMetaData> {
 
-    public DeleteAstMetaDataDetector(ROErrorReporter roErrorReporter) {
-        super.init(new ExpressionAstMetaDataDetector(this, roErrorReporter));
-        setErrorReporter(roErrorReporter);
+    public DeleteAstMetaDataDetector() {
+        super.init(new ExpressionAstMetaDataDetector(this));
+        setErrorReporter(DumbROErrorReporterDelegate.getInstance());
     }
 
     @Override
