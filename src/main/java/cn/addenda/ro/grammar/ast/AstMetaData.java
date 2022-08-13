@@ -68,98 +68,16 @@ public class AstMetaData {
         }
     }
 
-
     /**
      * 将astMetaData的conditionColumnMap合并到当前对象中
      */
     public void mergeColumnReference(AstMetaData astMetaData) {
-        mergeConditionColumnReference(astMetaData.getConditionColumnReference());
-        mergeResultColumnReference(astMetaData.getResultColumnReference());
-        mergeJoinColumnReference(astMetaData.getJoinColumnReference());
-        mergeGroupByColumnReference(astMetaData.getGroupByColumnReference());
-        mergeOrderByColumnReference(astMetaData.getOrderByColumnReference());
+        AstMetaDataHelper.mergeColumnReference(astMetaData.getConditionColumnReference(), conditionColumnReference);
+        AstMetaDataHelper.mergeColumnReference(astMetaData.getResultColumnReference(), resultColumnReference);
+        AstMetaDataHelper.mergeColumnReference(astMetaData.getJoinColumnReference(), joinColumnReference);
+        AstMetaDataHelper.mergeColumnReference(astMetaData.getGroupByColumnReference(), groupByColumnReference);
+        AstMetaDataHelper.mergeColumnReference(astMetaData.getOrderByColumnReference(), orderByColumnReference);
     }
-
-    /**
-     * 将thatConditionColumnMap合并到当前对象中
-     */
-    public void mergeConditionColumnReference(Map<String, List<String>> thatConditionColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatConditionColumnMap.entrySet();
-        for (Map.Entry<String, List<String>> entry : entries) {
-            String key = entry.getKey();
-            List<String> value = entry.getValue();
-            if (this.conditionColumnReference.containsKey(key)) {
-                this.conditionColumnReference.get(key).addAll(value);
-            } else {
-                this.conditionColumnReference.put(key, new ArrayList<>(value));
-            }
-        }
-    }
-
-    /**
-     * 将thatResultColumnMap合并到当前对象中
-     */
-    public void mergeResultColumnReference(Map<String, List<String>> thatResultColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatResultColumnMap.entrySet();
-        for (Map.Entry<String, List<String>> entry : entries) {
-            String key = entry.getKey();
-            List<String> value = entry.getValue();
-            if (this.resultColumnReference.containsKey(key)) {
-                this.resultColumnReference.get(key).addAll(value);
-            } else {
-                this.resultColumnReference.put(key, new ArrayList<>(value));
-            }
-        }
-    }
-
-    /**
-     * 将thatResultColumnMap合并到当前对象中
-     */
-    public void mergeJoinColumnReference(Map<String, List<String>> thatJoinColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatJoinColumnMap.entrySet();
-        for (Map.Entry<String, List<String>> entry : entries) {
-            String key = entry.getKey();
-            List<String> value = entry.getValue();
-            if (this.joinColumnReference.containsKey(key)) {
-                this.joinColumnReference.get(key).addAll(value);
-            } else {
-                this.joinColumnReference.put(key, new ArrayList<>(value));
-            }
-        }
-    }
-
-    /**
-     * 将thatGroupByColumnMap合并到当前对象中
-     */
-    public void mergeGroupByColumnReference(Map<String, List<String>> thatGroupByJoinColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatGroupByJoinColumnMap.entrySet();
-        for (Map.Entry<String, List<String>> entry : entries) {
-            String key = entry.getKey();
-            List<String> value = entry.getValue();
-            if (this.groupByColumnReference.containsKey(key)) {
-                this.groupByColumnReference.get(key).addAll(value);
-            } else {
-                this.groupByColumnReference.put(key, new ArrayList<>(value));
-            }
-        }
-    }
-
-    /**
-     * 将thatOrderByColumnMap合并到当前对象中
-     */
-    public void mergeOrderByColumnReference(Map<String, List<String>> thatOrderByJoinColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatOrderByJoinColumnMap.entrySet();
-        for (Map.Entry<String, List<String>> entry : entries) {
-            String key = entry.getKey();
-            List<String> value = entry.getValue();
-            if (this.orderByColumnReference.containsKey(key)) {
-                this.orderByColumnReference.get(key).addAll(value);
-            } else {
-                this.orderByColumnReference.put(key, new ArrayList<>(value));
-            }
-        }
-    }
-
 
     public Curd getCurd() {
         return curd;
@@ -276,11 +194,11 @@ public class AstMetaData {
     }
 
     public void createTable(Map<String, List<String>> columnReference) {
-        doCreateTable(columnReference, getConditionColumnReference());
-        doCreateTable(columnReference, getResultColumnReference());
-        doCreateTable(columnReference, getJoinColumnReference());
-        doCreateTable(columnReference, getGroupByColumnReference());
-        doCreateTable(columnReference, getOrderByColumnReference());
+        doCreateTable(columnReference, conditionColumnReference);
+        doCreateTable(columnReference, resultColumnReference);
+        doCreateTable(columnReference, joinColumnReference);
+        doCreateTable(columnReference, groupByColumnReference);
+        doCreateTable(columnReference, orderByColumnReference);
     }
 
     private void doCreateTable(Map<String, List<String>> columnReferenceForSaveTable, Map<String, List<String>> columnReference) {

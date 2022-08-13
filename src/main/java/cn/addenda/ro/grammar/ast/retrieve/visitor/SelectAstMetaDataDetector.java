@@ -2,6 +2,7 @@ package cn.addenda.ro.grammar.ast.retrieve.visitor;
 
 import cn.addenda.ro.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstMetaData;
+import cn.addenda.ro.grammar.ast.AstMetaDataHelper;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.Identifier;
 import cn.addenda.ro.grammar.ast.expression.Literal;
@@ -49,7 +50,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         Curd columnSeg = singleSelect.getColumnSeg();
         AstMetaData columnSegAmd = columnSeg.accept(this);
-        astMetaDataCur.mergeResultColumnReference(columnSegAmd.getConditionColumnReference());
+        AstMetaDataHelper.mergeColumnReference(columnSegAmd.getConditionColumnReference(), astMetaDataCur.getResultColumnReference());
         astMetaDataCur.getResultColumnList().addAll(columnSegAmd.getResultColumnList());
 
         TableSeg tableSeg = (TableSeg) singleSelect.getTableSeg();
@@ -67,14 +68,14 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Curd groupBySeg = singleSelect.getGroupBySeg();
         if (groupBySeg != null) {
             AstMetaData accept = groupBySeg.accept(this);
-            astMetaDataCur.mergeGroupByColumnReference(accept.getConditionColumnReference());
+            AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getGroupByColumnReference());
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
         Curd orderBySeg = singleSelect.getOrderBySeg();
         if (orderBySeg != null) {
             AstMetaData accept = orderBySeg.accept(this);
-            astMetaDataCur.mergeOrderByColumnReference(accept.getConditionColumnReference());
+            AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getOrderByColumnReference());
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
@@ -161,7 +162,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         // resultColumnReference 存table信息
         AstMetaData leftAmd = tableSeg.getLeftCurd().accept(this);
-        astMetaDataCur.mergeResultColumnReference(leftAmd.getResultColumnReference());
+        AstMetaDataHelper.mergeColumnReference(leftAmd.getResultColumnReference(), astMetaDataCur.getResultColumnReference());
         astMetaDataCur.createTable(leftAmd.getResultColumnReference());
         astMetaDataCur.mergeColumnReference(leftAmd);
 
@@ -170,7 +171,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Curd rightCurd = tableSeg.getRightCurd();
         if (rightCurd != null) {
             AstMetaData rightAmd = rightCurd.accept(this);
-            astMetaDataCur.mergeResultColumnReference(rightAmd.getResultColumnReference());
+            AstMetaDataHelper.mergeColumnReference(rightAmd.getResultColumnReference(), astMetaDataCur.getResultColumnReference());
             astMetaDataCur.createTable(rightAmd.getResultColumnReference());
             astMetaDataCur.mergeColumnReference(rightAmd);
 
@@ -181,7 +182,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Curd condition = tableSeg.getCondition();
         if (condition != null) {
             AstMetaData accept = condition.accept(this);
-            astMetaDataCur.mergeJoinColumnReference(accept.getConditionColumnReference());
+            AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getJoinColumnReference());
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
