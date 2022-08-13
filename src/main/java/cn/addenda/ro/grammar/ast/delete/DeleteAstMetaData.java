@@ -10,8 +10,11 @@ import java.util.Set;
  */
 public class DeleteAstMetaData extends AstMetaData {
 
+    private String tableName;
+
     public void putTableName(String tableName) {
         createTable(tableName);
+        this.tableName = tableName;
     }
 
     @Override
@@ -25,6 +28,13 @@ public class DeleteAstMetaData extends AstMetaData {
         });
 
         undeterminedColumnList.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "DeleteAstMetaData{" +
+                "tableName='" + tableName + '\'' +
+                "} " + super.toString();
     }
 
 }

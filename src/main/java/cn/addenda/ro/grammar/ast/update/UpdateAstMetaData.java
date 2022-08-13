@@ -10,20 +10,31 @@ import java.util.Set;
  */
 public class UpdateAstMetaData extends AstMetaData {
 
+    private String tableName;
+
     public void putTableName(String tableName) {
         createTable(tableName);
+        this.tableName = tableName;
     }
 
     @Override
     public void sortMetaData() {
         Set<String> undeterminedColumnList = conditionColumnReference.get(UNDETERMINED_TABLE);
 
-        conditionColumnReference.forEach((tableName, value) -> {
-            if (!UNDETERMINED_TABLE.equals(tableName)) {
+        conditionColumnReference.forEach((item, value) -> {
+            if (!UNDETERMINED_TABLE.equals(item)) {
                 value.addAll(undeterminedColumnList);
             }
         });
 
         undeterminedColumnList.clear();
     }
+
+    @Override
+    public String toString() {
+        return "UpdateAstMetaData{" +
+                "tableName='" + tableName + '\'' +
+                "} " + super.toString();
+    }
+
 }

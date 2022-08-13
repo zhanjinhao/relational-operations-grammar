@@ -18,4 +18,11 @@ public class SelectAstMetaData extends AstMetaData {
         return subSegments;
     }
 
+    @Override
+    public String toString() {
+        return "SelectAstMetaData{" +
+                "subSegments=" + subSegments +
+                "} " + super.toString();
+    }
+
 }

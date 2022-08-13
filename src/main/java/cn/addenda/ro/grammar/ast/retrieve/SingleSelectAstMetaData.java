@@ -120,4 +120,16 @@ public class SingleSelectAstMetaData extends AstMetaData {
         return resultColumnList;
     }
 
+    @Override
+    public String toString() {
+        return "SingleSelectAstMetaData{" +
+                "resultColumnList=" + resultColumnList +
+                ", resultColumnReference=" + resultColumnReference +
+                ", joinColumnReference=" + joinColumnReference +
+                ", groupByColumnReference=" + groupByColumnReference +
+                ", orderByColumnReference=" + orderByColumnReference +
+                ", aliasTableMap=" + aliasTableMap +
+                "} " + super.toString();
+    }
+
 }
