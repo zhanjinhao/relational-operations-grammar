@@ -2,7 +2,7 @@ package cn.addenda.ro.grammar.ast.update;
 
 import cn.addenda.ro.grammar.ast.AstMetaData;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author addenda
@@ -16,7 +16,7 @@ public class UpdateAstMetaData extends AstMetaData {
 
     @Override
     public void sortMetaData() {
-        List<String> undeterminedColumnList = conditionColumnReference.get(UNDETERMINED_TABLE);
+        Set<String> undeterminedColumnList = conditionColumnReference.get(UNDETERMINED_TABLE);
 
         conditionColumnReference.forEach((tableName, value) -> {
             if (!UNDETERMINED_TABLE.equals(tableName)) {

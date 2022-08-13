@@ -16,19 +16,19 @@ public class SingleSelectAstMetaData extends AstMetaData {
     // 存返回的值
     private final List<Token> resultColumnList = new ArrayList<>();
 
-    private final Map<String, List<String>> resultColumnReference = new HashMap<>();
-    private final Map<String, List<String>> joinColumnReference = new HashMap<>();
-    private final Map<String, List<String>> groupByColumnReference = new HashMap<>();
-    private final Map<String, List<String>> orderByColumnReference = new HashMap<>();
+    private final Map<String, Set<String>> resultColumnReference = new HashMap<>();
+    private final Map<String, Set<String>> joinColumnReference = new HashMap<>();
+    private final Map<String, Set<String>> groupByColumnReference = new HashMap<>();
+    private final Map<String, Set<String>> orderByColumnReference = new HashMap<>();
 
     private Map<String, Curd> aliasTableMap = new HashMap<>();
 
     public SingleSelectAstMetaData() {
         super();
-        resultColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
-        joinColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
-        groupByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
-        orderByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
+        resultColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
+        joinColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
+        groupByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
+        orderByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
     }
 
     /**
@@ -51,11 +51,11 @@ public class SingleSelectAstMetaData extends AstMetaData {
         doSortMetaData(orderByColumnReference, aliasTableMap);
     }
 
-    private void doSortMetaData(Map<String, List<String>> columnReference, Map<String, Curd> aliasTableMap) {
+    private void doSortMetaData(Map<String, Set<String>> columnReference, Map<String, Curd> aliasTableMap) {
         // 需要将表建到引用中去
         Set<String> aliasTableEntries = aliasTableMap.keySet();
         for (String tableName : aliasTableEntries) {
-            columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+            columnReference.computeIfAbsent(tableName, item -> new HashSet<>());
         }
         // 只有一个表时，认为字段都是这个表的
         if (columnReference.size() == 2) {
@@ -66,7 +66,7 @@ public class SingleSelectAstMetaData extends AstMetaData {
                     tableName = item;
                 }
             }
-            List<String> strings = columnReference.get(UNDETERMINED_TABLE);
+            Set<String> strings = columnReference.get(UNDETERMINED_TABLE);
             for (String column : strings) {
                 columnReference.get(tableName).add(column);
             }
@@ -77,14 +77,14 @@ public class SingleSelectAstMetaData extends AstMetaData {
     @Override
     public void createTable(String tableName) {
         super.createTable(tableName);
-        resultColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-        joinColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-        orderByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-        groupByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+        resultColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
+        joinColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
+        orderByColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
+        groupByColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
     }
 
     @Override
-    public void createTable(Map<String, List<String>> columnReference) {
+    public void createTable(Map<String, Set<String>> columnReference) {
         super.createTable(columnReference);
         doCreateTable(columnReference, resultColumnReference);
         doCreateTable(columnReference, joinColumnReference);
@@ -92,19 +92,19 @@ public class SingleSelectAstMetaData extends AstMetaData {
         doCreateTable(columnReference, orderByColumnReference);
     }
 
-    public Map<String, List<String>> getResultColumnReference() {
+    public Map<String, Set<String>> getResultColumnReference() {
         return resultColumnReference;
     }
 
-    public Map<String, List<String>> getJoinColumnReference() {
+    public Map<String, Set<String>> getJoinColumnReference() {
         return joinColumnReference;
     }
 
-    public Map<String, List<String>> getGroupByColumnReference() {
+    public Map<String, Set<String>> getGroupByColumnReference() {
         return groupByColumnReference;
     }
 
-    public Map<String, List<String>> getOrderByColumnReference() {
+    public Map<String, Set<String>> getOrderByColumnReference() {
         return orderByColumnReference;
     }
 

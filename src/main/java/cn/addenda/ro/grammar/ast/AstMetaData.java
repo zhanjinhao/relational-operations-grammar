@@ -22,10 +22,10 @@ public class AstMetaData {
     // 如果遍历树的时候遇到了这四个语法（事实上只有SELECT），认为其是当前AST的孩子
     private final List<AstMetaData> children = new ArrayList<>();
 
-    protected final Map<String, List<String>> conditionColumnReference = new HashMap<>();
+    protected final Map<String, Set<String>> conditionColumnReference = new HashMap<>();
 
     public AstMetaData() {
-        conditionColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
+        conditionColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
     }
 
     public void putUndeterminedConditionColumn(String column) {
@@ -37,7 +37,7 @@ public class AstMetaData {
         } else {
             // condition要存表存字段
             String tableName = column.substring(0, i);
-            conditionColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+            conditionColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
             conditionColumnReference.get(tableName).add(column);
 
             // 其他的引用表需要建出来
@@ -80,7 +80,7 @@ public class AstMetaData {
         children.add(astMetaData);
     }
 
-    public Map<String, List<String>> getConditionColumnReference() {
+    public Map<String, Set<String>> getConditionColumnReference() {
         return conditionColumnReference;
     }
 
@@ -94,17 +94,17 @@ public class AstMetaData {
     }
 
     public void createTable(String tableName) {
-        conditionColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+        conditionColumnReference.computeIfAbsent(tableName, item -> new HashSet<>());
     }
 
-    public void createTable(Map<String, List<String>> columnReference) {
+    public void createTable(Map<String, Set<String>> columnReference) {
         doCreateTable(columnReference, conditionColumnReference);
     }
 
-    protected void doCreateTable(Map<String, List<String>> columnReferenceForSaveTable, Map<String, List<String>> columnReference) {
+    protected void doCreateTable(Map<String, Set<String>> columnReferenceForSaveTable, Map<String, Set<String>> columnReference) {
         Set<String> tableNames = columnReferenceForSaveTable.keySet();
         for (String tableName : tableNames) {
-            columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+            columnReference.computeIfAbsent(tableName, item -> new HashSet<>());
         }
     }
 
