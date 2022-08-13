@@ -50,6 +50,11 @@ public class FunctionROErrorReporterDelegate extends AbstractROErrorReporterDele
         throw new FunctionException(errorCode, getErrorMsg(errorCode) + SEPARATOR + getSuffix(attachment));
     }
 
+    @Override
+    public void error(int errorCode, Throwable throwable) {
+        throw new FunctionException(errorCode, getErrorMsg(errorCode), throwable);
+    }
+
     public static final int FUNCTION_parameter_PARSE = 50001;
     public static final String FUNCTION_parameter_PARSE_MSG = "Illegal function parameter. ";
 

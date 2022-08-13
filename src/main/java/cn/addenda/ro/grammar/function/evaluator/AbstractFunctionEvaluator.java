@@ -46,7 +46,7 @@ public abstract class AbstractFunctionEvaluator implements FunctionEvaluator, RO
             }
             functionDescriptorMap.put(functionDescriptor.functionName(), functionDescriptor);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            error(FunctionROErrorReporterDelegate.FUNCTION_HANDLER_INSTANTIATION_PARSE);
+            error(FunctionROErrorReporterDelegate.FUNCTION_HANDLER_INSTANTIATION_PARSE, e);
         }
     }
 
@@ -73,7 +73,6 @@ public abstract class AbstractFunctionEvaluator implements FunctionEvaluator, RO
         List<Curd> parameterList = function.getParameterList();
 
 
-
         String functionName = (String) function.getMethod().getLiteral();
         functionDescriptorMap.get(functionName).staticCheck(function, type);
     }
@@ -88,4 +87,8 @@ public abstract class AbstractFunctionEvaluator implements FunctionEvaluator, RO
         errorReporterDelegate.error(errorCode, attachment);
     }
 
+    @Override
+    public void error(int errorCode, Throwable throwable) {
+        errorReporterDelegate.error(errorCode, throwable);
+    }
 }
