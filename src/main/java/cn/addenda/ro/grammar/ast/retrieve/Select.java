@@ -16,12 +16,12 @@ public class Select extends Binary {
     private SelectType selectType;
 
     public Select(Curd leftCurd, Token token, Token allToken, Curd rightCurd) {
-        super(leftCurd, token, rightCurd);
+        super(leftCurd, token, rightCurd, new SelectAstMetaData());
         this.allToken = allToken;
     }
 
     public Select(Curd left) {
-        super(left, null, null);
+        super(left, null, null, new SelectAstMetaData());
     }
 
     @Override

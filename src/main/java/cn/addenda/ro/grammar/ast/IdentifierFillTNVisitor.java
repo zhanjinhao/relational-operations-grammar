@@ -92,7 +92,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
         Token identifier = inCondition.getIdentifier();
         addTableName(identifier);
 
-        Curd curd = inCondition.getCurd();
+        Curd curd = inCondition.getSelect();
         if (curd != null) {
             curd.accept(this);
         }

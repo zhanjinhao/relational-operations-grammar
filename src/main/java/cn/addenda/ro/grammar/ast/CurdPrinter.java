@@ -188,7 +188,7 @@ public class CurdPrinter implements CurdVisitor<String> {
         } else {
             sb.append(BLANK).append("not").append(BLANK).append("in").append(BLANK);
         }
-        Curd curd = inCondition.getCurd();
+        Curd curd = inCondition.getSelect();
         if (curd != null) {
             sb.append(curd.accept(this));
         } else {

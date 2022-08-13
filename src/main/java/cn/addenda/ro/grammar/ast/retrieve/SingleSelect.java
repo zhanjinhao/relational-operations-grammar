@@ -25,6 +25,7 @@ public class SingleSelect extends Curd {
 
     public SingleSelect(Curd columnSeg, Curd tableSeg, Curd whereSeg,
                         Curd groupBySeg, Curd orderBySeg, Curd limitSeg) {
+        super(new SingleSelectAstMetaData());
         this.columnSeg = columnSeg;
         this.tableSeg = tableSeg;
         this.whereSeg = whereSeg;
@@ -33,17 +34,17 @@ public class SingleSelect extends Curd {
         this.limitSeg = limitSeg;
     }
 
+    @Override
+    public <R> R accept(CurdVisitor<R> curdVisitor) {
+        return curdVisitor.visitSingleSelect(this);
+    }
+
     public SingleSelectType getSingleSelectType() {
         return singleSelectType;
     }
 
     public void setSingleSelectType(SingleSelectType singleSelectType) {
         this.singleSelectType = singleSelectType;
-    }
-
-    @Override
-    public <R> R accept(CurdVisitor<R> curdVisitor) {
-        return curdVisitor.visitSingleSelect(this);
     }
 
     public Curd getColumnSeg() {

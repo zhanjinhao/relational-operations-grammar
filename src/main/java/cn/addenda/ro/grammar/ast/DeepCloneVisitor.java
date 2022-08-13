@@ -87,7 +87,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
             }
             return new InCondition(in, identifier, newRange);
         } else {
-            Curd curd = inCondition.getCurd();
+            Curd curd = inCondition.getSelect();
             return new InCondition(in, identifier, curd.accept(this));
         }
     }

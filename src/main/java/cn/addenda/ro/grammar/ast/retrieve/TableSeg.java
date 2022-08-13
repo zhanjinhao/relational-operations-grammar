@@ -19,15 +19,14 @@ public class TableSeg extends Binary {
      */
     private Curd condition;
 
-
     public TableSeg(Token qualifier, Curd leftCurd, Token token, Curd rightCurd, Curd condition) {
-        super(leftCurd, token, rightCurd);
+        super(leftCurd, token, rightCurd, new SingleSelectAstMetaData());
         this.qualifier = qualifier;
         this.condition = condition;
     }
 
     public TableSeg(Token qualifier, Curd leftCurd, Token token, Curd rightCurd) {
-        super(leftCurd, token, rightCurd);
+        super(leftCurd, token, rightCurd, new SingleSelectAstMetaData());
         this.qualifier = qualifier;
     }
 

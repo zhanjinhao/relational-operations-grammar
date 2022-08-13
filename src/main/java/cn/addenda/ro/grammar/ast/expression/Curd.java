@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class Curd {
 
-    private final AstMetaData astMetaData = new AstMetaData();
+    private AstMetaData astMetaData;
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
 
@@ -21,6 +21,12 @@ public abstract class Curd {
     private static final Map<String, IdentifierFillTNVisitor> tNToIdentifierFillTNMap = new ConcurrentHashMap<>();
 
     protected Curd() {
+        this.astMetaData = new AstMetaData();
+        astMetaData.setCurd(this);
+    }
+
+    protected Curd(AstMetaData astMetaData) {
+        this.astMetaData = astMetaData;
         astMetaData.setCurd(this);
     }
 

@@ -12,6 +12,8 @@ public class SelectParserTest {
 
     static String[] sqls = new String[]{
 
+            "select date_add(A.date, interval 1 day) as tomorrow from (select * from a) A",
+
             "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
                     + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
                     + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"

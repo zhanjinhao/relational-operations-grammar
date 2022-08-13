@@ -15,6 +15,7 @@ public class GroupFunction extends Curd {
     private Curd curd;
 
     public GroupFunction(Token method, Curd curd) {
+        super(new SingleSelectAstMetaData());
         this.method = method;
         this.curd = curd;
     }

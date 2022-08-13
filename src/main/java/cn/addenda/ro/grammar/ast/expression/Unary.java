@@ -1,5 +1,6 @@
 package cn.addenda.ro.grammar.ast.expression;
 
+import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 /**
@@ -11,7 +12,13 @@ public abstract class Unary extends Curd {
     private Token operator;
     private Curd curd;
 
-    public Unary(Token operator, Curd curd) {
+    protected Unary(Token operator, Curd curd) {
+        this.operator = operator;
+        this.curd = curd;
+    }
+
+    protected Unary(Token operator, Curd curd, AstMetaData astMetaData) {
+        super(astMetaData);
         this.operator = operator;
         this.curd = curd;
     }

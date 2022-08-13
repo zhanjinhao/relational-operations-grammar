@@ -11,18 +11,21 @@ import java.util.Set;
  */
 public class AstMetaDataHelper {
 
+    private AstMetaDataHelper() {
+    }
+
     /**
-     * 将thatConditionColumnMap合并到当前对象中
+     * 将 thatColumnMap 合并到 thisColumnMap 中
      */
-    public static void mergeColumnReference(Map<String, List<String>> thatConditionColumnMap, Map<String, List<String>> thisConditionColumnMap) {
-        Set<Map.Entry<String, List<String>>> entries = thatConditionColumnMap.entrySet();
+    public static void mergeColumnReference(Map<String, List<String>> thatColumnMap, Map<String, List<String>> thisColumnMap) {
+        Set<Map.Entry<String, List<String>>> entries = thatColumnMap.entrySet();
         for (Map.Entry<String, List<String>> entry : entries) {
             String key = entry.getKey();
             List<String> value = entry.getValue();
-            if (thisConditionColumnMap.containsKey(key)) {
-                thisConditionColumnMap.get(key).addAll(value);
+            if (thisColumnMap.containsKey(key)) {
+                thisColumnMap.get(key).addAll(value);
             } else {
-                thisConditionColumnMap.put(key, new ArrayList<>(value));
+                thisColumnMap.put(key, new ArrayList<>(value));
             }
         }
     }

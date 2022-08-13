@@ -1,7 +1,6 @@
 package cn.addenda.ro.grammar.ast;
 
 import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.*;
 
@@ -23,26 +22,10 @@ public class AstMetaData {
     // 如果遍历树的时候遇到了这四个语法（事实上只有SELECT），认为其是当前AST的孩子
     private final List<AstMetaData> children = new ArrayList<>();
 
-    // 存Select语句的SingleSelect集合
-    private final List<AstMetaData> subSegments = new ArrayList<>();
-
-    // 存返回的值
-    private final List<Token> resultColumnList = new ArrayList<>();
-
-    private final Map<String, List<String>> conditionColumnReference = new HashMap<>();
-    private final Map<String, List<String>> resultColumnReference = new HashMap<>();
-    private final Map<String, List<String>> joinColumnReference = new HashMap<>();
-    private final Map<String, List<String>> groupByColumnReference = new HashMap<>();
-    private final Map<String, List<String>> orderByColumnReference = new HashMap<>();
-
-    private Map<String, Curd> aliasTableMap = new HashMap<>();
+    protected final Map<String, List<String>> conditionColumnReference = new HashMap<>();
 
     public AstMetaData() {
-        conditionColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
-        resultColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
-        joinColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
-        groupByColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
-        orderByColumnReference.put(UNDETERMINED_TABLE, new ArrayList<>());
+        conditionColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new ArrayList<>());
     }
 
     public void putUndeterminedConditionColumn(String column) {
@@ -57,14 +40,8 @@ public class AstMetaData {
             conditionColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
             conditionColumnReference.get(tableName).add(column);
 
-            // resultColumnReference 要存表
-            resultColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-            // joinColumnReference 要存表
-            joinColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-            // groupByColumnReference 要存表
-            groupByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-            // orderByColumnReference 要存表
-            orderByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
+            // 其他的引用表需要建出来
+            createTable(tableName);
         }
     }
 
@@ -73,10 +50,6 @@ public class AstMetaData {
      */
     public void mergeColumnReference(AstMetaData astMetaData) {
         AstMetaDataHelper.mergeColumnReference(astMetaData.getConditionColumnReference(), conditionColumnReference);
-        AstMetaDataHelper.mergeColumnReference(astMetaData.getResultColumnReference(), resultColumnReference);
-        AstMetaDataHelper.mergeColumnReference(astMetaData.getJoinColumnReference(), joinColumnReference);
-        AstMetaDataHelper.mergeColumnReference(astMetaData.getGroupByColumnReference(), groupByColumnReference);
-        AstMetaDataHelper.mergeColumnReference(astMetaData.getOrderByColumnReference(), orderByColumnReference);
     }
 
     public Curd getCurd() {
@@ -103,105 +76,28 @@ public class AstMetaData {
         children.add(astMetaData);
     }
 
-    public List<AstMetaData> getSubSegments() {
-        return subSegments;
-    }
-
-    public List<Token> getResultColumnList() {
-        return resultColumnList;
-    }
-
     public Map<String, List<String>> getConditionColumnReference() {
         return conditionColumnReference;
-    }
-
-    public Map<String, List<String>> getResultColumnReference() {
-        return resultColumnReference;
-    }
-
-    public Map<String, List<String>> getJoinColumnReference() {
-        return joinColumnReference;
-    }
-
-    public Map<String, List<String>> getGroupByColumnReference() {
-        return groupByColumnReference;
-    }
-
-    public Map<String, List<String>> getOrderByColumnReference() {
-        return orderByColumnReference;
-    }
-
-
-    public Map<String, Curd> getAliasTableMap() {
-        return aliasTableMap;
-    }
-
-    public void setAliasTableMap(Map<String, Curd> aliasTableMap) {
-        this.aliasTableMap = aliasTableMap;
-    }
-
-    public void sortMetaData() {
-        doSortMetaData(conditionColumnReference, aliasTableMap);
-        doSortMetaData(resultColumnReference, aliasTableMap);
-        doSortMetaData(joinColumnReference, aliasTableMap);
-        doSortMetaData(groupByColumnReference, aliasTableMap);
-        doSortMetaData(orderByColumnReference, aliasTableMap);
-
-    }
-
-    private void doSortMetaData(Map<String, List<String>> columnReference, Map<String, Curd> aliasTableMap) {
-        // 需要将表建到引用中去
-        Set<String> aliasTableEntries = aliasTableMap.keySet();
-        for (String tableName : aliasTableEntries) {
-            columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
-        }
-        // 只有一个表时，认为字段都是这个表的
-        if (columnReference.size() == 2) {
-            String tableName = null;
-            Set<String> columnReferenceEntries = columnReference.keySet();
-            for (String item : columnReferenceEntries) {
-                if (!UNDETERMINED_TABLE.equals(item)) {
-                    tableName = item;
-                }
-            }
-            List<String> strings = columnReference.get(UNDETERMINED_TABLE);
-            for (String column : strings) {
-                columnReference.get(tableName).add(column);
-            }
-            columnReference.get(UNDETERMINED_TABLE).clear();
-        }
     }
 
     @Override
     public String toString() {
         return "AstMetaData{" +
                 "curd=" + curd +
-                ", resultColumnList=" + resultColumnList +
                 ", conditionColumnMap=" + conditionColumnReference +
-                ", resultColumnMap=" + resultColumnReference +
-                ", curdTableMap=" + aliasTableMap +
                 ", conditionChildren=" + children +
-                ", subSegments=" + subSegments +
                 '}';
     }
 
     public void createTable(String tableName) {
-        conditionColumnReference.put(tableName, new ArrayList<>());
-        resultColumnReference.put(tableName, new ArrayList<>());
-        joinColumnReference.put(tableName, new ArrayList<>());
-        orderByColumnReference.put(tableName, new ArrayList<>());
-        groupByColumnReference.put(tableName, new ArrayList<>());
+        conditionColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
     }
 
     public void createTable(Map<String, List<String>> columnReference) {
         doCreateTable(columnReference, conditionColumnReference);
-        doCreateTable(columnReference, resultColumnReference);
-        doCreateTable(columnReference, joinColumnReference);
-        doCreateTable(columnReference, groupByColumnReference);
-        doCreateTable(columnReference, orderByColumnReference);
     }
 
-    private void doCreateTable(Map<String, List<String>> columnReferenceForSaveTable, Map<String, List<String>> columnReference) {
+    protected void doCreateTable(Map<String, List<String>> columnReferenceForSaveTable, Map<String, List<String>> columnReference) {
         Set<String> tableNames = columnReferenceForSaveTable.keySet();
         for (String tableName : tableNames) {
             columnReference.computeIfAbsent(tableName, item -> new ArrayList<>());

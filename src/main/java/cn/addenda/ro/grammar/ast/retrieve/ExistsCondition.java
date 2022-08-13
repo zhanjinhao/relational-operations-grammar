@@ -12,7 +12,7 @@ import cn.addenda.ro.grammar.lexical.token.Token;
 public class ExistsCondition extends Unary {
 
     public ExistsCondition(Token operator, Curd curd) {
-        super(operator, curd);
+        super(operator, curd, new SingleSelectAstMetaData());
     }
 
     @Override

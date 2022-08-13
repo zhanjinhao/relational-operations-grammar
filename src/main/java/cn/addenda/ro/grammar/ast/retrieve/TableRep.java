@@ -17,6 +17,7 @@ public class TableRep extends Curd {
      * alias 是别名，curd 是真实表
      */
     public TableRep(Curd curd, Token alias) {
+        super(new SingleSelectAstMetaData());
         this.curd = curd;
         this.alias = alias;
     }
@@ -25,6 +26,7 @@ public class TableRep extends Curd {
      * curd 是真实表
      */
     public TableRep(Curd curd) {
+        super(new SingleSelectAstMetaData());
         this.curd = curd;
     }
 

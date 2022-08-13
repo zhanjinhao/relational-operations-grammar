@@ -16,14 +16,15 @@ public class ColumnSeg extends Curd {
 
     private List<Curd> columnRepList;
 
+    public ColumnSeg(Token restriction, List<Curd> columnRepList) {
+        super(new SingleSelectAstMetaData());
+        this.restriction = restriction;
+        this.columnRepList = columnRepList;
+    }
+
     @Override
     public <R> R accept(CurdVisitor<R> curdVisitor) {
         return curdVisitor.visitColumnSeg(this);
-    }
-
-    public ColumnSeg(Token restriction, List<Curd> columnRepList) {
-        this.restriction = restriction;
-        this.columnRepList = columnRepList;
     }
 
     public Token getRestriction() {

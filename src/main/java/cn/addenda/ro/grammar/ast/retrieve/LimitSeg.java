@@ -17,11 +17,13 @@ public class LimitSeg extends Curd {
     private Token offset;
 
     public LimitSeg(Token num, Token offset) {
+        super(new SingleSelectAstMetaData());
         this.num = num;
         this.offset = offset;
     }
 
     public LimitSeg(Token num) {
+        super(new SingleSelectAstMetaData());
         this.num = num;
         this.offset = null;
     }

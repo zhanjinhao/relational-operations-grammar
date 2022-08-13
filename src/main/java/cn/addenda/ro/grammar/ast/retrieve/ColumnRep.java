@@ -12,15 +12,15 @@ import cn.addenda.ro.grammar.lexical.token.Token;
 public class ColumnRep extends Unary {
 
     /**
-     * @param curd 真实的表
-     * @param operator  别名
+     * @param curd     真实的表
+     * @param operator 别名
      */
     public ColumnRep(Curd curd, Token operator) {
-        super(operator, curd);
+        super(operator, curd, new SingleSelectAstMetaData());
     }
 
     public ColumnRep(Curd curd) {
-        super(null, curd);
+        super(null, curd, new SingleSelectAstMetaData());
     }
 
     @Override

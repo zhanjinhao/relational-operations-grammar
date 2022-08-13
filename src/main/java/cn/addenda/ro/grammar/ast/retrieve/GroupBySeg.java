@@ -17,11 +17,13 @@ public class GroupBySeg extends Curd {
     private Curd having;
 
     public GroupBySeg(List<Token> columnList, Curd having) {
+        super(new SingleSelectAstMetaData());
         this.columnList = columnList;
         this.having = having;
     }
 
     public GroupBySeg(List<Token> columnList) {
+        super(new SingleSelectAstMetaData());
         this.columnList = columnList;
         this.having = null;
     }

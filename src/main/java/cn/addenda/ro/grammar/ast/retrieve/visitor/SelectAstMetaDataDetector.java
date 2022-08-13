@@ -24,7 +24,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitSelect(Select select) {
-        AstMetaData astMetaDataCur = select.getAstMetaData();
+        SelectAstMetaData astMetaDataCur = (SelectAstMetaData) select.getAstMetaData();
         Curd leftCurd = select.getLeftCurd();
         if (leftCurd instanceof Select) {
             AstMetaData accept = leftCurd.accept(this);
@@ -46,18 +46,16 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitSingleSelect(SingleSelect singleSelect) {
-        AstMetaData astMetaDataCur = singleSelect.getAstMetaData();
+        SingleSelectAstMetaData astMetaDataCur = (SingleSelectAstMetaData) singleSelect.getAstMetaData();
 
         Curd columnSeg = singleSelect.getColumnSeg();
-        AstMetaData columnSegAmd = columnSeg.accept(this);
+        SingleSelectAstMetaData columnSegAmd = (SingleSelectAstMetaData) columnSeg.accept(this);
         AstMetaDataHelper.mergeColumnReference(columnSegAmd.getConditionColumnReference(), astMetaDataCur.getResultColumnReference());
         astMetaDataCur.getResultColumnList().addAll(columnSegAmd.getResultColumnList());
 
         TableSeg tableSeg = (TableSeg) singleSelect.getTableSeg();
-        AstMetaData tableSegAmd = tableSeg.accept(this);
+        SingleSelectAstMetaData tableSegAmd = (SingleSelectAstMetaData) tableSeg.accept(this);
         astMetaDataCur.getAliasTableMap().putAll(tableSegAmd.getAliasTableMap());
-//        astMetaDataCur.mergeJoinColumnReference(tableSegAmd.getConditionColumnReference());
-//        astMetaDataCur.createTable(tableSegAmd.getResultColumnReference());
         astMetaDataCur.mergeColumnReference(tableSegAmd);
 
         Curd whereSeg = singleSelect.getWhereSeg();
@@ -88,11 +86,11 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitColumnSeg(ColumnSeg columnSeg) {
-        AstMetaData astMetaDataCur = columnSeg.getAstMetaData();
+        SingleSelectAstMetaData astMetaDataCur = (SingleSelectAstMetaData) columnSeg.getAstMetaData();
 
         List<Curd> columnRepList = columnSeg.getColumnRepList();
         for (Curd curd : columnRepList) {
-            AstMetaData accept = curd.accept(this);
+            SingleSelectAstMetaData accept = (SingleSelectAstMetaData) curd.accept(this);
             astMetaDataCur.mergeColumnReference(accept);
             astMetaDataCur.getResultColumnList().addAll(accept.getResultColumnList());
         }
@@ -102,7 +100,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitColumnRep(ColumnRep columnRep) {
-        AstMetaData astMetaDataCur = columnRep.getAstMetaData();
+        SingleSelectAstMetaData astMetaDataCur = (SingleSelectAstMetaData) columnRep.getAstMetaData();
         Token alias = columnRep.getOperator();
         Curd curd = columnRep.getCurd();
 
@@ -158,11 +156,10 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitTableSeg(TableSeg tableSeg) {
-        AstMetaData astMetaDataCur = tableSeg.getAstMetaData();
+        SingleSelectAstMetaData astMetaDataCur = (SingleSelectAstMetaData) tableSeg.getAstMetaData();
 
         // resultColumnReference 存table信息
-        AstMetaData leftAmd = tableSeg.getLeftCurd().accept(this);
-        AstMetaDataHelper.mergeColumnReference(leftAmd.getResultColumnReference(), astMetaDataCur.getResultColumnReference());
+        SingleSelectAstMetaData leftAmd = (SingleSelectAstMetaData) tableSeg.getLeftCurd().accept(this);
         astMetaDataCur.createTable(leftAmd.getResultColumnReference());
         astMetaDataCur.mergeColumnReference(leftAmd);
 
@@ -170,8 +167,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         Curd rightCurd = tableSeg.getRightCurd();
         if (rightCurd != null) {
-            AstMetaData rightAmd = rightCurd.accept(this);
-            AstMetaDataHelper.mergeColumnReference(rightAmd.getResultColumnReference(), astMetaDataCur.getResultColumnReference());
+            SingleSelectAstMetaData rightAmd = (SingleSelectAstMetaData) rightCurd.accept(this);
             astMetaDataCur.createTable(rightAmd.getResultColumnReference());
             astMetaDataCur.mergeColumnReference(rightAmd);
 
@@ -191,7 +187,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitTableRep(TableRep tableRep) {
-        AstMetaData astMetaDataCur = tableRep.getAstMetaData();
+        SingleSelectAstMetaData astMetaDataCur = (SingleSelectAstMetaData) tableRep.getAstMetaData();
 
         Curd curd = tableRep.getCurd();
         Token alias = tableRep.getAlias();
@@ -207,9 +203,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
                 accept.setParent(astMetaDataCur);
                 astMetaDataCur.addChild(accept);
             } else {
-                // 此时 accept 中有用的是 conditionColumnReference
-                // 有别名之后，不在需要真实的表名了
-                // astMetaDataCur.mergeColumnReference(accept);
+                // 有别名之后，不在需要真实的表名了，所以这里不需要mergeColumnReference
             }
         }
         // 没有别名的场景下，curd只会是Identifier。此时需要在引用中新建一个表即可
@@ -231,7 +225,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Token identifier = inCondition.getIdentifier();
         astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(identifier.getLiteral()));
 
-        Curd curd = inCondition.getCurd();
+        Curd curd = inCondition.getSelect();
         // select 模式
         if (curd != null) {
             AstMetaData accept = curd.accept(this);

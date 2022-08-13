@@ -21,17 +21,19 @@ public class InCondition extends Curd {
     private List<Curd> range;
 
     // select
-    private Curd curd;
+    private Curd select;
 
     // select 场景
-    public InCondition(Token in, Token identifier, Curd curd) {
+    public InCondition(Token in, Token identifier, Curd select) {
+        super(new SingleSelectAstMetaData());
         this.in = in;
         this.identifier = identifier;
-        this.curd = curd;
+        this.select = select;
     }
 
     // list 场景
     public InCondition(Token in, Token identifier, List<Curd> range) {
+        super(new SingleSelectAstMetaData());
         this.in = in;
         this.identifier = identifier;
         this.range = range;
@@ -41,7 +43,6 @@ public class InCondition extends Curd {
     public <R> R accept(CurdVisitor<R> curdVisitor) {
         return curdVisitor.visitInCondition(this);
     }
-
 
     public Token getIn() {
         return in;
@@ -55,7 +56,7 @@ public class InCondition extends Curd {
         return range;
     }
 
-    public Curd getCurd() {
-        return curd;
+    public Curd getSelect() {
+        return select;
     }
 }

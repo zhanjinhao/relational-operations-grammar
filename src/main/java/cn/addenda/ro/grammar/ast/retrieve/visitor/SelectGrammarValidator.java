@@ -218,7 +218,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
     @Override
     public Void visitInCondition(InCondition inCondition) {
 
-        Curd curd = inCondition.getCurd();
+        Curd curd = inCondition.getSelect();
         List<Curd> range = inCondition.getRange();
 
         if (curd == null && range == null) {

@@ -20,6 +20,7 @@ public class CaseWhen extends Curd {
     private Curd defaultValue;
 
     public CaseWhen(Curd value, List<Curd> conditionList, List<Curd> resultList, Curd defaultValue) {
+        super(new SingleSelectAstMetaData());
         this.value = value;
         this.conditionList = conditionList;
         this.resultList = resultList;

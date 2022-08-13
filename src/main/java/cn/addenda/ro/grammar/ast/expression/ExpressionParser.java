@@ -8,6 +8,7 @@ import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,7 +198,7 @@ public class ExpressionParser extends AbstractCurdParser {
         }
 
         // 有参数的情况
-        ArrayList<Curd> parameterList = new ArrayList<>();
+        List<Curd> parameterList = new ArrayList<>();
         do {
             parameterList.add(functionParameter());
         } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
@@ -252,12 +253,12 @@ public class ExpressionParser extends AbstractCurdParser {
             error(AstROErrorReporterDelegate.EXPRESSION_timeInterval_PARSE);
             return null;
         }
-        Long interval = null;
+        BigInteger interval = null;
         Object value = time.getLiteral();
-        if (value instanceof Integer) {
-            interval = Long.parseLong(value.toString());
-        } else if (value instanceof Long) {
-            interval = (Long) value;
+        if (value instanceof BigInteger) {
+            interval = (BigInteger) value;
+        } else {
+            error(AstROErrorReporterDelegate.EXPRESSION_timeInterval_PARSE);
         }
 
         return new TimeInterval(token, interval);

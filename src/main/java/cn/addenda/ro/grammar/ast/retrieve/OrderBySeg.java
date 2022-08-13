@@ -15,16 +15,17 @@ public class OrderBySeg extends Curd {
     private List<OrderItem> columnList;
 
     public OrderBySeg(List<OrderItem> columnList) {
+        super(new SingleSelectAstMetaData());
         this.columnList = columnList;
-    }
-
-    public List<OrderItem> getColumnList() {
-        return columnList;
     }
 
     @Override
     public <R> R accept(CurdVisitor<R> curdVisitor) {
         return curdVisitor.visitOrderBySeg(this);
+    }
+
+    public List<OrderItem> getColumnList() {
+        return columnList;
     }
 
     public static class OrderItem {
