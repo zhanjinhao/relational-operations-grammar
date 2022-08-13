@@ -12,7 +12,7 @@ public class SelectParserTest {
 
     static String[] sqls = new String[]{
 
-            "select a from A where  a > 100",
+            "select a from A where  a > 100 and a < 50",
 
             "select date_add(A.date, interval 1 day) as tomorrow from (select * from a) A",
 

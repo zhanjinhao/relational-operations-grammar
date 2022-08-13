@@ -17,6 +17,7 @@ public class Update extends Curd {
     private Curd whereSeg;
 
     public Update(Token tableName, Curd assignmentList, Curd whereSeg) {
+        super(new UpdateAstMetaData());
         this.tableName = tableName;
         this.assignmentList = assignmentList;
         this.whereSeg = whereSeg;

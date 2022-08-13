@@ -4,6 +4,7 @@ import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
+import cn.addenda.ro.grammar.ast.update.visitor.UpdateAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.update.visitor.UpdateGrammarValidator;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
@@ -15,6 +16,8 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
  * @datetime 2021/4/5 12:03
  */
 public class UpdateParser extends ExpressionParser {
+
+    private static final UpdateAstMetaDataDetector UPDATE_AST_META_DATA_DETECTOR = new UpdateAstMetaDataDetector();
 
     public UpdateParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
         super(tokenSequence, functionEvaluator);
@@ -37,6 +40,7 @@ public class UpdateParser extends ExpressionParser {
         Curd update = update();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         update.accept(new UpdateGrammarValidator(this.errorReporterDelegate));
+        update.accept(UPDATE_AST_META_DATA_DETECTOR);
         return update;
     }
 
