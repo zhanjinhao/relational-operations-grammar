@@ -204,7 +204,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
             astMetaDataCur.getAliasTableMap().put(tableName, curd);
             if (curd instanceof Select) {
                 accept.setParent(astMetaDataCur);
-                astMetaDataCur.getTableChildren().add(accept);
+                astMetaDataCur.addChild(accept);
             } else {
                 // 此时 accept 中有用的是 conditionColumnReference
                 // 有别名之后，不在需要真实的表名了
@@ -235,7 +235,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (curd != null) {
             AstMetaData accept = curd.accept(this);
             accept.setParent(astMetaDataCur);
-            astMetaDataCur.getConditionChildren().add(accept);
+            astMetaDataCur.addChild(accept);
             return astMetaDataCur;
         }
 
@@ -252,7 +252,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData accept = curd.accept(this);
 
         accept.setParent(astMetaData);
-        astMetaData.getConditionChildren().add(accept);
+        astMetaData.addChild(accept);
         return astMetaData;
     }
 

@@ -28,7 +28,7 @@ public class ExpressionAstMetaDataDetectorWrapperForRetrieve extends ExpressionV
         if (curd instanceof Select) {
             AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
             AstMetaData accept = curd.accept(this);
-            astMetaDataCur.getConditionChildren().add(accept);
+            astMetaDataCur.addChild(accept);
             accept.setParent(astMetaDataCur);
             return astMetaDataCur;
         } else {
@@ -58,7 +58,7 @@ public class ExpressionAstMetaDataDetectorWrapperForRetrieve extends ExpressionV
         Curd leftCurd = binary.getLeftCurd();
         AstMetaData leftAccept = leftCurd.accept(this);
         if (leftCurd instanceof Select) {
-            astMetaDataCur.getConditionChildren().add(leftAccept);
+            astMetaDataCur.addChild(leftAccept);
             leftAccept.setParent(astMetaDataCur);
         } else {
             astMetaDataCur.mergeColumnReference(leftAccept);
@@ -68,7 +68,7 @@ public class ExpressionAstMetaDataDetectorWrapperForRetrieve extends ExpressionV
         if (rightCurd != null) {
             AstMetaData rightAccept = rightCurd.accept(this);
             if (rightCurd instanceof Select) {
-                astMetaDataCur.getConditionChildren().add(rightAccept);
+                astMetaDataCur.addChild(rightAccept);
                 rightAccept.setParent(astMetaDataCur);
             } else {
                 astMetaDataCur.mergeColumnReference(rightAccept);
@@ -84,7 +84,7 @@ public class ExpressionAstMetaDataDetectorWrapperForRetrieve extends ExpressionV
         if (curd instanceof Select) {
             AstMetaData astMetaDataCur = unaryArithmetic.getAstMetaData();
             AstMetaData accept = curd.accept(this);
-            astMetaDataCur.getConditionChildren().add(accept);
+            astMetaDataCur.addChild(accept);
             return astMetaDataCur;
         } else {
             return expressionAstMetaDataDetector.visitUnaryArithmetic(unaryArithmetic);

@@ -19,11 +19,9 @@ public class AstMetaData {
 
     private AstMetaData parent;
 
-    // 存where部分的孩子
-    private final List<AstMetaData> conditionChildren = new ArrayList<>();
-
-    // 存表部分的子AstMetaData
-    private final List<AstMetaData> tableChildren = new ArrayList<>();
+    // INSERT, DELETE, SELECT, UPDATE 为 CURD 最顶层的结构
+    // 如果遍历树的时候遇到了这四个语法（事实上只有SELECT），认为其是当前AST的孩子
+    private final List<AstMetaData> children = new ArrayList<>();
 
     // 存Select语句的SingleSelect集合
     private final List<AstMetaData> subSegments = new ArrayList<>();
@@ -179,12 +177,12 @@ public class AstMetaData {
         this.parent = parent;
     }
 
-    public List<AstMetaData> getConditionChildren() {
-        return conditionChildren;
+    public List<AstMetaData> getChildren() {
+        return children;
     }
 
-    public List<AstMetaData> getTableChildren() {
-        return tableChildren;
+    public void addChild(AstMetaData astMetaData) {
+        children.add(astMetaData);
     }
 
     public List<AstMetaData> getSubSegments() {
@@ -264,8 +262,7 @@ public class AstMetaData {
                 ", conditionColumnMap=" + conditionColumnReference +
                 ", resultColumnMap=" + resultColumnReference +
                 ", curdTableMap=" + aliasTableMap +
-                ", conditionChildren=" + conditionChildren +
-                ", tableChildren=" + tableChildren +
+                ", conditionChildren=" + children +
                 ", subSegments=" + subSegments +
                 '}';
     }
