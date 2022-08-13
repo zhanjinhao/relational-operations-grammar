@@ -11,10 +11,10 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
 public class DeleteParserTest {
 
     static String[] sqls = new String[]{
+            "delete from score where CREATE_TM < date_add(now(), interval 1 day) and DEGREE + 1 < 60 - 1",
             "delete from score where DEGREE < 50",
             "delete from score where CREATE_TM < now()",
             "delete from score where DEGREE + 1 < 60 - 1",
-            "delete from score where CREATE_TM < now() and DEGREE + 1 < 60 - 1",
             "delete from score"
     };
 

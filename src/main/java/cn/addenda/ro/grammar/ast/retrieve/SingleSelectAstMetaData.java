@@ -42,6 +42,7 @@ public class SingleSelectAstMetaData extends AstMetaData {
         AstMetaDataHelper.mergeColumnReference(astMetaData.getOrderByColumnReference(), orderByColumnReference);
     }
 
+    @Override
     public void sortMetaData() {
         doSortMetaData(conditionColumnReference, aliasTableMap);
         doSortMetaData(resultColumnReference, aliasTableMap);
@@ -73,6 +74,7 @@ public class SingleSelectAstMetaData extends AstMetaData {
         }
     }
 
+    @Override
     public void createTable(String tableName) {
         super.createTable(tableName);
         resultColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
@@ -81,6 +83,7 @@ public class SingleSelectAstMetaData extends AstMetaData {
         groupByColumnReference.computeIfAbsent(tableName, item -> new ArrayList<>());
     }
 
+    @Override
     public void createTable(Map<String, List<String>> columnReference) {
         super.createTable(columnReference);
         doCreateTable(columnReference, resultColumnReference);

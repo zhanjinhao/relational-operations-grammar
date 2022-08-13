@@ -12,6 +12,8 @@ public class SelectParserTest {
 
     static String[] sqls = new String[]{
 
+            "select a from A where  a > 100",
+
             "select date_add(A.date, interval 1 day) as tomorrow from (select * from a) A",
 
             "select T.FLIGHT_ID, ROUTE_TOWARDS\n"

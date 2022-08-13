@@ -15,6 +15,7 @@ public class Delete extends Curd {
     private Curd whereSeg;
 
     public Delete(Token tableName, Curd whereSeg) {
+        super(new DeleteAstMetaData());
         this.tableName = tableName;
         this.whereSeg = whereSeg;
     }

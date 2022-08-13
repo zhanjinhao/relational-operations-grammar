@@ -52,6 +52,10 @@ public class AstMetaData {
         AstMetaDataHelper.mergeColumnReference(astMetaData.getConditionColumnReference(), conditionColumnReference);
     }
 
+    public void sortMetaData() {
+
+    }
+
     public Curd getCurd() {
         return curd;
     }
