@@ -3,9 +3,8 @@ package cn.addenda.ro.grammar.ast.retrieve.visitor;
 import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.AstMetaDataHelper;
-import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.expression.Identifier;
-import cn.addenda.ro.grammar.ast.expression.Literal;
+import cn.addenda.ro.grammar.ast.expression.*;
+import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMetaData> {
 
     public SelectAstMetaDataDetector() {
-        super.init(new ExpressionAstMetaDataDetectorWrapperForRetrieve(this));
+        super.init(new ExpressionAstMetaDataDetector(this));
         setErrorReporter(DumbROErrorReporterDelegate.getInstance());
     }
 
@@ -292,6 +291,75 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Curd curd = groupFunction.getCurd();
         astMetaDataCur.mergeColumnReference(curd.accept(this));
         return astMetaDataCur;
+    }
+
+    @Override
+    public AstMetaData visitWhereSeg(WhereSeg whereSeg) {
+        Curd curd = whereSeg.getLogic();
+        if (curd instanceof Select) {
+            AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
+            AstMetaData accept = curd.accept(this);
+            astMetaDataCur.addChild(accept);
+            accept.setParent(astMetaDataCur);
+            return astMetaDataCur;
+        } else {
+            return delegate.visitWhereSeg(whereSeg);
+        }
+    }
+
+    @Override
+    public AstMetaData visitLogic(Logic logic) {
+        return visitBinary(logic);
+    }
+
+    @Override
+    public AstMetaData visitComparison(Comparison comparison) {
+        return visitBinary(comparison);
+    }
+
+    @Override
+    public AstMetaData visitBinaryArithmetic(BinaryArithmetic binaryArithmetic) {
+        return visitBinary(binaryArithmetic);
+    }
+
+    @Override
+    public AstMetaData visitBinary(Binary binary) {
+        AstMetaData astMetaDataCur = binary.getAstMetaData();
+
+        Curd leftCurd = binary.getLeftCurd();
+        AstMetaData leftAccept = leftCurd.accept(this);
+        if (leftCurd instanceof Select) {
+            astMetaDataCur.addChild(leftAccept);
+            leftAccept.setParent(astMetaDataCur);
+        } else {
+            astMetaDataCur.mergeColumnReference(leftAccept);
+        }
+
+        Curd rightCurd = binary.getRightCurd();
+        if (rightCurd != null) {
+            AstMetaData rightAccept = rightCurd.accept(this);
+            if (rightCurd instanceof Select) {
+                astMetaDataCur.addChild(rightAccept);
+                rightAccept.setParent(astMetaDataCur);
+            } else {
+                astMetaDataCur.mergeColumnReference(rightAccept);
+            }
+        }
+
+        return astMetaDataCur;
+    }
+
+    @Override
+    public AstMetaData visitUnaryArithmetic(UnaryArithmetic unaryArithmetic) {
+        Curd curd = unaryArithmetic.getCurd();
+        if (curd instanceof Select) {
+            AstMetaData astMetaDataCur = unaryArithmetic.getAstMetaData();
+            AstMetaData accept = curd.accept(this);
+            astMetaDataCur.addChild(accept);
+            return astMetaDataCur;
+        } else {
+            return delegate.visitUnaryArithmetic(unaryArithmetic);
+        }
     }
 
 }
