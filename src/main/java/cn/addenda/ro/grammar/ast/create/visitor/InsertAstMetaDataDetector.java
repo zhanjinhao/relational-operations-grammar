@@ -24,13 +24,13 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitInsert(Insert insert) {
-        InsertSelectAstMetaData astMetaData = (InsertSelectAstMetaData) insert.getAstMetaData();
+        InsertAstMetaData astMetaData = (InsertAstMetaData) insert.getAstMetaData();
 
         Token tableName = insert.getTableName();
         astMetaData.putTableName(String.valueOf(tableName.getLiteral()));
 
         Curd insertRep = insert.getInsertRep();
-        InsertSelectAstMetaData insertRepAstMetaData = (InsertSelectAstMetaData) insertRep.accept(this);
+        InsertAstMetaData insertRepAstMetaData = (InsertAstMetaData) insertRep.accept(this);
         astMetaData.mergeColumnReference(insertRepAstMetaData);
 
         List<Token> insertColumnList = insertRepAstMetaData.getInsertColumnList();
@@ -38,7 +38,7 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
         if (onDuplicateUpdate != null) {
-            InsertSelectAstMetaData onDuplicateUpdateAstMetaData = (InsertSelectAstMetaData) onDuplicateUpdate.accept(this);
+            InsertAstMetaData onDuplicateUpdateAstMetaData = (InsertAstMetaData) onDuplicateUpdate.accept(this);
             AstMetaDataHelper.mergeColumnReference(onDuplicateUpdateAstMetaData.getConditionColumnReference(), astMetaData.getOnDuplicateUpdateReference());
         }
 
@@ -50,7 +50,7 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitInsertValuesRep(InsertValuesRep insertValuesRep) {
 
-        InsertSelectAstMetaData astMetaData = (InsertSelectAstMetaData) insertValuesRep.getAstMetaData();
+        InsertAstMetaData astMetaData = (InsertAstMetaData) insertValuesRep.getAstMetaData();
 
         List<Token> columnList = insertValuesRep.getColumnList();
         columnList.forEach(token -> astMetaData.getInsertColumnList().add(token));
@@ -67,9 +67,9 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitInsertSetRep(InsertSetRep insertSetRep) {
-        InsertSelectAstMetaData astMetaData = (InsertSelectAstMetaData) insertSetRep.getAstMetaData();
+        InsertAstMetaData astMetaData = (InsertAstMetaData) insertSetRep.getAstMetaData();
 
-        InsertSelectAstMetaData assignmentListAstMetaData = (InsertSelectAstMetaData) insertSetRep.getAssignmentList().accept(this);
+        InsertAstMetaData assignmentListAstMetaData = (InsertAstMetaData) insertSetRep.getAssignmentList().accept(this);
         astMetaData.mergeColumnReference(assignmentListAstMetaData);
 
         List<Token> insertColumnList = assignmentListAstMetaData.getInsertColumnList();
@@ -82,10 +82,10 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        InsertSelectAstMetaData astMetaData = (InsertSelectAstMetaData) onDuplicateKey.getAstMetaData();
+        InsertAstMetaData astMetaData = (InsertAstMetaData) onDuplicateKey.getAstMetaData();
 
         Curd assignmentList = onDuplicateKey.getAssignmentList();
-        InsertSelectAstMetaData assignmentListAstMetaData = (InsertSelectAstMetaData) assignmentList.accept(this);
+        InsertAstMetaData assignmentListAstMetaData = (InsertAstMetaData) assignmentList.accept(this);
         astMetaData.mergeColumnReference(assignmentListAstMetaData);
 
         List<Token> insertColumnList = assignmentListAstMetaData.getInsertColumnList();
@@ -98,7 +98,7 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitInsertSelectRep(InsertSelectRep insertSelectRep) {
-        InsertSelectAstMetaData astMetaData = (InsertSelectAstMetaData) insertSelectRep.getAstMetaData();
+        InsertAstMetaData astMetaData = (InsertAstMetaData) insertSelectRep.getAstMetaData();
 
         List<Token> columnList = insertSelectRep.getColumnList();
         columnList.forEach(token -> astMetaData.getInsertColumnList().add(token));
@@ -114,7 +114,7 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
 
     @Override
     public AstMetaData visitAssignmentList(AssignmentList assignmentList) {
-        InsertSelectAstMetaData insertSelectAstMetaData = new InsertSelectAstMetaData();
+        InsertAstMetaData insertAstMetaData = new InsertAstMetaData();
 
         AstMetaData astMetaDataCur = assignmentList.getAstMetaData();
         List<AssignmentList.Entry> entryList = assignmentList.getEntryList();
@@ -123,11 +123,11 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
             astMetaDataCur.mergeColumnReference(entry.getValue().accept(this));
             astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(column.getLiteral()));
 
-            insertSelectAstMetaData.getInsertColumnList().add(column);
+            insertAstMetaData.getInsertColumnList().add(column);
         }
 
-        insertSelectAstMetaData.mergeColumnReference(astMetaDataCur);
-        return insertSelectAstMetaData;
+        insertAstMetaData.mergeColumnReference(astMetaDataCur);
+        return insertAstMetaData;
     }
 
 }

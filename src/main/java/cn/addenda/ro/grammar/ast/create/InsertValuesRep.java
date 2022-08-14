@@ -16,7 +16,7 @@ public class InsertValuesRep extends Curd {
     private List<List<Curd>> curdListList;
 
     public InsertValuesRep(List<Token> columnList, List<List<Curd>> curdListList) {
-        super(new InsertSelectAstMetaData());
+        super(new InsertAstMetaData());
         this.columnList = columnList;
         this.curdListList = curdListList;
     }

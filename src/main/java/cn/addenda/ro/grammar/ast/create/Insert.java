@@ -23,7 +23,7 @@ public class Insert extends Curd {
     private Curd onDuplicateUpdate;
 
     public Insert(Token constrict, Token tableName, Curd insertRep, InsertType insertType) {
-        super(new InsertSelectAstMetaData());
+        super(new InsertAstMetaData());
         this.constrict = constrict;
         this.tableName = tableName;
         this.insertRep = insertRep;
@@ -32,7 +32,7 @@ public class Insert extends Curd {
     }
 
     public Insert(Token constrict, Token tableName, Curd insertRep, Curd onDuplicateUpdate, InsertType insertType) {
-        super(new InsertSelectAstMetaData());
+        super(new InsertAstMetaData());
         this.constrict = constrict;
         this.tableName = tableName;
         this.insertRep = insertRep;

@@ -9,7 +9,7 @@ import java.util.*;
  * @author addenda
  * @datetime 2022/8/13 21:37
  */
-public class InsertSelectAstMetaData extends AstMetaData {
+public class InsertAstMetaData extends AstMetaData {
 
     // 存插入的字段
     private final List<Token> insertColumnList = new ArrayList<>();
@@ -50,7 +50,7 @@ public class InsertSelectAstMetaData extends AstMetaData {
 
     @Override
     public String toString() {
-        return "InsertSelectAstMetaData{" +
+        return "InsertAstMetaData{" +
                 "tableName='" + tableName + '\'' +
                 ", onDuplicateUpdateReference=" + onDuplicateUpdateReference +
                 "} " + super.toString();

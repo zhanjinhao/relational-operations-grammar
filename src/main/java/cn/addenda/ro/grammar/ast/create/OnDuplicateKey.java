@@ -12,7 +12,7 @@ public class OnDuplicateKey extends Curd {
     private Curd assignmentList;
 
     public OnDuplicateKey(Curd assignmentList) {
-        super(new InsertSelectAstMetaData());
+        super(new InsertAstMetaData());
         this.assignmentList = assignmentList;
     }
 

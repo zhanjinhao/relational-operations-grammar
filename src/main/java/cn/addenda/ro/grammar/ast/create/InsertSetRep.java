@@ -12,7 +12,7 @@ public class InsertSetRep extends Curd {
     private Curd assignmentList;
 
     public InsertSetRep(Curd assignmentList) {
-        super(new InsertSelectAstMetaData());
+        super(new InsertAstMetaData());
         this.assignmentList = assignmentList;
     }
 
