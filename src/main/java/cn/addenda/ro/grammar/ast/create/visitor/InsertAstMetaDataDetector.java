@@ -120,13 +120,15 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
         List<AssignmentList.Entry> entryList = assignmentList.getEntryList();
         for (AssignmentList.Entry entry : entryList) {
             Token column = entry.getColumn();
-            astMetaDataCur.mergeColumnReference(entry.getValue().accept(this));
-            astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(column.getLiteral()));
+            AstMetaData accept = entry.getValue().accept(this);
 
+            astMetaDataCur.mergeColumnReference(accept);
+            insertAstMetaData.mergeColumnReference(accept);
+
+            astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(column.getLiteral()));
             insertAstMetaData.getInsertColumnList().add(column);
         }
 
-        insertAstMetaData.mergeColumnReference(astMetaDataCur);
         return insertAstMetaData;
     }
 

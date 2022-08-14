@@ -12,15 +12,15 @@ public class InsertParserTest {
 
     static String[] sqls = new String[]{
 
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
+//            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
 
             "insert into score(SNO, CNO, DEGREE) values (109, '3-105', DEGREE + 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = DEGREE_MAX+1",
-
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
-
-            "insert into score(SNO, CNO, DEGREE) values (?, '3-105', ?), (109, ?, 76), (?, '3-105', ?)",
-
-            "insert into score set SNO = 109, CNO = '3-105', DEGREE = 76",
+//
+//            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
+//
+//            "insert into score(SNO, CNO, DEGREE) values (?, '3-105', ?), (109, ?, 76), (?, '3-105', ?)",
+//
+//            "insert into score set SNO = 109, CNO = '3-105', DEGREE = 76",
 
             "insert into score set SNO = 109, CNO = date_format(now(), 'yyyy-dd-mm'), DEGREE = DEGREE + 9 * 3",
 
