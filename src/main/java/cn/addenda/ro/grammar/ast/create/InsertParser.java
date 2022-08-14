@@ -1,6 +1,7 @@
 package cn.addenda.ro.grammar.ast.create;
 
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
+import cn.addenda.ro.grammar.ast.create.visitor.InsertAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.create.visitor.InsertGrammarValidator;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
@@ -21,6 +22,8 @@ import java.util.List;
  * @datetime 2021/4/3 17:50
  */
 public class InsertParser extends ExpressionParser {
+
+    private static final InsertAstMetaDataDetector INSERT_AST_META_DATA_DETECTOR = new InsertAstMetaDataDetector();
 
     public InsertParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
         super(tokenSequence, functionEvaluator);
@@ -45,6 +48,7 @@ public class InsertParser extends ExpressionParser {
         Curd insert = insert();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         insert.accept(new InsertGrammarValidator(this.errorReporterDelegate));
+        insert.accept(INSERT_AST_META_DATA_DETECTOR);
         return insert;
     }
 
@@ -62,8 +66,8 @@ public class InsertParser extends ExpressionParser {
         Token tableName = tokenSequence.takeCur();
         tokenSequence.advance();
 
-        InsertType insertType;
-        Curd curd;
+        InsertType insertType = null;
+        Curd curd = null;
         if (tokenSequence.curEqual(TokenType.SET)) {
             curd = insertSetRep();
             insertType = InsertType.SET;
@@ -80,7 +84,6 @@ public class InsertParser extends ExpressionParser {
                 insertType = InsertType.VALUES;
             } else {
                 error(AstROErrorReporterDelegate.INSERT_insert_PARSE);
-                return null;
             }
         }
 
@@ -143,9 +146,6 @@ public class InsertParser extends ExpressionParser {
             }
             curdListList.add(curdList);
         } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
-        if (curdListList.isEmpty()) {
-            error(AstROErrorReporterDelegate.INSERT_insertValuesRep_PARSE);
-        }
         return new InsertValuesRep(tokenList, curdListList);
     }
 
@@ -157,6 +157,7 @@ public class InsertParser extends ExpressionParser {
         Curd curd = assignmentList();
         if (!(curd instanceof AssignmentList)) {
             error(AstROErrorReporterDelegate.INSERT_insertSetRep_PARSE);
+            return null;
         }
         AssignmentList assignmentList = (AssignmentList) curd;
         if (assignmentList.getEntryList() == null || assignmentList.getEntryList().isEmpty()) {
@@ -164,6 +165,5 @@ public class InsertParser extends ExpressionParser {
         }
         return new InsertSetRep(curd);
     }
-
 
 }

@@ -25,7 +25,7 @@ public class InsertGrammarValidator extends InsertVisitorWithDelegate<Void> {
     @Override
     public Void visitInsert(Insert insert) {
 
-        Curd curd = insert.getCurd();
+        Curd curd = insert.getInsertRep();
         Token constrict = insert.getConstrict();
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
 
@@ -67,7 +67,7 @@ public class InsertGrammarValidator extends InsertVisitorWithDelegate<Void> {
 
     @Override
     public Void visitInsertSetRep(InsertSetRep insertSetRep) {
-        Curd entryList = insertSetRep.getEntryList();
+        Curd entryList = insertSetRep.getAssignmentList();
         if (entryList == null) {
             error(AstROErrorReporterDelegate.INSERT_insertSetRep_VALIDATION);
         } else {
@@ -78,7 +78,7 @@ public class InsertGrammarValidator extends InsertVisitorWithDelegate<Void> {
 
     @Override
     public Void visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        Curd curd = onDuplicateKey.getCurd();
+        Curd curd = onDuplicateKey.getAssignmentList();
         if (curd == null) {
             error(AstROErrorReporterDelegate.INSERT_onDuplicateKey_VALIDATION);
         } else {

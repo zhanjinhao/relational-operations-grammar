@@ -111,7 +111,7 @@ public class ExpressionAstMetaDataDetector extends ExpressionVisitorForDelegatio
         AstMetaData astMetaDataCur = assignmentList.getAstMetaData();
         List<AssignmentList.Entry> entryList = assignmentList.getEntryList();
         for (AssignmentList.Entry entry : entryList) {
-            Token columnName = entry.getColumnName();
+            Token columnName = entry.getColumn();
             astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(columnName.getLiteral()));
             astMetaDataCur.mergeColumnReference(entry.getValue().accept(this));
         }

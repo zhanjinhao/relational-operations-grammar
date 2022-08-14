@@ -30,6 +30,10 @@ public class UpdateAstMetaData extends AstMetaData {
         undeterminedColumnList.clear();
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
     @Override
     public String toString() {
         return "UpdateAstMetaData{" +

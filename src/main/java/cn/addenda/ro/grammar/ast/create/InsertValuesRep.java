@@ -11,11 +11,12 @@ import java.util.List;
  * @Date 2021/4/5 21:02
  */
 public class InsertValuesRep extends Curd {
-    
+
     private List<Token> columnList;
     private List<List<Curd>> curdListList;
 
     public InsertValuesRep(List<Token> columnList, List<List<Curd>> curdListList) {
+        super(new InsertSelectAstMetaData());
         this.columnList = columnList;
         this.curdListList = curdListList;
     }

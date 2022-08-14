@@ -16,6 +16,7 @@ public class InsertSelectRep extends Curd {
     private Curd select;
 
     public InsertSelectRep(List<Token> columnList, Curd select) {
+        super(new InsertSelectAstMetaData());
         this.columnList = columnList;
         this.select = select;
     }

@@ -402,7 +402,7 @@ public class CurdPrinter implements CurdVisitor<String> {
 
         sb.append(BLANK).append("set").append(BLANK);
 
-        Curd entryList = insertSetRep.getEntryList();
+        Curd entryList = insertSetRep.getAssignmentList();
         String accept = entryList.accept(this);
         sb.append(accept);
 
@@ -423,7 +423,7 @@ public class CurdPrinter implements CurdVisitor<String> {
         Token tableName = insert.getTableName();
         sb.append(tableName.getLiteral());
 
-        sb.append(insert.getCurd().accept(this));
+        sb.append(insert.getInsertRep().accept(this));
 
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
         if (onDuplicateUpdate != null) {
@@ -436,7 +436,7 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitAssignmentList(AssignmentList assignmentList) {
         return assignmentList.getEntryList().stream()
-                .map(item -> item.getColumnName().getLiteral() + "=" + item.getValue().accept(this))
+                .map(item -> item.getColumn().getLiteral() + "=" + item.getValue().accept(this))
                 .collect(Collectors.joining(", "));
     }
 
@@ -464,7 +464,7 @@ public class CurdPrinter implements CurdVisitor<String> {
 
     @Override
     public String visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        return BLANK + "on" + BLANK + "duplicate" + BLANK + "key" + BLANK + "update" + BLANK + onDuplicateKey.getCurd().accept(this);
+        return BLANK + "on" + BLANK + "duplicate" + BLANK + "key" + BLANK + "update" + BLANK + onDuplicateKey.getAssignmentList().accept(this);
     }
 
     @Override

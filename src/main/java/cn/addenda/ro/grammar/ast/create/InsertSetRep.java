@@ -9,10 +9,11 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
  */
 public class InsertSetRep extends Curd {
 
-    private Curd entryList;
+    private Curd assignmentList;
 
-    public InsertSetRep(Curd entryList) {
-        this.entryList = entryList;
+    public InsertSetRep(Curd assignmentList) {
+        super(new InsertSelectAstMetaData());
+        this.assignmentList = assignmentList;
     }
 
     @Override
@@ -20,8 +21,8 @@ public class InsertSetRep extends Curd {
         return curdVisitor.visitInsertSetRep(this);
     }
 
-    public Curd getEntryList() {
-        return entryList;
+    public Curd getAssignmentList() {
+        return assignmentList;
     }
 
 }

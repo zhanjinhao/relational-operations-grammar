@@ -161,7 +161,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitInsert(Insert insert) {
-        insert.getCurd().accept(this);
+        insert.getInsertRep().accept(this);
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
         if (onDuplicateUpdate != null) {
             onDuplicateUpdate.accept(this);
@@ -176,13 +176,13 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitInsertSetRep(InsertSetRep insertSetRep) {
-        insertSetRep.getEntryList().accept(this);
+        insertSetRep.getAssignmentList().accept(this);
         return null;
     }
 
     @Override
     public Void visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        Curd curd = onDuplicateKey.getCurd();
+        Curd curd = onDuplicateKey.getAssignmentList();
         if (curd != null) {
             curd.accept(this);
         }
@@ -291,7 +291,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
         List<AssignmentList.Entry> entryList = assignmentList.getEntryList();
         for (AssignmentList.Entry entry : entryList) {
             entry.getValue().accept(this);
-            Token columnName = entry.getColumnName();
+            Token columnName = entry.getColumn();
             addTableName(columnName);
         }
         return null;

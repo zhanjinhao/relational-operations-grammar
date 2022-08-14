@@ -15,25 +15,27 @@ public class Insert extends Curd {
     // ignore?
     private Token constrict;
 
-    private Curd onDuplicateUpdate;
-
     private Token tableName;
 
     // insertValuesRep | insertSetRep | insertSelectRep
-    private Curd curd;
+    private Curd insertRep;
 
-    public Insert(Token constrict, Token tableName, Curd curd, InsertType insertType) {
+    private Curd onDuplicateUpdate;
+
+    public Insert(Token constrict, Token tableName, Curd insertRep, InsertType insertType) {
+        super(new InsertSelectAstMetaData());
         this.constrict = constrict;
         this.tableName = tableName;
-        this.curd = curd;
+        this.insertRep = insertRep;
         this.insertType = insertType;
         onDuplicateUpdate = null;
     }
 
-    public Insert(Token constrict, Token tableName, Curd curd, Curd onDuplicateUpdate, InsertType insertType) {
+    public Insert(Token constrict, Token tableName, Curd insertRep, Curd onDuplicateUpdate, InsertType insertType) {
+        super(new InsertSelectAstMetaData());
         this.constrict = constrict;
         this.tableName = tableName;
-        this.curd = curd;
+        this.insertRep = insertRep;
         this.onDuplicateUpdate = onDuplicateUpdate;
         this.insertType = insertType;
     }
@@ -55,8 +57,8 @@ public class Insert extends Curd {
         return tableName;
     }
 
-    public Curd getCurd() {
-        return curd;
+    public Curd getInsertRep() {
+        return insertRep;
     }
 
     public InsertType getInsertType() {

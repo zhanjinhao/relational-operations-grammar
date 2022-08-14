@@ -9,10 +9,11 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
  */
 public class OnDuplicateKey extends Curd {
 
-    private Curd curd;
+    private Curd assignmentList;
 
-    public OnDuplicateKey(Curd curd) {
-        this.curd = curd;
+    public OnDuplicateKey(Curd assignmentList) {
+        super(new InsertSelectAstMetaData());
+        this.assignmentList = assignmentList;
     }
 
     @Override
@@ -20,7 +21,7 @@ public class OnDuplicateKey extends Curd {
         return curdVisitor.visitOnDuplicateKey(this);
     }
 
-    public Curd getCurd() {
-        return curd;
+    public Curd getAssignmentList() {
+        return assignmentList;
     }
 }

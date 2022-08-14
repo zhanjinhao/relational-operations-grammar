@@ -193,7 +193,7 @@ public class ExpressionGrammarValidator extends ExpressionVisitorForDelegation<V
             return null;
         }
         for (AssignmentList.Entry entry : entryList) {
-            Token columnName = entry.getColumnName();
+            Token columnName = entry.getColumn();
             if (columnName == null) {
                 error(AstROErrorReporterDelegate.EXPRESSION_assignmentList_VALIDATION);
                 return null;

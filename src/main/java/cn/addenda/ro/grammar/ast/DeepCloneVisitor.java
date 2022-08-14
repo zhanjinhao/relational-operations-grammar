@@ -153,7 +153,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     public Curd visitInsert(Insert insert) {
         Token constrict = insert.getConstrict();
         Token tableName = insert.getTableName();
-        Curd curd = insert.getCurd();
+        Curd curd = insert.getInsertRep();
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
 
         return new Insert(nullClone(constrict), tableName.deepClone(),
@@ -183,12 +183,12 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitInsertSetRep(InsertSetRep insertSetRep) {
-        return new InsertSetRep(insertSetRep.getEntryList().accept(this));
+        return new InsertSetRep(insertSetRep.getAssignmentList().accept(this));
     }
 
     @Override
     public Curd visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        return new OnDuplicateKey(onDuplicateKey.getCurd().accept(this));
+        return new OnDuplicateKey(onDuplicateKey.getAssignmentList().accept(this));
     }
 
     @Override
@@ -276,7 +276,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         List<AssignmentList.Entry> newEntryList = new ArrayList<>();
 
         for (AssignmentList.Entry entry : entryList) {
-            Token columnName = entry.getColumnName();
+            Token columnName = entry.getColumn();
             Curd value = entry.getValue();
             newEntryList.add(new AssignmentList.Entry(columnName.deepClone(), value.accept(this)));
         }

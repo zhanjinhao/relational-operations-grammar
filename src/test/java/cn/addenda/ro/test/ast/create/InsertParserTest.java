@@ -14,7 +14,7 @@ public class InsertParserTest {
 
             "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
 
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = 99",
+            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', DEGREE + 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = DEGREE_MAX+1",
 
             "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
 

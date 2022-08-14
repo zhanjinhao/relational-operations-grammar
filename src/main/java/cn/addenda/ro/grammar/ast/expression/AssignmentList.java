@@ -27,17 +27,17 @@ public class AssignmentList extends Curd {
     }
 
     public static class Entry {
-        private Token columnName;
+        private Token column;
         private Curd value;
-        public Entry(Token columnName, Curd value) {
-            this.columnName = columnName;
+        public Entry(Token column, Curd value) {
+            this.column = column;
             this.value = value;
         }
-        public Token getColumnName() {
-            return columnName;
+        public Token getColumn() {
+            return column;
         }
-        public void setColumnName(Token columnName) {
-            this.columnName = columnName;
+        public void setColumn(Token column) {
+            this.column = column;
         }
         public Curd getValue() {
             return value;
