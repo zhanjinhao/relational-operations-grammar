@@ -22,12 +22,12 @@ public abstract class Curd {
 
     protected Curd() {
         this.astMetaData = new AstMetaData();
-        astMetaData.setCurd(this);
+        this.astMetaData.setCurd(this);
     }
 
     protected Curd(AstMetaData astMetaData) {
         this.astMetaData = astMetaData;
-        astMetaData.setCurd(this);
+        this.astMetaData.setCurd(this);
     }
 
     public abstract <R> R accept(CurdVisitor<R> curdVisitor);
