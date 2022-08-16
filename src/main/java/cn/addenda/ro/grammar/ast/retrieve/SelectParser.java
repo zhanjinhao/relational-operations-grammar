@@ -64,6 +64,7 @@ public class SelectParser extends ExpressionParser {
         saveSingleSelectContext(select, SingleSelectType.TOP);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
+        select.setDetector(SELECT_AST_META_DATA_DETECTOR);
         select.accept(SELECT_AST_META_DATA_DETECTOR);
         return select;
     }
@@ -200,7 +201,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -270,6 +271,7 @@ public class SelectParser extends ExpressionParser {
     /**
      * "where" logic
      */
+    @Override
     protected Curd whereSeg() {
         Curd curd = super.whereSeg();
         saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
@@ -339,6 +341,7 @@ public class SelectParser extends ExpressionParser {
     /**
      * inCondition | existsCondition | comparison
      */
+    @Override
     protected Curd condition() {
         if (tokenSequence.curEqual(TokenType.EXISTS, TokenType.NOT)) {
             return existsCondition();

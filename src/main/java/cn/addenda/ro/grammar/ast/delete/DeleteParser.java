@@ -38,6 +38,7 @@ public class DeleteParser extends ExpressionParser {
         Curd delete = delete();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         delete.accept(new DeleteGrammarValidator(this.errorReporterDelegate));
+        delete.setDetector(DELETE_AST_META_DATA_DETECTOR);
         delete.accept(DELETE_AST_META_DATA_DETECTOR);
         return delete;
     }

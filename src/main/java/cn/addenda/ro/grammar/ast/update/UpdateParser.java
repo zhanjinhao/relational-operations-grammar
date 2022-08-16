@@ -40,6 +40,7 @@ public class UpdateParser extends ExpressionParser {
         Curd update = update();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         update.accept(new UpdateGrammarValidator(this.errorReporterDelegate));
+        update.setDetector(UPDATE_AST_META_DATA_DETECTOR);
         update.accept(UPDATE_AST_META_DATA_DETECTOR);
         return update;
     }

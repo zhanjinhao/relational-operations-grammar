@@ -18,6 +18,11 @@ public class InsertAstMetaData extends AstMetaData {
 
     private final Map<String, Set<String>> onDuplicateUpdateReference = new HashMap<>();
 
+    @Override
+    public AstMetaData getNewInstance() {
+        return new InsertAstMetaData();
+    }
+
     public void putTableName(String tableName) {
         createTable(tableName);
         this.tableName = tableName;

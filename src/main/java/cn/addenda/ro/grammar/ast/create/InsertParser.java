@@ -49,6 +49,7 @@ public class InsertParser extends ExpressionParser {
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         insert.accept(new InsertGrammarValidator(this.errorReporterDelegate));
         insert.accept(INSERT_AST_META_DATA_DETECTOR);
+        insert.setDetector(INSERT_AST_META_DATA_DETECTOR);
         return insert;
     }
 

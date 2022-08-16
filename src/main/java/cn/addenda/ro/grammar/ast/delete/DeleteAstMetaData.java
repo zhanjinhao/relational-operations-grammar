@@ -12,6 +12,11 @@ public class DeleteAstMetaData extends AstMetaData {
 
     private String tableName;
 
+    @Override
+    public AstMetaData getNewInstance() {
+        return new DeleteAstMetaData();
+    }
+
     public void putTableName(String tableName) {
         createTable(tableName);
         this.tableName = tableName;

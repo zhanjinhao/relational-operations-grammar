@@ -13,7 +13,9 @@ import java.util.*;
  */
 public class SingleSelectAstMetaData extends AstMetaData {
 
-    // 存返回的值
+    /**
+     * 存返回的值
+     */
     private final List<Token> resultColumnList = new ArrayList<>();
 
     private final Map<String, Set<String>> resultColumnReference = new HashMap<>();
@@ -29,6 +31,11 @@ public class SingleSelectAstMetaData extends AstMetaData {
         joinColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
         groupByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
         orderByColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
+    }
+
+    @Override
+    public AstMetaData getNewInstance() {
+        return new SingleSelectAstMetaData();
     }
 
     /**
@@ -123,13 +130,13 @@ public class SingleSelectAstMetaData extends AstMetaData {
     @Override
     public String toString() {
         return "SingleSelectAstMetaData{" +
-                "resultColumnList=" + resultColumnList +
-                ", resultColumnReference=" + resultColumnReference +
-                ", joinColumnReference=" + joinColumnReference +
-                ", groupByColumnReference=" + groupByColumnReference +
-                ", orderByColumnReference=" + orderByColumnReference +
-                ", aliasTableMap=" + aliasTableMap +
-                "} " + super.toString();
+            "resultColumnList=" + resultColumnList +
+            ", resultColumnReference=" + resultColumnReference +
+            ", joinColumnReference=" + joinColumnReference +
+            ", groupByColumnReference=" + groupByColumnReference +
+            ", orderByColumnReference=" + orderByColumnReference +
+            ", aliasTableMap=" + aliasTableMap +
+            "} " + super.toString();
     }
 
 }

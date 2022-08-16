@@ -18,14 +18,20 @@ public class AstMetaData {
 
     private AstMetaData parent;
 
-    // INSERT, DELETE, SELECT, UPDATE 为 CURD 最顶层的结构
-    // 如果遍历树的时候遇到了这四个语法（事实上只有SELECT），认为其是当前AST的孩子
+    /**
+     * INSERT, DELETE, SELECT, UPDATE 为 CURD 最顶层的结构
+     * 如果遍历树的时候遇到了这四个语法（事实上只有SELECT），认为其是当前AST的孩子
+     */
     private final List<AstMetaData> children = new ArrayList<>();
 
     protected final Map<String, Set<String>> conditionColumnReference = new HashMap<>();
 
     public AstMetaData() {
         conditionColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
+    }
+
+    public AstMetaData getNewInstance() {
+        return new AstMetaData();
     }
 
     public void putUndeterminedConditionColumn(String column) {
@@ -87,10 +93,10 @@ public class AstMetaData {
     @Override
     public String toString() {
         return "AstMetaData{" +
-                "curd=" + curd +
-                ", conditionColumnMap=" + conditionColumnReference +
-                ", conditionChildren=" + children +
-                '}';
+            "curd=" + curd +
+            ", conditionColumnMap=" + conditionColumnReference +
+            ", conditionChildren=" + children +
+            '}';
     }
 
     public void createTable(String tableName) {

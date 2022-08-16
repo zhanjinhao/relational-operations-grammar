@@ -12,13 +12,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class Curd {
 
-    private final AstMetaData astMetaData;
+    private AstMetaData astMetaData;
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
 
-    private static final DeepCloneVisitor deepCloneVisitor = new DeepCloneVisitor();
+    private static final DeepCloneVisitor DEEP_CLONE_VISITOR = new DeepCloneVisitor();
 
-    private static final Map<String, IdentifierFillTNVisitor> tNToIdentifierFillTNMap = new ConcurrentHashMap<>();
+    private CurdVisitor<AstMetaData> detector;
+
+    private static final ClearAstMetaDataVisitor CLEAR_AST_META_DATA_VISITOR = new ClearAstMetaDataVisitor();
+
+    private static final Map<String, IdentifierFillTNVisitor> T_N_TO_IDENTIFIER_FILL_TN_MAP = new ConcurrentHashMap<>();
 
     protected Curd() {
         this.astMetaData = new AstMetaData();
@@ -42,19 +46,27 @@ public abstract class Curd {
     }
 
     public Curd deepClone() {
-        return this.accept(deepCloneVisitor);
+        return this.accept(DEEP_CLONE_VISITOR);
     }
 
     public void fillTableName(String tableName) {
         IdentifierFillTNVisitor identifierFillTNVisitor =
-                tNToIdentifierFillTNMap.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
+            T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
         this.accept(identifierFillTNVisitor);
+    }
+
+    public void setAstMetaData(AstMetaData astMetaData) {
+        this.astMetaData = astMetaData;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         return Objects.equals(toString().replaceAll("\\s+", " "), o.toString().replaceAll("\\s+", " "));
     }
 
@@ -62,4 +74,14 @@ public abstract class Curd {
     public int hashCode() {
         return Objects.hash(toString().replaceAll("\\s+", ""));
     }
+
+    public void reSetAstMetaData() {
+        this.accept(CLEAR_AST_META_DATA_VISITOR);
+        this.accept(detector);
+    }
+
+    public void setDetector(CurdVisitor<AstMetaData> detector) {
+        this.detector = detector;
+    }
+
 }

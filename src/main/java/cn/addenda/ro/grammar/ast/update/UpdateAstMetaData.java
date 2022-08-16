@@ -13,10 +13,17 @@ import java.util.Set;
  */
 public class UpdateAstMetaData extends AstMetaData {
 
-    // 存更新的字段
+    /**
+     * 存更新的字段
+     */
     private final List<Token> updateColumnList = new ArrayList<>();
 
     private String tableName;
+
+    @Override
+    public AstMetaData getNewInstance() {
+        return new UpdateAstMetaData();
+    }
 
     public void putTableName(String tableName) {
         createTable(tableName);
@@ -47,8 +54,8 @@ public class UpdateAstMetaData extends AstMetaData {
     @Override
     public String toString() {
         return "UpdateAstMetaData{" +
-                "tableName='" + tableName + '\'' +
-                "} " + super.toString();
+            "tableName='" + tableName + '\'' +
+            "} " + super.toString();
     }
 
 }
