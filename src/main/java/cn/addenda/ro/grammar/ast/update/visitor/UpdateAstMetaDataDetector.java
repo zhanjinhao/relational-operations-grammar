@@ -17,9 +17,22 @@ import java.util.List;
  */
 public class UpdateAstMetaDataDetector extends UpdateVisitorWithDelegate<AstMetaData> {
 
-    public UpdateAstMetaDataDetector() {
+    private volatile static UpdateAstMetaDataDetector detector;
+
+    private UpdateAstMetaDataDetector() {
         super.init(new ExpressionAstMetaDataDetector(this));
         setErrorReporter(DumbROErrorReporterDelegate.getInstance());
+    }
+
+    public static UpdateAstMetaDataDetector getInstance() {
+        if (detector == null) {
+            synchronized (UpdateAstMetaDataDetector.class) {
+                if (detector == null) {
+                    detector = new UpdateAstMetaDataDetector();
+                }
+            }
+        }
+        return detector;
     }
 
     @Override

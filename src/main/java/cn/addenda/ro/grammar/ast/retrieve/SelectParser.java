@@ -20,8 +20,6 @@ import java.util.Set;
  */
 public class SelectParser extends ExpressionParser {
 
-    private static final SelectAstMetaDataDetector SELECT_AST_META_DATA_DETECTOR = new SelectAstMetaDataDetector();
-
     public SelectParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
@@ -64,8 +62,8 @@ public class SelectParser extends ExpressionParser {
         saveSingleSelectContext(select, SingleSelectType.TOP);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
-        select.setDetector(SELECT_AST_META_DATA_DETECTOR);
-        select.accept(SELECT_AST_META_DATA_DETECTOR);
+        select.setDetector(SelectAstMetaDataDetector.getInstance());
+        select.accept(SelectAstMetaDataDetector.getInstance());
         return select;
     }
 
@@ -201,7 +199,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;

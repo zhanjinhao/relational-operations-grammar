@@ -16,9 +16,22 @@ import java.util.List;
  */
 public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMetaData> {
 
-    public SelectAstMetaDataDetector() {
+    private volatile static SelectAstMetaDataDetector detector;
+
+    private SelectAstMetaDataDetector() {
         super.init(new ExpressionAstMetaDataDetector(this));
         setErrorReporter(DumbROErrorReporterDelegate.getInstance());
+    }
+
+    public static SelectAstMetaDataDetector getInstance() {
+        if (detector == null) {
+            synchronized (SelectAstMetaDataDetector.class) {
+                if (detector == null) {
+                    detector = new SelectAstMetaDataDetector();
+                }
+            }
+        }
+        return detector;
     }
 
     @Override

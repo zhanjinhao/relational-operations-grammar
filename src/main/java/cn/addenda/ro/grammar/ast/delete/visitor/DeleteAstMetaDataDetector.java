@@ -14,9 +14,22 @@ import cn.addenda.ro.grammar.lexical.token.Token;
  */
 public class DeleteAstMetaDataDetector extends DeleteVisitorWithDelegate<AstMetaData> {
 
-    public DeleteAstMetaDataDetector() {
+    private volatile static DeleteAstMetaDataDetector detector;
+
+    private DeleteAstMetaDataDetector() {
         super.init(new ExpressionAstMetaDataDetector(this));
         setErrorReporter(DumbROErrorReporterDelegate.getInstance());
+    }
+
+    public static DeleteAstMetaDataDetector getInstance() {
+        if (detector == null) {
+            synchronized (DeleteAstMetaDataDetector.class) {
+                if (detector == null) {
+                    detector = new DeleteAstMetaDataDetector();
+                }
+            }
+        }
+        return detector;
     }
 
     @Override

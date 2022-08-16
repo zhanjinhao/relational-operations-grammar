@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class InsertParser extends ExpressionParser {
 
-    private static final InsertAstMetaDataDetector INSERT_AST_META_DATA_DETECTOR = new InsertAstMetaDataDetector();
-
     public InsertParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
@@ -48,8 +46,8 @@ public class InsertParser extends ExpressionParser {
         Curd insert = insert();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         insert.accept(new InsertGrammarValidator(this.errorReporterDelegate));
-        insert.accept(INSERT_AST_META_DATA_DETECTOR);
-        insert.setDetector(INSERT_AST_META_DATA_DETECTOR);
+        insert.accept(InsertAstMetaDataDetector.getInstance());
+        insert.setDetector(InsertAstMetaDataDetector.getInstance());
         return insert;
     }
 
