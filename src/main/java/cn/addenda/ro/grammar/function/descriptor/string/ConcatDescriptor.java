@@ -1,10 +1,7 @@
 package cn.addenda.ro.grammar.function.descriptor.string;
 
 import cn.addenda.ro.data.DataTypeConst;
-import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.expression.CurdType;
-import cn.addenda.ro.grammar.ast.expression.Function;
-import cn.addenda.ro.grammar.ast.expression.Literal;
+import cn.addenda.ro.grammar.ast.expression.*;
 import cn.addenda.ro.grammar.function.descriptor.AbstractFunctionDescriptor;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 
@@ -31,7 +28,7 @@ public class ConcatDescriptor extends AbstractFunctionDescriptor {
     @Override
     public void staticCheck(Function function, CurdType type) {
         for (Curd curd : function.getParameterList()) {
-            checkType(curd, function, Literal.class);
+            checkType(curd, function, Literal.class, Identifier.class);
         }
     }
 
