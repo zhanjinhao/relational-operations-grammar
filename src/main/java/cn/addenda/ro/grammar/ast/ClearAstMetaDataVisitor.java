@@ -1,39 +1,11 @@
 package cn.addenda.ro.grammar.ast;
 
-import cn.addenda.ro.grammar.ast.create.Insert;
-import cn.addenda.ro.grammar.ast.create.InsertSelectRep;
-import cn.addenda.ro.grammar.ast.create.InsertSetRep;
-import cn.addenda.ro.grammar.ast.create.InsertValuesRep;
-import cn.addenda.ro.grammar.ast.create.OnDuplicateKey;
+import cn.addenda.ro.grammar.ast.create.*;
 import cn.addenda.ro.grammar.ast.delete.Delete;
-import cn.addenda.ro.grammar.ast.expression.AssignmentList;
-import cn.addenda.ro.grammar.ast.expression.BinaryArithmetic;
-import cn.addenda.ro.grammar.ast.expression.Comparison;
-import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.expression.Function;
-import cn.addenda.ro.grammar.ast.expression.Grouping;
-import cn.addenda.ro.grammar.ast.expression.Identifier;
-import cn.addenda.ro.grammar.ast.expression.IsNot;
-import cn.addenda.ro.grammar.ast.expression.Literal;
-import cn.addenda.ro.grammar.ast.expression.Logic;
-import cn.addenda.ro.grammar.ast.expression.TimeInterval;
-import cn.addenda.ro.grammar.ast.expression.TimeUnit;
-import cn.addenda.ro.grammar.ast.expression.UnaryArithmetic;
-import cn.addenda.ro.grammar.ast.expression.WhereSeg;
-import cn.addenda.ro.grammar.ast.retrieve.CaseWhen;
-import cn.addenda.ro.grammar.ast.retrieve.ColumnRep;
-import cn.addenda.ro.grammar.ast.retrieve.ColumnSeg;
-import cn.addenda.ro.grammar.ast.retrieve.ExistsCondition;
-import cn.addenda.ro.grammar.ast.retrieve.GroupBySeg;
-import cn.addenda.ro.grammar.ast.retrieve.GroupFunction;
-import cn.addenda.ro.grammar.ast.retrieve.InCondition;
-import cn.addenda.ro.grammar.ast.retrieve.LimitSeg;
-import cn.addenda.ro.grammar.ast.retrieve.OrderBySeg;
-import cn.addenda.ro.grammar.ast.retrieve.Select;
-import cn.addenda.ro.grammar.ast.retrieve.SingleSelect;
-import cn.addenda.ro.grammar.ast.retrieve.TableRep;
-import cn.addenda.ro.grammar.ast.retrieve.TableSeg;
+import cn.addenda.ro.grammar.ast.expression.*;
+import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.update.Update;
+
 import java.util.List;
 
 /**
@@ -320,11 +292,5 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
         curd.setAstMetaData(newAstMetaData);
     }
 
-    private void nullAccept(Curd curd) {
-        if (curd == null) {
-            return;
-        }
-        curd.accept(this);
-    }
 
 }
