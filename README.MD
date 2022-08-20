@@ -27,3 +27,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 # 依赖
 
 无任何依赖。是一个非常单纯的工具项目。
+
+# todo
+
+1、增加窗口函数。
