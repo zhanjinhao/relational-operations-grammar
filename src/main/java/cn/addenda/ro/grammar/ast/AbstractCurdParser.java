@@ -27,13 +27,13 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
 
     protected final TokenSequence tokenSequence;
 
-    private final FunctionEvaluator functionEvaluator;
+    private final FunctionEvaluator<?> functionEvaluator;
 
     private final Set<String> functionNameSet = new HashSet<>();
 
     protected final ROErrorReporter errorReporterDelegate;
 
-    protected AbstractCurdParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    protected AbstractCurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         this.errorReporterDelegate = new AstROErrorReporterDelegate(tokenSequence);
         this.tokenSequence = tokenSequence;
         this.functionEvaluator = functionEvaluator;
@@ -90,7 +90,7 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
 
     }
 
-    public FunctionEvaluator getFunctionEvaluator() {
+    public FunctionEvaluator<?> getFunctionEvaluator() {
         return functionEvaluator;
     }
 
@@ -106,8 +106,8 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
             return false;
         }
         return (DateConst.YEAR.equals(current) || DateConst.MONTH.equals(current) || DateConst.DAY.equals(current)
-            || DateConst.HOUR.equals(current) || DateConst.MINUTE.equals(current)
-            || DateConst.SECOND.equals(current) || DateConst.MICROSECOND.equals(current)) && TokenType.FROM.equals(next.getType());
+                || DateConst.HOUR.equals(current) || DateConst.MINUTE.equals(current)
+                || DateConst.SECOND.equals(current) || DateConst.MICROSECOND.equals(current)) && TokenType.FROM.equals(next.getType());
     }
 
     private boolean checkFunctionName(Token token) {

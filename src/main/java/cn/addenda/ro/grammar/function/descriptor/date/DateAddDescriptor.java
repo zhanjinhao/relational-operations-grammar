@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DateAddDescriptor extends AbstractFunctionDescriptor {
 
-    public DateAddDescriptor(FunctionEvaluator functionEvaluator) {
+    public DateAddDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

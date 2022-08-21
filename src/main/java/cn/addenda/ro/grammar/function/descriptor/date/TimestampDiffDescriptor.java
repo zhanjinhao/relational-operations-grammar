@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class TimestampDiffDescriptor extends AbstractFunctionDescriptor {
 
-    public TimestampDiffDescriptor(FunctionEvaluator functionEvaluator) {
+    public TimestampDiffDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

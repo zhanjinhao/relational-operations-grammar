@@ -9,7 +9,7 @@ import cn.addenda.ro.error.reporter.ROErrorReporter;
  */
 public abstract class ErrorReportableFunctionDescriptor implements FunctionDescriptor, ROErrorReporter {
 
-    private final ROErrorReporter errorReporter = new FunctionROErrorReporterDelegate();
+    private final ROErrorReporter errorReporter = new FunctionDescriptorROErrorReporterDelegate();
 
     @Override
     public void error(int errorCode) {

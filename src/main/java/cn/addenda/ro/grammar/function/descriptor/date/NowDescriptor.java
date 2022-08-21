@@ -5,7 +5,7 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.CurdType;
 import cn.addenda.ro.grammar.ast.expression.Function;
 import cn.addenda.ro.grammar.function.descriptor.ErrorReportableFunctionDescriptor;
-import cn.addenda.ro.grammar.function.descriptor.FunctionROErrorReporterDelegate;
+import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptorROErrorReporterDelegate;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class NowDescriptor extends ErrorReportableFunctionDescriptor {
     public void staticCheck(Function function, CurdType type) {
         List<Curd> parameterList = function.getParameterList();
         if (parameterList != null || !parameterList.isEmpty()) {
-            error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, function);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, function);
             return;
         }
     }

@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class SelectParser extends ExpressionParser {
 
-    public SelectParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public SelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

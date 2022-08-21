@@ -13,7 +13,7 @@ import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
  */
 public class InsertSelectParser extends SelectParser {
 
-    public InsertSelectParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public InsertSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

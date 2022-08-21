@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ExtractDescriptor extends AbstractFunctionDescriptor {
 
-    public ExtractDescriptor(FunctionEvaluator functionEvaluator) {
+    public ExtractDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

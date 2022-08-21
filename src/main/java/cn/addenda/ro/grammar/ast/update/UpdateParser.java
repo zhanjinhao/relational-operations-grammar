@@ -17,7 +17,7 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
  */
 public class UpdateParser extends ExpressionParser {
 
-    public UpdateParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public UpdateParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class ExpressionParser extends AbstractCurdParser {
 
-    public ExpressionParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public ExpressionParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

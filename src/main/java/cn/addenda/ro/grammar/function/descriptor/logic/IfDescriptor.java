@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class IfDescriptor extends AbstractFunctionDescriptor {
 
-    public IfDescriptor(FunctionEvaluator functionEvaluator) {
+    public IfDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

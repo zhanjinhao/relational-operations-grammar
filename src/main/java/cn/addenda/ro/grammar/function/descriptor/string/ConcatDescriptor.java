@@ -11,7 +11,7 @@ import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
  */
 public class ConcatDescriptor extends AbstractFunctionDescriptor {
 
-    public ConcatDescriptor(FunctionEvaluator functionEvaluator) {
+    public ConcatDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

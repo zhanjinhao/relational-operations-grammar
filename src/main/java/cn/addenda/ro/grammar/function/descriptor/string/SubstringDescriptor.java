@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class SubstringDescriptor extends AbstractFunctionDescriptor {
 
-    public SubstringDescriptor(FunctionEvaluator functionEvaluator) {
+    public SubstringDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

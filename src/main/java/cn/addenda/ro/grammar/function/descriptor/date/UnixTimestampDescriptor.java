@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class UnixTimestampDescriptor extends AbstractFunctionDescriptor {
 
-    public UnixTimestampDescriptor(FunctionEvaluator functionEvaluator) {
+    public UnixTimestampDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

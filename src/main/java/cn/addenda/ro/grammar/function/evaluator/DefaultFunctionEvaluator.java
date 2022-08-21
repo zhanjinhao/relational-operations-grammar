@@ -1,5 +1,6 @@
 package cn.addenda.ro.grammar.function.evaluator;
 
+import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptor;
 import cn.addenda.ro.grammar.function.descriptor.date.*;
 import cn.addenda.ro.grammar.function.descriptor.logic.DecodeDescriptor;
 import cn.addenda.ro.grammar.function.descriptor.logic.IfDescriptor;
@@ -13,30 +14,30 @@ import cn.addenda.ro.grammar.function.descriptor.string.SubstringDescriptor;
  */
 public class DefaultFunctionEvaluator extends AbstractFunctionEvaluator {
 
-    private static final FunctionEvaluator instance = new DefaultFunctionEvaluator();
+    private static final FunctionEvaluator<? extends FunctionDescriptor> instance = new DefaultFunctionEvaluator();
 
-    public static FunctionEvaluator getInstance() {
+    public static FunctionEvaluator<? extends FunctionDescriptor> getInstance() {
         return instance;
     }
 
     private DefaultFunctionEvaluator() {
-        addFunctionDescriptor(DateAddDescriptor.class);
-        addFunctionDescriptor(DateFormatDescriptor.class);
-        addFunctionDescriptor(DateSubDescriptor.class);
-        addFunctionDescriptor(UnixTimestampDescriptor.class);
-        addFunctionDescriptor(NowDescriptor.class);
-        addFunctionDescriptor(StrToDateDescriptor.class);
-        addFunctionDescriptor(FromUnixtimeDescriptor.class);
-        addFunctionDescriptor(TimestampDiffDescriptor.class);
-        addFunctionDescriptor(DateDescriptor.class);
-        addFunctionDescriptor(ExtractDescriptor.class);
+        addFunction(DateAddDescriptor.class);
+        addFunction(DateFormatDescriptor.class);
+        addFunction(DateSubDescriptor.class);
+        addFunction(UnixTimestampDescriptor.class);
+        addFunction(NowDescriptor.class);
+        addFunction(StrToDateDescriptor.class);
+        addFunction(FromUnixtimeDescriptor.class);
+        addFunction(TimestampDiffDescriptor.class);
+        addFunction(DateDescriptor.class);
+        addFunction(ExtractDescriptor.class);
 
-        addFunctionDescriptor(ConcatDescriptor.class);
-        addFunctionDescriptor(ReplaceDescriptor.class);
-        addFunctionDescriptor(SubstringDescriptor.class);
+        addFunction(ConcatDescriptor.class);
+        addFunction(ReplaceDescriptor.class);
+        addFunction(SubstringDescriptor.class);
 
-        addFunctionDescriptor(DecodeDescriptor.class);
-        addFunctionDescriptor(IfDescriptor.class);
+        addFunction(DecodeDescriptor.class);
+        addFunction(IfDescriptor.class);
     }
 
 }

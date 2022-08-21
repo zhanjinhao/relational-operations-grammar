@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ReplaceDescriptor extends AbstractFunctionDescriptor {
 
-    public ReplaceDescriptor(FunctionEvaluator functionEvaluator) {
+    public ReplaceDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

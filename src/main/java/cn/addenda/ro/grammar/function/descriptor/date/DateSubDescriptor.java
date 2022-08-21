@@ -13,7 +13,7 @@ import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
  */
 public class DateSubDescriptor extends AbstractFunctionDescriptor {
 
-    public DateSubDescriptor(FunctionEvaluator functionEvaluator) {
+    public DateSubDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 
@@ -29,7 +29,7 @@ public class DateSubDescriptor extends AbstractFunctionDescriptor {
 
     @Override
     public void staticCheck(Function function, CurdType type) {
-        FunctionDescriptor dateAddFunction = functionEvaluator.getFunctionDescriptor("date_add");
+        FunctionDescriptor dateAddFunction = functionEvaluator.getFunction("date_add");
         dateAddFunction.staticCheck(function, type);
     }
 

@@ -12,9 +12,9 @@ import java.util.Set;
  * @author addenda
  * @datetime 2021/4/11 14:02
  */
-public interface FunctionEvaluator extends ROError {
+public interface FunctionEvaluator<T extends FunctionDescriptor> extends ROError {
 
-    FunctionDescriptor getFunctionDescriptor(String functionName);
+    FunctionDescriptor getFunction(String functionName);
 
     Set<String> functionNameSet();
 
@@ -22,6 +22,6 @@ public interface FunctionEvaluator extends ROError {
 
     void staticCheck(Function function, CurdType type);
 
-    void addFunctionDescriptor(Class<? extends FunctionDescriptor> functionHandlerClass);
+    void addFunction(Class<? extends T> function);
 
 }

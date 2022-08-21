@@ -16,11 +16,14 @@ import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
  */
 public class CurdParserFactory {
 
-    public static ExpressionParser createExpressionParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    private CurdParserFactory() {
+    }
+
+    public static ExpressionParser createExpressionParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new ExpressionParser(tokenSequence, functionEvaluator);
     }
 
-    public static ExpressionParser createExpressionParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static ExpressionParser createExpressionParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createExpressionParser(tokenSequence, functionEvaluator);
     }
@@ -34,11 +37,11 @@ public class CurdParserFactory {
         return createExpressionParser(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static SelectParser createSelectParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public static SelectParser createSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new SelectParser(tokenSequence, functionEvaluator);
     }
 
-    public static SelectParser createSelectParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static SelectParser createSelectParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createSelectParser(tokenSequence, functionEvaluator);
     }
@@ -53,11 +56,11 @@ public class CurdParserFactory {
     }
 
 
-    public static InsertParser createInsertParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public static InsertParser createInsertParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new InsertParser(tokenSequence, functionEvaluator);
     }
 
-    public static InsertParser createInsertParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static InsertParser createInsertParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createInsertParser(tokenSequence, functionEvaluator);
     }
@@ -72,11 +75,11 @@ public class CurdParserFactory {
     }
 
 
-    public static UpdateParser createUpdateParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public static UpdateParser createUpdateParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new UpdateParser(tokenSequence, functionEvaluator);
     }
 
-    public static UpdateParser createUpdateParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static UpdateParser createUpdateParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createUpdateParser(tokenSequence, functionEvaluator);
     }
@@ -91,11 +94,11 @@ public class CurdParserFactory {
     }
 
 
-    public static DeleteParser createDeleteParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public static DeleteParser createDeleteParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new DeleteParser(tokenSequence, functionEvaluator);
     }
 
-    public static DeleteParser createDeleteParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static DeleteParser createDeleteParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createDeleteParser(tokenSequence, functionEvaluator);
     }
@@ -109,11 +112,11 @@ public class CurdParserFactory {
         return createDeleteParser(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static CurdParser createCurdParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public static CurdParser createCurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         return new CurdParser(tokenSequence, functionEvaluator);
     }
 
-    public static CurdParser createCurdParser(String sql, FunctionEvaluator functionEvaluator) {
+    public static CurdParser createCurdParser(String sql, FunctionEvaluator<?> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return createCurdParser(tokenSequence, functionEvaluator);
     }

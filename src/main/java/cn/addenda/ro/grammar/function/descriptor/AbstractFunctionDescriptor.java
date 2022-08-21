@@ -15,9 +15,9 @@ import java.util.List;
  */
 public abstract class AbstractFunctionDescriptor extends ErrorReportableFunctionDescriptor {
 
-    protected FunctionEvaluator functionEvaluator;
+    protected FunctionEvaluator<?> functionEvaluator;
 
-    protected AbstractFunctionDescriptor(FunctionEvaluator functionEvaluator) {
+    protected AbstractFunctionDescriptor(FunctionEvaluator<?> functionEvaluator) {
         this.functionEvaluator = functionEvaluator;
     }
 
@@ -28,7 +28,7 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
                 return size;
             }
         }
-        error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, function);
+        error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, function);
         return -1;
     }
 
@@ -37,14 +37,14 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
             return;
         }
         if (!(date instanceof Function)) {
-            error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
             return;
         }
 
         Function dateFunction = (Function) date;
-        FunctionDescriptor functionDescriptor = functionEvaluator.getFunctionDescriptor((String) dateFunction.getMethod().getLiteral());
+        FunctionDescriptor functionDescriptor = functionEvaluator.getFunction((String) dateFunction.getMethod().getLiteral());
         if (functionDescriptor.innerType() != DataTypeConst.DATE) {
-            error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
         }
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
 
         int length = clazz.length;
         if (length < 1) {
-            error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
             return;
         }
 
@@ -62,7 +62,7 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
             }
         }
 
-        error(FunctionROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+        error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
     }
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DateFormatDescriptor extends AbstractFunctionDescriptor {
 
-    public DateFormatDescriptor(FunctionEvaluator functionEvaluator) {
+    public DateFormatDescriptor(FunctionEvaluator<?> functionEvaluator) {
         super(functionEvaluator);
     }
 

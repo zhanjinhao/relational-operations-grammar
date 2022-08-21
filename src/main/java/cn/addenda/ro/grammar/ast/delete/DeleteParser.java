@@ -16,7 +16,7 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
  */
 public class DeleteParser extends ExpressionParser {
 
-    public DeleteParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public DeleteParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

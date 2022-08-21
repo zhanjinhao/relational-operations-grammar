@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class InsertParser extends ExpressionParser {
 
-    public InsertParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public InsertParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 

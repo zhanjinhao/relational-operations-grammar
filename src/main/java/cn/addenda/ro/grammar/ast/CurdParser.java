@@ -18,7 +18,7 @@ public class CurdParser extends AbstractCurdParser {
 
     // 这里可以对 Parser做一层缓存，避免每次都new对象引起Full GC。
 
-    public CurdParser(TokenSequence tokenSequence, FunctionEvaluator functionEvaluator) {
+    public CurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
         super(tokenSequence, functionEvaluator);
     }
 
