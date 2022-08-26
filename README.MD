@@ -31,3 +31,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 # todo
 
 1、增加窗口函数。
+2、select 增加锁语法。
+3、toString()支持分隔符为 ''。
+4、支持group_concat()语法。
+5、AstMetaData增加 ?计数 和 #{}计数
