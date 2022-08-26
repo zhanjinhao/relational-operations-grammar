@@ -1,6 +1,7 @@
 package cn.addenda.ro.grammar.lexical.scan;
 
 import cn.addenda.ro.error.ROError;
+import cn.addenda.ro.grammar.DeepCloneable;
 import cn.addenda.ro.grammar.lexical.Sequence;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * @author addenda
  * @datetime 2021/2/23 15:35
  */
-public class TokenSequence extends Sequence<List<Token>, Token> implements ROError {
+public class TokenSequence extends Sequence<List<Token>, Token> implements ROError, DeepCloneable<TokenSequence> {
 
     public TokenSequence() {
         super(new ArrayList<>(), new Token(TokenType.EOF, null));
@@ -93,6 +94,13 @@ public class TokenSequence extends Sequence<List<Token>, Token> implements ROErr
             }
             return item.getLiteral().toString();
         }).collect(Collectors.joining(" "));
+    }
+
+    @Override
+    public TokenSequence deepClone() {
+        TokenSequence tokenSequence = new TokenSequence();
+        source.forEach(token -> tokenSequence.addItem(token.deepClone()));
+        return tokenSequence;
     }
 
 }

@@ -1,6 +1,7 @@
 package cn.addenda.ro.grammar.lexical.token;
 
 import cn.addenda.ro.error.ROError;
+import cn.addenda.ro.grammar.DeepCloneable;
 
 import java.util.Objects;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
  * @author addenda
  * @datetime 2021/2/20 17:03
  */
-public class Token implements ROError {
+public class Token implements ROError, DeepCloneable<Token> {
 
     private final TokenType type;
     /**
@@ -68,6 +69,7 @@ public class Token implements ROError {
                 this.type.equals(TokenType.FALSE) || this.type.equals(TokenType.TRUE) || this.type.equals(TokenType.NULL));
     }
 
+    @Override
     public Token deepClone() {
         return new Token(this.getType(), this.getLiteral(), this.getIndex());
     }

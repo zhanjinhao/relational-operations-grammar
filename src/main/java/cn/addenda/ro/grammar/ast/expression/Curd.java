@@ -1,5 +1,6 @@
 package cn.addenda.ro.grammar.ast.expression;
 
+import cn.addenda.ro.grammar.DeepCloneable;
 import cn.addenda.ro.grammar.ast.*;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author addenda
  * @datetime 2021/3/1 11:35
  */
-public abstract class Curd {
+public abstract class Curd implements DeepCloneable<Curd> {
 
     private AstMetaData astMetaData;
 
@@ -45,13 +46,14 @@ public abstract class Curd {
         return astMetaData;
     }
 
+    @Override
     public Curd deepClone() {
         return this.accept(DEEP_CLONE_VISITOR);
     }
 
     public void fillTableName(String tableName) {
         IdentifierFillTNVisitor identifierFillTNVisitor =
-            T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
+                T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
         this.accept(identifierFillTNVisitor);
     }
 
