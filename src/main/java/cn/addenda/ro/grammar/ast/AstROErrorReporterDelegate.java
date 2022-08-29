@@ -96,6 +96,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_existsCondition_PARSE, SELECT_existsCondition_PARSE_MSG);
         addErrorMsg(SELECT_primary_PARSE, SELECT_primary_PARSE_MSG);
         addErrorMsg(SELECT_groupFunction_PARSE, SELECT_groupFunction_PARSE_MSG);
+        addErrorMsg(SELECT_lockSeg_PARSE, SELECT_lockSeg_PARSE_MSG);
 
         addErrorMsg(SELECT_select_VALIDATION, SELECT_select_VALIDATION_MSG);
         addErrorMsg(SELECT_singleSelect_VALIDATION, SELECT_singleSelect_VALIDATION_MSG);
@@ -333,6 +334,9 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
 
     public static final int SELECT_groupFunction_PARSE = 25015;
     public static final String SELECT_groupFunction_PARSE_MSG = "The grammar of groupFunction is : '(\"avg\" | \"max\" | \"min\" | \"count\" | \"sum\" | \"flat\") \"(\" binaryArithmetic \")\"'.";
+
+    public static final int SELECT_lockSeg_PARSE = 25016;
+    public static final String SELECT_lockSeg_PARSE_MSG = "The grammar of lockSeg is : 'sLock | xLock'.";
 
     /**
      * select 语法的语法验证错误代码从25501开始

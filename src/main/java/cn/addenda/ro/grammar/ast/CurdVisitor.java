@@ -42,6 +42,9 @@ public interface CurdVisitor<R> {
 
     R visitCaseWhen(CaseWhen caseWhen);
 
+    R visitSLock(SLock sLock);
+
+    R visitXLock(XLock xLock);
 
     // ----------------------------------------------------------
     // create 的观察方法
@@ -57,20 +60,17 @@ public interface CurdVisitor<R> {
 
     R visitInsertSelectRep(InsertSelectRep insertSelectRep);
 
-
     // ----------------------------------------------------------
     // update 的观察方法
     // ----------------------------------------------------------
 
     R visitUpdate(Update update);
 
-
     // ----------------------------------------------------------
     // delete 的观察方法
     // ----------------------------------------------------------
 
     R visitDelete(Delete delete);
-
 
     // ----------------------------------------------------------
     // expression 的观察方法
@@ -102,7 +102,6 @@ public interface CurdVisitor<R> {
 
     R visitIsNot(IsNot isNot);
 
-
     // ----------------------------------------------------------
     // 抽象类 的观察方法
     // ----------------------------------------------------------
@@ -125,4 +124,6 @@ public interface CurdVisitor<R> {
         }
         return curd.accept(this);
     }
+
+
 }

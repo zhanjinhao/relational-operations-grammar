@@ -30,6 +30,7 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
         nullAccept(singleSelect.getGroupBySeg());
         nullAccept(singleSelect.getOrderBySeg());
         nullAccept(singleSelect.getLimitSeg());
+        nullAccept(singleSelect.getLockSeg());
         nullReset(singleSelect);
         return null;
     }
@@ -130,6 +131,16 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
         }
 
         nullReset(caseWhen);
+        return null;
+    }
+
+    @Override
+    public Void visitSLock(SLock sLock) {
+        return null;
+    }
+
+    @Override
+    public Void visitXLock(XLock xLock) {
         return null;
     }
 

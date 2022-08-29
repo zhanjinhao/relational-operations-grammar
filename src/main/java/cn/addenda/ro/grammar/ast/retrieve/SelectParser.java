@@ -27,7 +27,7 @@ public class SelectParser extends ExpressionParser {
     /**
      * select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*
      * <p>
-     * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)?
+     * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
      * columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*
      * columnRep           ->  (* | binaryArithmetic | caseWhen) ("as" IDENTIFIER)?
      * caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"
@@ -37,7 +37,11 @@ public class SelectParser extends ExpressionParser {
      * groupBySeg          ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
      * orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
      * limitSeg            ->  "limit" INTEGER ("," INTEGER)?
+     * lockSeg             ->  sLock | xLock
      * <p>
+     *
+     * sLock               ->  "lock" "in" "share" "mode"
+     * xLock               ->  "for" "update"
      * logic ↑             ->  condition (("or" | "and") condition)*
      * condition ↑+        ->  inCondition | existsCondition | comparison
      * inCondition         ->  IDENTIFIER ("not")? "in" "(" select | (primary (, primary)*) ")"
@@ -117,7 +121,8 @@ public class SelectParser extends ExpressionParser {
         if (tokenSequence.curEqual(TokenType.LIMIT)) {
             limitSeg = limitSeg();
         }
-        return new SingleSelect(columnSeg, tableSeg, whereSeg, groupBySeg, orderBySeg, limitSeg);
+        Curd lockSeg = lockSeg();
+        return new SingleSelect(columnSeg, tableSeg, whereSeg, groupBySeg, orderBySeg, limitSeg, lockSeg);
     }
 
 
@@ -199,7 +204,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -335,6 +340,35 @@ public class SelectParser extends ExpressionParser {
         return new LimitSeg(token);
     }
 
+    /**
+     * sLock | xLock
+     */
+    private Curd lockSeg() {
+        if (tokenSequence.curEqual(TokenType.LOCK)) {
+            if (!tokenSequence.equalThenAdvance(TokenType.LOCK)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            if (!tokenSequence.equalThenAdvance(TokenType.IN)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            if (!tokenSequence.equalThenAdvance(TokenType.SHARE)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            if (!tokenSequence.equalThenAdvance(TokenType.MODE)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            return new SLock();
+        } else if (tokenSequence.curEqual(TokenType.FOR)) {
+            if (!tokenSequence.equalThenAdvance(TokenType.FOR)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            if (!tokenSequence.equalThenAdvance(TokenType.UPDATE)) {
+                error(AstROErrorReporterDelegate.SELECT_lockSeg_PARSE);
+            }
+            return new XLock();
+        }
+        return null;
+    }
 
     /**
      * inCondition | existsCondition | comparison

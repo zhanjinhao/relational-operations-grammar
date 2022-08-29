@@ -160,6 +160,16 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     }
 
     @Override
+    public Void visitSLock(SLock sLock) {
+        return null;
+    }
+
+    @Override
+    public Void visitXLock(XLock xLock) {
+        return null;
+    }
+
+    @Override
     public Void visitInsert(Insert insert) {
         insert.getInsertRep().accept(this);
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();

@@ -72,6 +72,16 @@ public abstract class DeleteVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
+    public R visitSLock(SLock sLock) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitXLock(XLock xLock) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public final R visitLimitSeg(LimitSeg limitSeg) {
         throw new UnsupportedOperationException();
     }

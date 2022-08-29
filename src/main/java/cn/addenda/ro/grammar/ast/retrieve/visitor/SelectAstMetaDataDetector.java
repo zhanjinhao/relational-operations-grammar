@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMetaData> {
 
-    private volatile static SelectAstMetaDataDetector detector;
+    private static volatile SelectAstMetaDataDetector detector;
 
     private SelectAstMetaDataDetector() {
         super.init(new ExpressionAstMetaDataDetector(this));
@@ -91,6 +91,8 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         // limit 不存在字段
 
+        // lockSeg 不存在字段
+
         astMetaDataCur.sortMetaData();
 
         return astMetaDataCur;
@@ -163,6 +165,16 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         astMetaDataCur.mergeColumnReference(defaultValue.accept(this));
 
         return astMetaDataCur;
+    }
+
+    @Override
+    public AstMetaData visitSLock(SLock sLock) {
+        return sLock.getAstMetaData();
+    }
+
+    @Override
+    public AstMetaData visitXLock(XLock xLock) {
+        return xLock.getAstMetaData();
     }
 
 

@@ -10,6 +10,9 @@ import java.util.Set;
  */
 public class TokenTypeLexemeMapping {
 
+    private TokenTypeLexemeMapping() {
+    }
+
     private static final Map<String, TokenType> lexemeToTokenType = new HashMap<>();
     private static final Map<TokenType, String> tokenTypeToLexeme = new HashMap<>();
 
@@ -101,6 +104,11 @@ public class TokenTypeLexemeMapping {
     public static final String ON = "on";
 
     public static final String INTERVAL = "interval";
+
+    public static final String LOCK = "lock";
+    public static final String SHARE = "share";
+    public static final String MODE = "mode";
+    public static final String FOR = "for";
 
     static {
         // symbol
@@ -199,11 +207,18 @@ public class TokenTypeLexemeMapping {
         // TIME
         lexemeToTokenType.put(INTERVAL, TokenType.INTERVAL);
 
+        // SELECT 锁
+        lexemeToTokenType.put(LOCK, TokenType.LOCK);
+        lexemeToTokenType.put(SHARE, TokenType.SHARE);
+        lexemeToTokenType.put(MODE, TokenType.MODE);
+        lexemeToTokenType.put(FOR, TokenType.FOR);
+
         // CASE WHEN
         lexemeToTokenType.put(CASE, TokenType.CASE);
         lexemeToTokenType.put(WHEN, TokenType.WHEN);
         lexemeToTokenType.put(THEN, TokenType.THEN);
         lexemeToTokenType.put(ELSE, TokenType.ELSE);
+
         lexemeToTokenType.put(END, TokenType.END);
 
         Set<Map.Entry<String, TokenType>> entries = lexemeToTokenType.entrySet();

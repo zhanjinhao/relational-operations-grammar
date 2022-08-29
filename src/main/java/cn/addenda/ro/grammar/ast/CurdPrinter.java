@@ -88,6 +88,11 @@ public class CurdPrinter implements CurdVisitor<String> {
         if (limitSeg != null) {
             sb.append(blankStr()).append(limitSeg.accept(this)).append("\n");
         }
+
+        Curd lockSeg = singleSelect.getLockSeg();
+        if (lockSeg != null) {
+            sb.append(blankStr()).append(lockSeg.accept(this)).append("\n");
+        }
         deepth--;
         if (!notNeedParen) {
             sb.append(BLANK).append(")").append(BLANK);
@@ -107,12 +112,12 @@ public class CurdPrinter implements CurdVisitor<String> {
         List<Curd> columnRepList = columnSeg.getColumnRepList();
         if (columnRepList != null) {
             sb.append(columnRepList.stream().map(item -> {
-                        if (item != null) {
-                            return item.accept(this);
-                        }
-                        return "";
-                    })
-                    .collect(Collectors.joining(", ")));
+                    if (item != null) {
+                        return item.accept(this);
+                    }
+                    return "";
+                })
+                .collect(Collectors.joining(", ")));
         }
         return sb.toString();
     }
@@ -220,13 +225,13 @@ public class CurdPrinter implements CurdVisitor<String> {
             List<Curd> range = inCondition.getRange();
             if (range != null && !range.isEmpty()) {
                 sb.append(range.stream()
-                        .map(item -> {
-                            if (item != null) {
-                                return item.accept(this);
-                            }
-                            return "";
-                        })
-                        .collect(Collectors.joining("," + BLANK)));
+                    .map(item -> {
+                        if (item != null) {
+                            return item.accept(this);
+                        }
+                        return "";
+                    })
+                    .collect(Collectors.joining("," + BLANK)));
             }
             sb.append(")");
         }
@@ -256,8 +261,8 @@ public class CurdPrinter implements CurdVisitor<String> {
         List<Token> columnList = groupBySeg.getColumnList();
         if (columnList != null && !columnList.isEmpty()) {
             sb.append(columnList.stream()
-                    .map(item -> item.getLiteral().toString())
-                    .collect(Collectors.joining(", ")));
+                .map(item -> item.getLiteral().toString())
+                .collect(Collectors.joining(", ")));
         }
         Curd having = groupBySeg.getHaving();
         if (having != null) {
@@ -398,7 +403,7 @@ public class CurdPrinter implements CurdVisitor<String> {
             }
 
             sb.append(BLANK).append("when").append(BLANK).append(b)
-                    .append(BLANK).append("then").append(BLANK).append(c);
+                .append(BLANK).append("then").append(BLANK).append(c);
         }
 
         Curd defaultValue = caseWhen.getDefaultValue();
@@ -408,6 +413,16 @@ public class CurdPrinter implements CurdVisitor<String> {
         sb.append(BLANK).append("end");
 
         return sb.toString();
+    }
+
+    @Override
+    public String visitSLock(SLock sLock) {
+        return "lock" + BLANK + "in" + BLANK + "share" + BLANK + "mode" + BLANK;
+    }
+
+    @Override
+    public String visitXLock(XLock xLock) {
+        return "for" + BLANK + "update" + BLANK;
     }
 
     @Override
@@ -458,13 +473,13 @@ public class CurdPrinter implements CurdVisitor<String> {
 
         List<List<Curd>> curdListList = insertValuesRep.getCurdListList();
         String collect = curdListList.stream()
-                .map(i -> i.stream().map(j -> {
-                    if (j != null) {
-                        return j.accept(this);
-                    }
-                    return "";
-                }).collect(Collectors.joining(", ", " ( ", " ) ")))
-                .collect(Collectors.joining(", "));
+            .map(i -> i.stream().map(j -> {
+                if (j != null) {
+                    return j.accept(this);
+                }
+                return "";
+            }).collect(Collectors.joining(", ", " ( ", " ) ")))
+            .collect(Collectors.joining(", "));
 
         sb.append(collect);
 
@@ -515,15 +530,15 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitAssignmentList(AssignmentList assignmentList) {
         return assignmentList.getEntryList().stream()
-                .map(item -> {
-                    String a = item.getColumn().getLiteral() + "=";
-                    Curd value = item.getValue();
-                    if (value != null) {
-                        return a + value.accept(this);
-                    }
-                    return a;
-                })
-                .collect(Collectors.joining(", "));
+            .map(item -> {
+                String a = item.getColumn().getLiteral() + "=";
+                Curd value = item.getValue();
+                if (value != null) {
+                    return a + value.accept(this);
+                }
+                return a;
+            })
+            .collect(Collectors.joining(", "));
     }
 
     @Override
@@ -591,8 +606,8 @@ public class CurdPrinter implements CurdVisitor<String> {
         }
 
         String str = "update" + BLANK +
-                update.getTableName().getLiteral() +
-                BLANK + "set" + BLANK + a;
+            update.getTableName().getLiteral() +
+            BLANK + "set" + BLANK + a;
         Curd whereSeg = update.getWhereSeg();
         if (whereSeg == null) {
             return str;

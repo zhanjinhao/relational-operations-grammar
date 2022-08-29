@@ -117,6 +117,16 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
+    public R visitSLock(SLock sLock) {
+        return sLock.accept(client);
+    }
+
+    @Override
+    public R visitXLock(XLock xLock) {
+        return xLock.accept(client);
+    }
+
+    @Override
     public R visitUpdate(Update update) {
         return update.accept(client);
     }

@@ -69,6 +69,10 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         if (limitSeg != null) {
             limitSeg.accept(this);
         }
+        Curd lockSeg = singleSelect.getLockSeg();
+        if (lockSeg != null) {
+            lockSeg.accept(this);
+        }
 
         return null;
     }
@@ -133,6 +137,16 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
     }
 
     @Override
+    public Void visitSLock(SLock sLock) {
+        return null;
+    }
+
+    @Override
+    public Void visitXLock(XLock xLock) {
+        return null;
+    }
+
+    @Override
     public Void visitTableSeg(TableSeg tableSeg) {
 
         Curd leftCurd = tableSeg.getLeftCurd();
@@ -175,7 +189,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         }
 
         if (condition == null && qualifier != null &&
-                (TokenType.LEFT.equals(qualifier.getType()) || TokenType.RIGHT.equals(qualifier.getType()))) {
+            (TokenType.LEFT.equals(qualifier.getType()) || TokenType.RIGHT.equals(qualifier.getType()))) {
             error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         }
 

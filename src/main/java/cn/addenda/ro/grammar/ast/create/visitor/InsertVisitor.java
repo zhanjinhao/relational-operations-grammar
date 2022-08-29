@@ -98,6 +98,16 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
+    public R visitSLock(SLock sLock) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitXLock(XLock xLock) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public R visitUpdate(Update update) {
         throw new UnsupportedOperationException();
     }

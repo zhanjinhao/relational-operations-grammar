@@ -23,8 +23,10 @@ public class SingleSelect extends Curd {
 
     private Curd limitSeg;
 
+    private Curd lockSeg;
+
     public SingleSelect(Curd columnSeg, Curd tableSeg, Curd whereSeg,
-                        Curd groupBySeg, Curd orderBySeg, Curd limitSeg) {
+        Curd groupBySeg, Curd orderBySeg, Curd limitSeg, Curd lockSeg) {
         super(new SingleSelectAstMetaData());
         this.columnSeg = columnSeg;
         this.tableSeg = tableSeg;
@@ -32,6 +34,7 @@ public class SingleSelect extends Curd {
         this.groupBySeg = groupBySeg;
         this.orderBySeg = orderBySeg;
         this.limitSeg = limitSeg;
+        this.lockSeg = lockSeg;
     }
 
     @Override
@@ -71,4 +74,7 @@ public class SingleSelect extends Curd {
         return limitSeg;
     }
 
+    public Curd getLockSeg() {
+        return lockSeg;
+    }
 }

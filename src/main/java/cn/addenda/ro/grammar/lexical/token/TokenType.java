@@ -129,6 +129,11 @@ public enum TokenType {
     INTERVAL,
 
     /**
+     * SELECT 锁
+     */
+    LOCK, SHARE, MODE, FOR,
+
+    /**
      * END.
      */
     EOF,

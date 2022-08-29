@@ -19,7 +19,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitSelect(Select select) {
         return new Select(select.getLeftCurd().accept(this), nullClone(select.getToken()),
-                nullClone(select.getAllToken()), nullClone(select.getRightCurd()));
+            nullClone(select.getAllToken()), nullClone(select.getRightCurd()));
     }
 
     @Override
@@ -30,9 +30,10 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         Curd groupBySeg = singleSelect.getGroupBySeg();
         Curd orderBySeg = singleSelect.getOrderBySeg();
         Curd limitSeg = singleSelect.getLimitSeg();
+        Curd lockSeg = singleSelect.getLockSeg();
 
         SingleSelect newSingleSelect = new SingleSelect(columnSeg.accept(this), tableSeg.accept(this),
-                nullClone(whereSeg), nullClone(groupBySeg), nullClone(orderBySeg), nullClone(limitSeg));
+            nullClone(whereSeg), nullClone(groupBySeg), nullClone(orderBySeg), nullClone(limitSeg), nullClone(lockSeg));
         newSingleSelect.setSingleSelectType(singleSelect.getSingleSelectType());
 
         return newSingleSelect;
@@ -64,7 +65,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitTableSeg(TableSeg tableSeg) {
         return new TableSeg(nullClone(tableSeg.getQualifier()), nullClone(tableSeg.getLeftCurd()),
-                nullClone(tableSeg.getToken()), nullClone(tableSeg.getRightCurd()), nullClone(tableSeg.getCondition()));
+            nullClone(tableSeg.getToken()), nullClone(tableSeg.getRightCurd()), nullClone(tableSeg.getCondition()));
     }
 
     @Override
@@ -146,7 +147,17 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         }
 
         return new CaseWhen(caseWhen.getValue().accept(this),
-                newConditionList, newResultList, caseWhen.getDefaultValue().accept(this));
+            newConditionList, newResultList, caseWhen.getDefaultValue().accept(this));
+    }
+
+    @Override
+    public Curd visitSLock(SLock sLock) {
+        return new SLock();
+    }
+
+    @Override
+    public Curd visitXLock(XLock xLock) {
+        return new XLock();
     }
 
     @Override
@@ -157,7 +168,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
 
         return new Insert(nullClone(constrict), tableName.deepClone(),
-                curd.accept(this), nullClone(onDuplicateUpdate), insert.getInsertType());
+            curd.accept(this), nullClone(onDuplicateUpdate), insert.getInsertType());
     }
 
     @Override
@@ -205,7 +216,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitUpdate(Update update) {
         return new Update(update.getTableName().deepClone(),
-                update.getAssignmentList().accept(this), nullClone(update.getWhereSeg()));
+            update.getAssignmentList().accept(this), nullClone(update.getWhereSeg()));
     }
 
     @Override
@@ -221,19 +232,19 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitLogic(Logic logic) {
         return new Logic(logic.getLeftCurd().accept(this),
-                nullClone(logic.getToken().deepClone()), nullClone(logic.getRightCurd()));
+            nullClone(logic.getToken().deepClone()), nullClone(logic.getRightCurd()));
     }
 
     @Override
     public Curd visitComparison(Comparison comparison) {
         return new Comparison(comparison.getLeftCurd().accept(this),
-                nullClone(comparison.getComparisonSymbol()), nullClone(comparison.getRightCurd()));
+            nullClone(comparison.getComparisonSymbol()), nullClone(comparison.getRightCurd()));
     }
 
     @Override
     public Curd visitBinaryArithmetic(BinaryArithmetic binaryArithmetic) {
         return new BinaryArithmetic(binaryArithmetic.getLeftCurd().accept(this),
-                nullClone(binaryArithmetic.getToken()), nullClone(binaryArithmetic.getRightCurd()));
+            nullClone(binaryArithmetic.getToken()), nullClone(binaryArithmetic.getRightCurd()));
     }
 
     @Override

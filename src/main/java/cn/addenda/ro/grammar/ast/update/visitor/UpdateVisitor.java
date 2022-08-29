@@ -15,6 +15,16 @@ public abstract class UpdateVisitor<R> extends AbstractCurdVisitor<R> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public R visitSLock(SLock sLock) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitXLock(XLock xLock) {
+        throw new UnsupportedOperationException();
+    }
+
     public final R visitSingleSelect(SingleSelect singleSelect) {
         throw new UnsupportedOperationException();
     }
