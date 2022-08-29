@@ -19,6 +19,10 @@ public class DeleteParserTest {
     };
 
     public static void main(String[] args) {
+        test2();
+    }
+
+    private static void test1() {
         for (String sql : sqls) {
             DeleteParser deleteParser = CurdParserFactory.createDeleteParser(sql);
             Curd parse = deleteParser.parse();
@@ -35,6 +39,16 @@ public class DeleteParserTest {
                 System.err.println(s1);
                 System.err.println(s2);
             }
+        }
+    }
+
+    private static void test2() {
+        for (String sql : sqls) {
+            DeleteParser deleteParser = CurdParserFactory.createDeleteParser(sql);
+            Curd parse = deleteParser.parse();
+
+            String s2 = parse.toString(" ");
+            System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));
         }
     }
 

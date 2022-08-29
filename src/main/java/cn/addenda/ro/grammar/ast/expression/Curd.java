@@ -42,6 +42,10 @@ public abstract class Curd implements DeepCloneable<Curd> {
         return this.accept(curdPrinter);
     }
 
+    public String toString(String separator) {
+        return this.accept(new CurdPrinter(separator));
+    }
+
     public AstMetaData getAstMetaData() {
         return astMetaData;
     }

@@ -13,15 +13,19 @@ public class UpdateParserTest {
 
     static String[] sqls = new String[]{
 
-//        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
+            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
 
-//        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')",
+            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')",
 
-        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python'), a = a+1, b = c",
+            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python'), a = a+1, b = c",
 
     };
 
     public static void main(String[] args) {
+        test2();
+    }
+
+    private static void test1() {
         for (String sql : sqls) {
             UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
             Curd parse = updateParser.parse();
@@ -38,6 +42,16 @@ public class UpdateParserTest {
                 System.err.println(s1);
                 System.err.println(s2);
             }
+        }
+    }
+
+    private static void test2() {
+        for (String sql : sqls) {
+            UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
+            Curd parse = updateParser.parse();
+
+            String s2 = parse.toString("");
+            System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));
         }
     }
 

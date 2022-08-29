@@ -39,6 +39,10 @@ public class InsertParserTest {
     };
 
     public static void main(String[] args) {
+        test2();
+    }
+
+    private static void test1() {
         for (String sql : sqls) {
             InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
             Curd parse = insertParser.parse();
@@ -55,6 +59,16 @@ public class InsertParserTest {
                 System.err.println(s1);
                 System.err.println(s2);
             }
+        }
+    }
+
+    private static void test2() {
+        for (String sql : sqls) {
+            InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
+            Curd parse = insertParser.parse();
+
+            String s2 = parse.toString(" ");
+            System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));
         }
     }
 

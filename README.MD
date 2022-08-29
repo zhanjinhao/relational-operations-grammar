@@ -34,7 +34,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 2、select 增加锁语法。 √
 
-3、toString()支持分隔符为 ''。
+3、toString()支持分隔符为 ''。 √
 
 4、支持group_concat()语法。 √
 
