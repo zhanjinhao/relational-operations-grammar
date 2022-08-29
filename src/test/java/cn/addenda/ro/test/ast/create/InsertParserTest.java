@@ -3,6 +3,7 @@ package cn.addenda.ro.test.ast.create;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.create.InsertParser;
 import cn.addenda.ro.grammar.ast.expression.Curd;
+import cn.addenda.ro.test.SqlReader;
 
 /**
  * @Author ISJINHAO
@@ -12,30 +13,6 @@ public class InsertParserTest {
 
     static String[] sqls = new String[]{
 
-//            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
-
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', DEGREE + 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = DEGREE_MAX+1",
-//
-//            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
-//
-//            "insert into score(SNO, CNO, DEGREE) values (?, '3-105', ?), (109, ?, 76), (?, '3-105', ?)",
-//
-//            "insert into score set SNO = 109, CNO = '3-105', DEGREE = 76",
-
-            "insert into score set SNO = 109, CNO = date_format(now(), 'yyyy-dd-mm'), DEGREE = DEGREE + 9 * 3",
-
-            "insert ignore into score set SNO = 109, CNO = '3-105', DEGREE = 76",
-
-            "insert ignore into score set SNO = ?, CNO = '3-105', DEGREE = ?",
-
-            "insert ignore into score set SNO = '1387398', CNO = #{cno}, DEGREE = ?",
-
-            "insert into table_listnames (name, address, tele) " +
-                    "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
-                    "where not exists ( " +
-                    "    select name from table_listnames where name = 'rupert' " +
-                    ") limit 1"
-
     };
 
     public static void main(String[] args) {
@@ -43,7 +20,7 @@ public class InsertParserTest {
     }
 
     private static void test1() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/insert.test", sqls)) {
             InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
             Curd parse = insertParser.parse();
 
@@ -63,7 +40,7 @@ public class InsertParserTest {
     }
 
     private static void test2() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/insert.test", sqls)) {
             InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
             Curd parse = insertParser.parse();
 

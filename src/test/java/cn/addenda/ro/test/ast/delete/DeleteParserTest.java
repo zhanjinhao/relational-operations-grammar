@@ -3,6 +3,7 @@ package cn.addenda.ro.test.ast.delete;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.delete.DeleteParser;
 import cn.addenda.ro.grammar.ast.expression.Curd;
+import cn.addenda.ro.test.SqlReader;
 
 /**
  * @Author ISJINHAO
@@ -11,11 +12,7 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
 public class DeleteParserTest {
 
     static String[] sqls = new String[]{
-            "delete from score where CREATE_TM < date_add(now(), interval 1 day) and DEGREE + 1 < 60 - 1",
-            "delete from score where DEGREE < 50",
-            "delete from score where CREATE_TM < now()",
-            "delete from score where DEGREE + 1 < 60 - 1",
-            "delete from score"
+
     };
 
     public static void main(String[] args) {
@@ -23,7 +20,7 @@ public class DeleteParserTest {
     }
 
     private static void test1() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/delete.test", sqls)) {
             DeleteParser deleteParser = CurdParserFactory.createDeleteParser(sql);
             Curd parse = deleteParser.parse();
 
@@ -43,7 +40,7 @@ public class DeleteParserTest {
     }
 
     private static void test2() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/delete.test", sqls)) {
             DeleteParser deleteParser = CurdParserFactory.createDeleteParser(sql);
             Curd parse = deleteParser.parse();
 

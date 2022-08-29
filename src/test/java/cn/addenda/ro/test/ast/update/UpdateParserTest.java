@@ -3,6 +3,7 @@ package cn.addenda.ro.test.ast.update;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.update.UpdateParser;
+import cn.addenda.ro.test.SqlReader;
 
 /**
  * @Author ISJINHAO
@@ -13,12 +14,6 @@ public class UpdateParserTest {
 
     static String[] sqls = new String[]{
 
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
-
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')",
-
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python'), a = a+1, b = c",
-
     };
 
     public static void main(String[] args) {
@@ -26,7 +21,7 @@ public class UpdateParserTest {
     }
 
     private static void test1() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/update.test", sqls)) {
             UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
             Curd parse = updateParser.parse();
 
@@ -46,11 +41,11 @@ public class UpdateParserTest {
     }
 
     private static void test2() {
-        for (String sql : sqls) {
+        for (String sql : SqlReader.read("src/test/resources/update.test", sqls)) {
             UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
             Curd parse = updateParser.parse();
 
-            String s2 = parse.toString("");
+            String s2 = parse.toString(" ");
             System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));
         }
     }
