@@ -97,6 +97,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_primary_PARSE, SELECT_primary_PARSE_MSG);
         addErrorMsg(SELECT_groupFunction_PARSE, SELECT_groupFunction_PARSE_MSG);
         addErrorMsg(SELECT_lockSeg_PARSE, SELECT_lockSeg_PARSE_MSG);
+        addErrorMsg(SELECT_groupConcat_PARSE, SELECT_groupConcat_PARSE_MSG);
 
         addErrorMsg(SELECT_select_VALIDATION, SELECT_select_VALIDATION_MSG);
         addErrorMsg(SELECT_singleSelect_VALIDATION, SELECT_singleSelect_VALIDATION_MSG);
@@ -113,6 +114,8 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_existsCondition_VALIDATION, SELECT_existsCondition_VALIDATION_MSG);
         addErrorMsg(SELECT_primary_VALIDATION, SELECT_primary_VALIDATION_MSG);
         addErrorMsg(SELECT_groupFunction_VALIDATION, SELECT_groupFunction_VALIDATION_MSG);
+        addErrorMsg(SELECT_lockSeg_VALIDATION, SELECT_lockSeg_VALIDATION_MSG);
+        addErrorMsg(SELECT_groupConcat_VALIDATION, SELECT_groupConcat_VALIDATION_MSG);
 
         addErrorMsg(CURD_unknow_syntax_PARSE, CURD_unknow_syntax_PARSE_MSG);
         addErrorMsg(CURD_token_undefined_PARSE, CURD_token_undefined_PARSE_MSG);
@@ -338,6 +341,9 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final int SELECT_lockSeg_PARSE = 25016;
     public static final String SELECT_lockSeg_PARSE_MSG = "The grammar of lockSeg is : 'sLock | xLock'.";
 
+    public static final int SELECT_groupConcat_PARSE = 25017;
+    public static final String SELECT_groupConcat_PARSE_MSG = "The grammar of lockSeg is : '\"group_concat\" \"(\" (\"distinct\")? binaryArithmetic (\",\" binaryArithmetic)* \"order\" \"by\" orderItem (\",\" orderItem)* (\"separator\" primary)? \")\"'.";
+
     /**
      * select 语法的语法验证错误代码从25501开始
      */
@@ -384,7 +390,13 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_primary_VALIDATION_MSG = "primary grammar validation failed : '#{xxx} | ? | \"true\" | \"false\" | \"null\" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | \"(\" singleSelect \")\" | groupFunction'.";
 
     public static final int SELECT_groupFunction_VALIDATION = 25515;
-    public static final String SELECT_groupFunction_VALIDATION_MSG = "groupFunction grammar validation failed is : '(\"avg\" | \"max\" | \"min\" | \"count\" | \"sum\" | \"flat\") \"(\" binaryArithmetic \")\"'.";
+    public static final String SELECT_groupFunction_VALIDATION_MSG = "groupFunction grammar validation failed : '(\"avg\" | \"max\" | \"min\" | \"count\" | \"sum\" | \"flat\") \"(\" binaryArithmetic \")\"'.";
+
+    public static final int SELECT_lockSeg_VALIDATION = 25516;
+    public static final String SELECT_lockSeg_VALIDATION_MSG = "lockSeg grammar validation failed is : 'sLock | xLock'.";
+
+    public static final int SELECT_groupConcat_VALIDATION = 25517;
+    public static final String SELECT_groupConcat_VALIDATION_MSG = "groupConcat grammar validation failed : '\"group_concat\" \"(\" (\"distinct\")? binaryArithmetic (\",\" binaryArithmetic)* \"order\" \"by\" orderItem (\",\" orderItem)* (\"separator\" primary)? \")\"'.";
 
 
     /**

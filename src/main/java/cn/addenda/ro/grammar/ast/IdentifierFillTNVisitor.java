@@ -126,11 +126,17 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitOrderBySeg(OrderBySeg orderBySeg) {
-        List<OrderBySeg.OrderItem> columnList = orderBySeg.getColumnList();
-        for (OrderBySeg.OrderItem orderItem : columnList) {
-            Token column = orderItem.getColumn();
-            addTableName(column);
+        List<Curd> columnList = orderBySeg.getColumnList();
+        for (Curd curd : columnList) {
+            OrderItem orderItem = (OrderItem) curd;
+            orderItem.getColumn().accept(this);
         }
+        return null;
+    }
+
+    @Override
+    public Void visitOrderItem(OrderItem orderItem) {
+        orderItem.getColumn().accept(this);
         return null;
     }
 
@@ -143,6 +149,23 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     public Void visitGroupFunction(GroupFunction groupFunction) {
         Curd curd = groupFunction.getCurd();
         curd.accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visitGroupConcat(GroupConcat groupConcat) {
+        final List<Curd> resultList = groupConcat.getResultList();
+        for (Curd curd : resultList) {
+            curd.accept(this);
+        }
+
+        final List<Curd> orderItemList = groupConcat.getOrderItemList();
+        if (orderItemList != null) {
+            for (Curd curd : orderItemList) {
+                curd.accept(this);
+            }
+        }
+
         return null;
     }
 

@@ -72,6 +72,11 @@ public abstract class DeleteVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
+    public R visitOrderItem(OrderItem orderItem) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public R visitSLock(SLock sLock) {
         throw new UnsupportedOperationException();
     }
@@ -88,6 +93,11 @@ public abstract class DeleteVisitor<R> extends AbstractCurdVisitor<R> {
 
     @Override
     public final R visitGroupFunction(GroupFunction groupFunction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitGroupConcat(GroupConcat groupConcat) {
         throw new UnsupportedOperationException();
     }
 

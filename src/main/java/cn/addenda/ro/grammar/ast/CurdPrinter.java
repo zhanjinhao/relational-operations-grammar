@@ -275,19 +275,23 @@ public class CurdPrinter implements CurdVisitor<String> {
     public String visitOrderBySeg(OrderBySeg orderBySeg) {
         StringBuilder sb = new StringBuilder();
         sb.append("order by\t");
-        List<OrderBySeg.OrderItem> columnList = orderBySeg.getColumnList();
-        if (columnList != null && !columnList.isEmpty()) {
-            OrderBySeg.OrderItem orderItem = columnList.get(0);
-            Token column = orderItem.getColumn();
-            Token orderType = orderItem.getOrderType();
-            sb.append(column.getLiteral()).append(BLANK).append(orderType == null ? "" : orderType.getLiteral());
-            for (int i = 1; i < columnList.size(); i++) {
-                orderItem = columnList.get(i);
-                column = orderItem.getColumn();
-                orderType = orderItem.getOrderType();
-                sb.append(",").append(BLANK).append(column.getLiteral()).append(BLANK).append(orderType == null ? "" : orderType.getLiteral());
-            }
+        List<Curd> columnList = orderBySeg.getColumnList();
+        // columnList不会为空
+        OrderItem orderItem = (OrderItem) columnList.get(0);
+        sb.append(orderItem.accept(this));
+        for (int i = 1; i < columnList.size(); i++) {
+            orderItem = (OrderItem) columnList.get(i);
+            sb.append(",").append(orderItem.accept(this));
         }
+        return sb.toString();
+    }
+
+    @Override
+    public String visitOrderItem(OrderItem orderItem) {
+        StringBuilder sb = new StringBuilder();
+        Curd column = orderItem.getColumn();
+        Token orderType = orderItem.getOrderType();
+        sb.append(column.accept(this)).append(BLANK).append(orderType == null ? "" : orderType.getLiteral());
         return sb.toString();
     }
 
@@ -372,6 +376,46 @@ public class CurdPrinter implements CurdVisitor<String> {
             a = curd.accept(this);
         }
         return groupFunction.getMethod().getLiteral() + "(" + BLANK + a + BLANK + ")";
+    }
+
+    @Override
+    public String visitGroupConcat(GroupConcat groupConcat) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(BLANK).append("group_concat");
+        sb.append(BLANK).append("(");
+
+        final Token modifier = groupConcat.getModifier();
+        sb.append(BLANK).append(modifier == null ? "" : modifier.getLiteral());
+
+        final List<Curd> resultList = groupConcat.getResultList();
+        Curd curd = resultList.get(0);
+        sb.append(BLANK).append(curd.accept(this));
+        for (int i = 1; i < resultList.size(); i++) {
+            curd = resultList.get(i);
+            sb.append(",").append(BLANK).append(curd.accept(this));
+        }
+
+        final List<Curd> orderItemList = groupConcat.getOrderItemList();
+        if (orderItemList != null) {
+            sb.append(BLANK).append("order");
+            sb.append(BLANK).append("by");
+            curd = orderItemList.get(0);
+            sb.append(BLANK).append(curd.accept(this));
+            for (int i = 1; i < orderItemList.size(); i++) {
+                curd = orderItemList.get(i);
+                sb.append(",").append(BLANK).append(curd.accept(this));
+            }
+        }
+
+        final String separator = groupConcat.getSeparator();
+        if (separator != null) {
+            sb.append(BLANK).append("separator");
+            sb.append(BLANK).append("'").append(separator).append("'");
+        }
+
+        sb.append(BLANK).append(")");
+        return sb.toString();
     }
 
     @Override

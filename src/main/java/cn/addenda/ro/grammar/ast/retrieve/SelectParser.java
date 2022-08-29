@@ -35,11 +35,12 @@ public class SelectParser extends ExpressionParser {
      * tableRep            ->  ("(" select ")" | IDENTIFIER) ("as" IDENTIFIER)?
      * whereSeg ↑          ->  "where" logic
      * groupBySeg          ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
-     * orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
+     * orderBySeg          ->  "order" "by" orderItem ("," orderItem)*
      * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
      * lockSeg             ->  sLock | xLock
      * <p>
      *
+     * orderItem           ->  binaryArithmetic ("desc" | "asc")?
      * sLock               ->  "lock" "in" "share" "mode"
      * xLock               ->  "for" "update"
      * logic ↑             ->  condition (("or" | "and") condition)*
@@ -56,7 +57,8 @@ public class SelectParser extends ExpressionParser {
      * functionParameter ↑ ->  logic | timeInterval | timeUnit | function
      * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
      * timeUnit ↑          ->  IDENTIFIER "from" primary
-     * groupFunction       ->  ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
+     * groupFunction       ->  groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" IDENTIFIER ")")
+     * groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
      * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
      */
     @Override
@@ -98,7 +100,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)?
+     * columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
      */
     private Curd singleSelect() {
         Curd columnSeg = columnSeg();
@@ -298,23 +300,27 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
+     * "order" "by" orderItem ("," orderItem)*
      */
     private Curd orderBySeg() {
         consume(TokenType.ORDER, AstROErrorReporterDelegate.SELECT_orderBySeg_PARSE);
         consume(TokenType.BY, AstROErrorReporterDelegate.SELECT_orderBySeg_PARSE);
-        List<OrderBySeg.OrderItem> columnList = new ArrayList<>();
+        List<Curd> columnList = new ArrayList<>();
         do {
-            Token token = tokenSequence.takeCur();
-            tokenSequence.advance();
-            if (tokenSequence.curEqual(TokenType.ASC, TokenType.DESC)) {
-                columnList.add(new OrderBySeg.OrderItem(token, tokenSequence.takeCur()));
-                tokenSequence.advance();
-            } else {
-                columnList.add(new OrderBySeg.OrderItem(token));
-            }
+            columnList.add(orderItem());
         } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
         return new OrderBySeg(columnList);
+    }
+
+    /**
+     * binaryArithmetic ("desc" | "asc")?
+     */
+    private Curd orderItem() {
+        final Curd curd = binaryArithmetic();
+        if (tokenSequence.equalThenAdvance(TokenType.ASC, TokenType.DESC)) {
+            return new OrderItem(curd, tokenSequence.takePre());
+        }
+        return new OrderItem(curd);
     }
 
 
@@ -507,10 +513,13 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * ("avg" | "max" | "min" | "count" | "sum", "flat") "(" IDENTIFIER ")"
+     * groupConcat | (("avg" | "max" | "min" | "count" | "sum", "flat") "(" IDENTIFIER ")")
      */
     protected Curd groupFunction() {
         Token method = tokenSequence.takeCur();
+        if (TokenType.GROUP_CONCAT.equals(method.getType())) {
+            return groupConcatFunction();
+        }
         tokenSequence.advance();
         consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_groupFunction_PARSE);
         Curd curd;
@@ -524,6 +533,48 @@ public class SelectParser extends ExpressionParser {
         return new GroupFunction(method, curd);
     }
 
+    /**
+     * "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
+     */
+    private Curd groupConcatFunction() {
+        // 跳过 group_concat
+        tokenSequence.advance();
+        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_groupConcat_PARSE);
+
+        Token modifier = null;
+        if (tokenSequence.equalThenAdvance(TokenType.DISTINCT)) {
+            modifier = tokenSequence.takePre();
+        }
+
+        List<Curd> resultList = new ArrayList<>();
+        do {
+            resultList.add(binaryArithmetic());
+        } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
+
+        List<Curd> orderItemList = null;
+        if (tokenSequence.equalThenAdvance(TokenType.ORDER)) {
+            // 跳过 BY
+            consume(TokenType.BY, AstROErrorReporterDelegate.SELECT_groupConcat_PARSE);
+            orderItemList = new ArrayList<>();
+            do {
+                orderItemList.add(orderItem());
+            } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
+        }
+
+        String separator = null;
+        if (tokenSequence.equalThenAdvance(TokenType.SEPARATOR)) {
+            final Token token = tokenSequence.takeCur();
+            if (!TokenType.STRING.equals(token.getType())) {
+                error(AstROErrorReporterDelegate.SELECT_groupConcat_PARSE);
+            }
+            separator = String.valueOf(token.getLiteral());
+            tokenSequence.advance();
+        }
+
+        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_groupConcat_PARSE);
+        return new GroupConcat(modifier, resultList, orderItemList, separator);
+    }
+
     protected static Set<TokenType> groupFunctionTypeSet = new HashSet<>();
 
     static {
@@ -533,6 +584,7 @@ public class SelectParser extends ExpressionParser {
         groupFunctionTypeSet.add(TokenType.COUNT);
         groupFunctionTypeSet.add(TokenType.AVG);
         groupFunctionTypeSet.add(TokenType.SUM);
+        groupFunctionTypeSet.add(TokenType.GROUP_CONCAT);
     }
 
     protected boolean checkGroupFunctionName(Token token) {

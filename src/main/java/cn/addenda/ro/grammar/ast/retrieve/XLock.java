@@ -9,6 +9,10 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
  */
 public class XLock extends Curd {
 
+    public XLock() {
+        super(new SingleSelectAstMetaData());
+    }
+
     @Override
     public <R> R accept(CurdVisitor<R> curdVisitor) {
         return curdVisitor.visitXLock(this);

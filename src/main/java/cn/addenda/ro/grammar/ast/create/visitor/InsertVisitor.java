@@ -78,6 +78,11 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
+    public R visitOrderItem(OrderItem orderItem) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public final R visitLimitSeg(LimitSeg limitSeg) {
         throw new UnsupportedOperationException();
     }
@@ -94,6 +99,11 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
 
     @Override
     public final R visitGroupFunction(GroupFunction groupFunction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitGroupConcat(GroupConcat groupConcat) {
         throw new UnsupportedOperationException();
     }
 

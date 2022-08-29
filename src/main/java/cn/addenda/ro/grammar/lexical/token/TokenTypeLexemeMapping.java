@@ -53,6 +53,8 @@ public class TokenTypeLexemeMapping {
     public static final String MIN = "min";
     public static final String MAX = "max";
     public static final String AVG = "avg";
+    public static final String GROUP_CONCAT = "group_concat";
+    public static final String SEPARATOR = "separator";
 
     public static final String WHERE = "where";
     public static final String HAVING = "having";
@@ -151,6 +153,8 @@ public class TokenTypeLexemeMapping {
         lexemeToTokenType.put(COUNT, TokenType.COUNT);
         lexemeToTokenType.put(MIN, TokenType.MIN);
         lexemeToTokenType.put(MAX, TokenType.MAX);
+        lexemeToTokenType.put(GROUP_CONCAT, TokenType.GROUP_CONCAT);
+        lexemeToTokenType.put(SEPARATOR, TokenType.SEPARATOR);
 
         // CONDITION
         lexemeToTokenType.put(WHERE, TokenType.WHERE);

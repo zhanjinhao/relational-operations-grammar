@@ -86,10 +86,10 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
             for (Curd curd : range) {
                 newRange.add(curd.accept(this));
             }
-            return new InCondition(in, identifier, newRange);
+            return new InCondition(in, identifier.deepClone(), newRange);
         } else {
             Curd curd = inCondition.getSelect();
-            return new InCondition(in, identifier, curd.accept(this));
+            return new InCondition(in, identifier.deepClone(), curd.accept(this));
         }
     }
 
@@ -113,13 +113,17 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitOrderBySeg(OrderBySeg orderBySeg) {
-        List<OrderBySeg.OrderItem> columnList = orderBySeg.getColumnList();
-        List<OrderBySeg.OrderItem> newColumnList = new ArrayList<>();
-        for (OrderBySeg.OrderItem item : columnList) {
-            Token orderType = item.getOrderType();
-            newColumnList.add(new OrderBySeg.OrderItem(item.getColumn().deepClone(), nullClone(orderType)));
+        List<Curd> columnList = orderBySeg.getColumnList();
+        List<Curd> newColumnList = new ArrayList<>();
+        for (Curd curd : columnList) {
+            newColumnList.add(curd.accept(this));
         }
         return new OrderBySeg(newColumnList);
+    }
+
+    @Override
+    public Curd visitOrderItem(OrderItem orderItem) {
+        return new OrderItem(orderItem.getColumn().deepClone(), nullClone(orderItem.getOrderType()));
     }
 
     @Override
@@ -130,6 +134,26 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitGroupFunction(GroupFunction groupFunction) {
         return new GroupFunction(groupFunction.getMethod().deepClone(), groupFunction.getCurd().accept(this));
+    }
+
+    @Override
+    public Curd visitGroupConcat(GroupConcat groupConcat) {
+        final List<Curd> resultList = groupConcat.getResultList();
+        List<Curd> newResultList = new ArrayList<>();
+        for (Curd curd : resultList) {
+            newResultList.add(curd.accept(this));
+        }
+
+        final List<Curd> orderItemList = groupConcat.getOrderItemList();
+        List<Curd> newOrderItemList = null;
+        if (orderItemList != null) {
+            newOrderItemList = new ArrayList<>();
+            for (Curd curd : orderItemList) {
+                newOrderItemList.add(curd.accept(this));
+            }
+        }
+
+        return new GroupConcat(nullClone(groupConcat.getModifier()), newResultList, newOrderItemList, groupConcat.getSeparator());
     }
 
     @Override

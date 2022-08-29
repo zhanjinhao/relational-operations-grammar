@@ -48,7 +48,8 @@ function ↑          ->  functionName "(" functionParameter? ("," functionParam
 functionParameter ↑ ->  logic | timeInterval | timeUnit | function
 timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
 timeUnit ↑          ->  IDENTIFIER "from" primary
-groupFunction       ->  ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
+groupFunction       ->  groupConcat | ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
+groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
 columnList			->  IDENTIFIER ("," IDENTIFIER)*
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 InsertParser

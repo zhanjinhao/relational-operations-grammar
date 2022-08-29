@@ -13,240 +13,264 @@ public class IdentifierFillTNVisitorTest {
 
     static String[] sqls = new String[]{
 
-            "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
-                    + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
-                    + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
-                    + "      from T_DISPATCH_FLIGHT_RELEASE\n"
-                    + "      where DELETE_FLAG = 'N'\n"
-                    + "        and FLIGHT_ID in (100838874, 100813825)\n"
-                    + "      group by FLIGHT_ID) T\n"
-                    + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
-                    + " and RELEASE.MODIFY_TM = T.LATEAST_TIME order by RELEASE.CREATE_TIME",
+        "select group_concat(DELETE_FLAG, CREATOR + '1' separator ';') as a "
+            + " from t_fp_day_navigation "
+            + "group by DELETE_FLAG, CREATOR having group_concat(DELETE_FLAG + ' ' order by CREATOR asc separator ';') != '' order by ('1' + DELETE_FLAG) desc",
 
-            "select ts_user.*, ts_role.create_time, ts_role.create_user from ts_user join ts_role on ts_user.user_id = ts_role.create_user " +
-                    "where (select c.a from (select 1 as a from dual) c) > ts_role.a and (select c.a from (select true as a from dual) c) ",
+        "select * from STUDENT order by CLASS desc, NAME asc",
 
-            "select distinct SNO\n" +
-                    "from SCORE SCX\n" +
-                    "where not exists\n" +
-                    "          (\n" +
-                    "              select *\n" +
-                    "              from SCORE SCY\n" +
-                    "              where SCY.SNO = '2002151122' and\n" +
-                    "                        not exists\n" +
-                    "                        (\n" +
-                    "                              select *\n" +
-                    "                              from SCORE SCZ\n" +
-                    "                              where SCZ.SNO = SCX.Sno and\n" +
-                    "                                        SCZ.CNO = SCY.CNO))",
+        "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
 
-            "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
-                    + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
-                    + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
-                    + "      from T_DISPATCH_FLIGHT_RELEASE\n"
-                    + "      where DELETE_FLAG = 'N'\n"
-                    + "        and FLIGHT_ID in (?, ?)\n"
-                    + "      group by FLIGHT_ID) T\n"
-                    + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
-                    + " and RELEASE.MODIFY_TM = T.LATEAST_TIME",
+        "insert into score(SNO, CNO, DEGREE) values (109, '3-105', DEGREE + 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = DEGREE_MAX+1",
 
-            "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
-                    + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
-                    + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
-                    + "      from T_DISPATCH_FLIGHT_RELEASE\n"
-                    + "      where DELETE_FLAG = 'N'\n"
-                    + "        and FLIGHT_ID in (#{flightId1}, #{flightId2}, #{flightId3})\n"
-                    + "      group by FLIGHT_ID) T\n"
-                    + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
-                    + " and RELEASE.MODIFY_TM = T.LATEAST_TIME",
+        "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
 
-            "select a, b"
-                    + "  from tab2 t cross join tab3 left join tab3 on tab4.e = tab2.e, (select * from tab5) t5\n"
-                    + " where t.m = ?\n"
-                    + "   and exists (select 1\n"
-                    + "                 from tab4 t4\n"
-                    + "                where t1.n = t4.n)\n"
-                    + "   and t.tm >= '2016-11-11'",
+        "insert into score(SNO, CNO, DEGREE) values (?, '3-105', ?), (109, ?, 76), (?, '3-105', ?)",
 
-            "select SNO, SNAME, SBIRTHDAY, date_format(now(), 'yyyy') as anow from STUDENT \n" +
-                    "where date_format(SBIRTHDAY, 'yyyy') = (select date_format(SBIRTHDAY, 'yyyy') as t from STUDENT where SNO = '108')",
+        "insert into score set SNO = 109, CNO = '3-105', DEGREE = 76",
 
-            "select SNO, CNO from SCORE where DEGREE not in (select max(DEGREE) as maxd from SCORE)",
+        "insert into score set SNO = 109, CNO = date_format(now(), 'yyyy-dd-mm'), DEGREE = DEGREE + 9 * 3",
 
-            "select a.SNO, a.CNO from SCORE a, (select max(DEGREE) as MAX from SCORE) b where b.MAX = SCORE.DEGREE",
+        "insert ignore into score set SNO = 109, CNO = '3-105', DEGREE = 76",
 
-            "select 1 from (select a from dual d1 join dual d2 on d1.id = d2.outer_id) t1 where (select 2 from dual) > t1.a",
+        "insert ignore into score set SNO = ?, CNO = '3-105', DEGREE = ?",
 
-            "select 1 from dual where (select c as d from t1 where id = 5) > (select a from t2 where id = 6)",
+        "insert ignore into score set SNO = '1387398', CNO = #{cno}, DEGREE = ?",
 
-            "select 1 from dual union select 2 from dual union select 3 from dual union select 4 from dual union select 5 from dual",
+        "insert into table_listnames (name, address, tele) " +
+            "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
+            "where not exists ( " +
+            "    select name from table_listnames where name = 'rupert' " +
+            ") limit 1",
 
-            "select 1 from dual minus select 2 from dual union select 3 from dual",
+        "delete from score where CREATE_TM < date_add(now(), interval 1 day) and DEGREE + 1 < 60 - 1",
+        "delete from score where DEGREE < 50",
+        "delete from score where CREATE_TM < now()",
+        "delete from score where DEGREE + 1 < 60 - 1",
+        "delete from score",
 
-            "select * from ts_user " +
-                    "where (select c.a from (select true as a from dual) c) and (select c.a from (select true as a from dual) c)",
+        "select a from (select * from A) aa where a > 100 and a < 50",
 
-            "select * from t1, t2 where t1.a = (select b from t2 where t1.c = t2.c)",
+        "select date_add(A.date, interval 1 day) as tomorrow from (select * from a) A",
 
-            "select * from ts_user where (select c.a from (select true as a from dual) c)",
+        "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
+            + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
+            + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
+            + "      from T_DISPATCH_FLIGHT_RELEASE\n"
+            + "      where DELETE_FLAG = 'N'\n"
+            + "        and FLIGHT_ID in (100838874, 100813825)\n"
+            + "      group by FLIGHT_ID) T\n"
+            + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
+            + " and RELEASE.MODIFY_TM = T.LATEAST_TIME order by RELEASE.CREATE_TIME",
 
-            "select * from ts_user where (select 1 from dual) = 1",
+        "select ts_user.*, ts_role.create_time, ts_role.create_user from ts_user join ts_role on ts_user.user_id = ts_role.create_user " +
+            "where (select c.a from (select 1 as a from dual) c) > ts_role.a and (select c.a from (select true as a from dual) c) ",
 
-            "select now() as a from dual",
+        "select distinct SNO\n" +
+            "from SCORE SCX\n" +
+            "where not exists\n" +
+            "          (\n" +
+            "              select *\n" +
+            "              from SCORE SCY\n" +
+            "              where SCY.SNO = '2002151122' and\n" +
+            "                        not exists\n" +
+            "                        (\n" +
+            "                              select *\n" +
+            "                              from SCORE SCZ\n" +
+            "                              where SCZ.SNO = SCX.Sno and\n" +
+            "                                        SCZ.CNO = SCY.CNO))",
 
-            "select 1 from dual",
+        "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
+            + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
+            + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
+            + "      from T_DISPATCH_FLIGHT_RELEASE\n"
+            + "      where DELETE_FLAG = 'N'\n"
+            + "        and FLIGHT_ID in (?, ?)\n"
+            + "      group by FLIGHT_ID) T\n"
+            + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
+            + " and RELEASE.MODIFY_TM = T.LATEAST_TIME",
 
-            "select -(1 * SCORE) as score from dual",
+        "select T.FLIGHT_ID, ROUTE_TOWARDS\n"
+            + "from T_DISPATCH_FLIGHT_RELEASE RELEASE,\n"
+            + "     (select FLIGHT_ID, max(MODIFY_TM) as LATEAST_TIME\n"
+            + "      from T_DISPATCH_FLIGHT_RELEASE\n"
+            + "      where DELETE_FLAG = 'N'\n"
+            + "        and FLIGHT_ID in (#{flightId1}, #{flightId2}, #{flightId3})\n"
+            + "      group by FLIGHT_ID) T\n"
+            + "where RELEASE.FLIGHT_ID = T.FLIGHT_ID\n"
+            + " and RELEASE.MODIFY_TM = T.LATEAST_TIME",
 
-            "select * from SCORE where DEGREE > 60 and DEGREE < 80",
+        "select a, b"
+            + "  from tab2 t cross join tab3 left join tab3 on tab4.e = tab2.e, (select * from tab5) t5\n"
+            + " where t.m = ?\n"
+            + "   and exists (select 1\n"
+            + "                 from tab4 t4\n"
+            + "                where t1.n = t4.n)\n"
+            + "   and t.tm >= '2016-11-11'",
 
-            "select * from STUDENT order by CLASS desc",
+        "select SNO, SNAME, SBIRTHDAY, date_format(now(), 'yyyy') as anow from STUDENT \n" +
+            "where date_format(SBIRTHDAY, 'yyyy') = (select date_format(SBIRTHDAY, 'yyyy') as t from STUDENT where SNO = '108')",
 
-            "select * from SCORE order by CNO asc, DEGREE desc",
+        "select SNO, CNO from SCORE where DEGREE not in (select max(DEGREE) as maxd from SCORE)",
 
-            "select avg(DEGREE) as avgd from SCORE where CNO = '3-105'",
+        "select a.SNO, a.CNO from SCORE a, (select max(DEGREE) as MAX from SCORE) b where b.MAX = SCORE.DEGREE",
 
-            "select avg(DEGREE) as avgd from SCORE where CNO like '3%' group by CNO having count(CNO) > 5",
+        "select 1 from (select a from dual d1 join dual d2 on d1.id = d2.outer_id) t1 where (select 2 from dual) > t1.a",
 
-            "select SNO from SCORE group by SNO having min(DEGREE) > 70 and max(DEGREE) < 90",
+        "select 1 from dual where (select c as d from t1 where id = 5) > (select a from t2 where id = 6)",
 
-            "select STUDENT.SNAME, SCORE.CNO, SCORE.DEGREE from STUDENT, SCORE where STUDENT.SNO = SCORE.SNO",
+        "select 1 from dual union select 2 from dual union select 3 from dual union select 4 from dual union select 5 from dual",
 
-            "select STUDENT.SNAME, COURSE.CNAME, SCORE.DEGREE \n" +
-                    "from SCORE, COURSE, STUDENT where STUDENT.SNO = SCORE.SNO and SCORE.CNO = COURSE.CNO",
+        "select 1 from dual minus select 2 from dual union select 3 from dual",
 
-            "select SCORE.SNO, SCORE.CNO, GRADE.RANK \n" +
-                    "from SCORE, GRADE where SCORE.DEGREE >= GRADE.LOW and SCORE.DEGREE <= GRADE.UPP",
+        "select * from ts_user " +
+            "where (select c.a from (select true as a from dual) c) and (select c.a from (select true as a from dual) c)",
 
-            "select * from SCORE \n" +
-                    "where \n" +
-                    "\tSCORE.CNO = '3-105' \n" +
-                    "\tand \n" +
-                    "\t(select DEGREE from SCORE where SNO = '109' and CNO = '3-105') < SCORE.DEGREE",
+        "select * from t1, t2 where t1.a = (select b from t2 where t1.c = t2.c)",
 
-            "select * from SCORE \n" +
-                    "where \n" +
-                    "\tSCORE.CNO = ? \n" +
-                    "\tand \n" +
-                    "\t(select DEGREE from SCORE where SNO = '?' and CNO = '3-105') < SCORE.DEGREE",
+        "select * from ts_user where (select c.a from (select true as a from dual) c)",
 
+        "select * from ts_user where (select 1 from dual) = 1",
+
+        "select now() as a from dual",
+
+        "select 1 from dual",
+
+        "select -(1 * SCORE) as score from dual",
+
+        "select * from SCORE where DEGREE > 60 and DEGREE < 80",
+
+        "select * from SCORE order by CNO asc, DEGREE desc",
+
+        "select avg(DEGREE) as avgd from SCORE where CNO = '3-105'",
+
+        "select avg(DEGREE) as avgd from SCORE where CNO like '3%' group by CNO having count(CNO) > 5",
+
+        "select SNO from SCORE group by SNO having min(DEGREE) > 70 and max(DEGREE) < 90",
+
+        "select STUDENT.SNAME, SCORE.CNO, SCORE.DEGREE from STUDENT, SCORE where STUDENT.SNO = SCORE.SNO",
+
+        "select STUDENT.SNAME, COURSE.CNAME, SCORE.DEGREE \n" +
+            "from SCORE, COURSE, STUDENT where STUDENT.SNO = SCORE.SNO and SCORE.CNO = COURSE.CNO",
+
+        "select SCORE.SNO, SCORE.CNO, GRADE.RANK \n" +
+            "from SCORE, GRADE where SCORE.DEGREE >= GRADE.LOW and SCORE.DEGREE <= GRADE.UPP",
+
+        "select * from SCORE \n" +
+            "where \n" +
+            "\tSCORE.CNO = '3-105' \n" +
+            "\tand \n" +
+            "\t(select DEGREE from SCORE where SNO = '109' and CNO = '3-105') < SCORE.DEGREE",
+
+        "select * from SCORE \n" +
+            "where \n" +
+            "\tSCORE.CNO = ? \n" +
+            "\tand \n" +
+            "\t(select DEGREE from SCORE where SNO = '?' and CNO = '3-105') < SCORE.DEGREE",
+
+        "select * \n" +
+            "from SCORE, (select SNO, max(DEGREE) as MAXDEGREE from SCORE group by SNO having count(*) > 1) b \n" +
+            "where b.SNO = a.SNO and b.MAXDEGREE > a.DEGREE",
+
+        "select * from SCORE a \n" +
+            "where \n" +
+            "\t((select max(b.DEGREE) as maxd from SCORE b where a.SNO = b.SNO) > a.DEGREE) \n" +
+            "\tand \n" +
+            "\t(a.SNO in (select c.SNO from SCORE group by c.SNO having count(*) > 1))",
+
+        "select * from SCORE where (select DEGREE from SCORE where SNO = '109' and CNO = '3-105') < DEGREE",
+
+        "select * from SCORE \n" +
+            "where \n" +
+            "\tCNO in \n" +
+            "\t(select CNO from COURSE where (select TNO from TEACHER where TNAME = '张旭') = COURSE.TNO)",
+
+        "select TNAME from TEACHER \n" +
+            "where \n" +
+            "\tTNO in \n" +
+            "\t(select TNO from COURSE where CNO in (select CNO from SCORE group by CNO having count(*) > 5))",
+
+        "select * from SCORE a where a.CNO = '3-105' " +
+            "and a.DEGREE >= (select min(DEGREE) as c from SCORE b where b.CNO = '3-245') order by DEGREE desc",
+
+        "select SNO, a.CNO, DEGREE from SCORE a, (select avg(DEGREE) as AVGG, CNO from SCORE group by CNO) b \n" +
+            "where a.CNO = b.CNO and a.DEGREE < b.AVGG",
+
+        "select * from SCORE a where (select avg(b.DEGREE) as a from SCORE b where a.CNO = b.CNO) > a.DEGREE",
+
+        "select TNAME, DEPART from TEACHER where TEACHER.TNO not in (select distinct TNO from COURSE)",
+
+        "select * from STUDENT \n" +
+            "where \n" +
+            "\tSSEX = (select SSEX from STUDENT where SNAME = '李军') \n" +
+            "\tand \n" +
+            "\tCLASS = (select CLASS from STUDENT where SNAME = '李军') \n" +
+            "\tand \n" +
+            "\tSNAME != '李军'",
+
+        "select * from SCORE a \n" +
+            "where (select count(*) as a from SCORE b where a.CNO = b.CNO and a.DEGREE < b.DEGREE) < 2",
+
+        "select * from SCORE minus \n" +
             "select * \n" +
-                    "from SCORE, (select SNO, max(DEGREE) as MAXDEGREE from SCORE group by SNO having count(*) > 1) b \n" +
-                    "where b.SNO = a.SNO and b.MAXDEGREE > a.DEGREE",
+            "from SCORE a where (select count(*) as a from SCORE b where a.CNO = b.CNO and a.DEGREE < b.DEGREE) < 1",
 
-            "select * from SCORE a \n" +
-                    "where \n" +
-                    "\t((select max(b.DEGREE) as maxd from SCORE b where a.SNO = b.SNO) > a.DEGREE) \n" +
-                    "\tand \n" +
-                    "\t(a.SNO in (select c.SNO from SCORE group by c.SNO having count(*) > 1))",
+        "select SNAME\n" +
+            "from  STUDENT\n" +
+            "where exists\n" +
+            "(\n" +
+            "      select *\n" +
+            "      from SCORE\n" +
+            "      where SNO = STUDENT.SNO and CNO='1'\n" +
+            ")",
 
-            "select * from SCORE where (select DEGREE from SCORE where SNO = '109' and CNO = '3-105') < DEGREE",
+        "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
+            "where not exists ( " +
+            "    select name from table_listnames where name = 'rupert' " +
+            ") limit 1",
 
-            "select * from SCORE \n" +
-                    "where \n" +
-                    "\tCNO in \n" +
-                    "\t(select CNO from COURSE where (select TNO from TEACHER where TNAME = '张旭') = COURSE.TNO)",
+        "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
+            "where not exists ( " +
+            "    select name from table_listnames where name = 'rupert' and 1 = 2 " +
+            ") limit 1",
 
-            "select TNAME from TEACHER \n" +
-                    "where \n" +
-                    "\tTNO in \n" +
-                    "\t(select TNO from COURSE where CNO in (select CNO from SCORE group by CNO having count(*) > 5))",
+        "select a, b"
+            + "  from tab2 t left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5\n"
+            + " where t.m = ?\n"
+            + "   and exists (select 1\n"
+            + "                 from tab4 t4\n"
+            + "                where t1.n = t4.n)\n"
+            + "   and t.tm >= '2016-11-11'",
 
-            "select * from SCORE a where a.CNO = '3-105' " +
-                    "and a.DEGREE >= (select min(DEGREE) as c from SCORE b where b.CNO = '3-245') order by DEGREE desc",
+        "select * from A where a is null",
 
-            "select SNO, a.CNO, DEGREE from SCORE a, (select avg(DEGREE) as AVGG, CNO from SCORE group by CNO) b \n" +
-                    "where a.CNO = b.CNO and a.DEGREE < b.AVGG",
+        "select * from A where a is not null",
 
-            "select * from SCORE a where (select avg(b.DEGREE) as a from SCORE b where a.CNO = b.CNO) > a.DEGREE",
+        "select case a when b+1 then '1' when b+2 then '2' else '3' end as A from (select 2 as a, 1 as b from dual) A",
 
-            "select TNAME, DEPART from TEACHER where TEACHER.TNO not in (select distinct TNO from COURSE)",
+        "select t1.*, t2.* from t1, t2 where t1.id = t2.outerId",
 
-            "select * from STUDENT \n" +
-                    "where \n" +
-                    "\tSSEX = (select SSEX from STUDENT where SNAME = '李军') \n" +
-                    "\tand \n" +
-                    "\tCLASS = (select CLASS from STUDENT where SNAME = '李军') \n" +
-                    "\tand \n" +
-                    "\tSNAME != '李军'",
+        "select * from A where a = 1.12",
 
-            "select * from SCORE a \n" +
-                    "where (select count(*) as a from SCORE b where a.CNO = b.CNO and a.DEGREE < b.DEGREE) < 2",
+        "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5",
 
-            "select * from SCORE minus \n" +
-                    "select * \n" +
-                    "from SCORE a where (select count(*) as a from SCORE b where a.CNO = b.CNO and a.DEGREE < b.DEGREE) < 1",
+        "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 lock in share mode",
 
-            "select SNAME\n" +
-                    "from  STUDENT\n" +
-                    "where exists\n" +
-                    "(\n" +
-                    "      select *\n" +
-                    "      from SCORE\n" +
-                    "      where SNO = STUDENT.SNO and CNO='1'\n" +
-                    ")",
+        "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 for update",
 
-            "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
-                    "where not exists ( " +
-                    "    select name from table_listnames where name = 'rupert' " +
-                    ") limit 1",
+        "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 limit 1 for update",
 
-            "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
-                    "where not exists ( " +
-                    "    select name from table_listnames where name = 'rupert' and 1 = 2 " +
-                    ") limit 1",
+        "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 limit 1 offset 2 for update",
 
-            "select a, b"
-                    + "  from tab2 t left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5\n"
-                    + " where t.m = ?\n"
-                    + "   and exists (select 1\n"
-                    + "                 from tab4 t4\n"
-                    + "                where t1.n = t4.n)\n"
-                    + "   and t.tm >= '2016-11-11'",
+        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
 
-            "select * from A where a is null",
+        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')",
 
-            "select case a when b+1 then '1' when b+2 then '2' else '3' end as A from (select 2 as a, 1 as b from dual) A",
-
-            "select t1.*, t2.* from t1, t2 where t1.id = t2.outerId",
-
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
-
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')",
-
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76)",
-
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76) on duplicate key update SNO = 131, CNO = '4-111', DEGREE = 99",
-
-            "insert into score(SNO, CNO, DEGREE) values (109, '3-105', 76), (109, '3-105', 76), (109, '3-105', 76)",
-
-            "insert into score(SNO, CNO, DEGREE) values (?, '3-105', ?), (109, ?, 76), (?, '3-105', ?)",
-
-            "insert into score set SNO = 109, CNO = '3-105', DEGREE = 76",
-
-            "insert into score set SNO = 109, CNO = date_format(now(), 'yyyy-dd-mm'), DEGREE = DEGREE + 9 * 3",
-
-            "insert ignore into score set SNO = 109, CNO = '3-105', DEGREE = 76",
-
-            "insert ignore into score set SNO = ?, CNO = '3-105', DEGREE = ?",
-
-            "insert ignore into score set SNO = '1387398', CNO = #{cno}, DEGREE = ?",
-
-            "insert into table_listnames (name, address, tele) " +
-                    "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
-                    "where not exists ( " +
-                    "    select name from table_listnames where name = 'rupert' " +
-                    ") limit 1",
-            "delete from score where DEGREE < 50",
-            "delete from score where CREATE_TM < now()",
-            "delete from score where DEGREE + 1 < 60 - 1",
-            "delete from score where CREATE_TM < now() and DEGREE + 1 < 60 - 1",
-            "delete from score"
+        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python'), a = a+1, b = c",
 
     };
 
     public static void main(String[] args) {
-
 
         for (String sql : sqls) {
             CurdParser curdParser = CurdParserFactory.createCurdParser(sql, DefaultFunctionEvaluator.getInstance());
@@ -254,9 +278,11 @@ public class IdentifierFillTNVisitorTest {
             Curd curd = curdParser.parse();
             Curd deepClone = curd.deepClone();
 
-            deepClone.fillTableName("HAHAHAHAHAHA");
+            String tableName = "HAHAHAHAHAHA";
+
+            deepClone.fillTableName(tableName);
             String s1 = curd.toString().replaceAll("\\s+", "");
-            String s2 = deepClone.toString().replaceAll("\\s+", "");
+            String s2 = deepClone.toString().replaceAll("\\s+", "").replaceAll(tableName + ".", "");
 
             if (s1.equals(s2)) {
                 System.out.println(s1);

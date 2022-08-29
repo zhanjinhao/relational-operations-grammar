@@ -82,6 +82,11 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
+    public R visitOrderItem(OrderItem orderItem) {
+        return orderItem.accept(client);
+    }
+
+    @Override
     public final R visitLimitSeg(LimitSeg limitSeg) {
         return limitSeg.accept(client);
     }
@@ -89,6 +94,11 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     @Override
     public final R visitGroupFunction(GroupFunction groupFunction) {
         return groupFunction.accept(client);
+    }
+
+    @Override
+    public R visitGroupConcat(GroupConcat groupConcat) {
+        return groupConcat.accept(client);
     }
 
     @Override

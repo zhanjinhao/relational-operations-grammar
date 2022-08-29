@@ -36,9 +36,13 @@ public interface CurdVisitor<R> {
 
     R visitOrderBySeg(OrderBySeg orderBySeg);
 
+    R visitOrderItem(OrderItem orderItem);
+
     R visitLimitSeg(LimitSeg limitSeg);
 
     R visitGroupFunction(GroupFunction groupFunction);
+
+    R visitGroupConcat(GroupConcat groupConcat);
 
     R visitCaseWhen(CaseWhen caseWhen);
 

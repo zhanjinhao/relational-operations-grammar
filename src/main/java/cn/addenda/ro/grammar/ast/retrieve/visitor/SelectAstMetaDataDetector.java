@@ -296,12 +296,18 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     public AstMetaData visitOrderBySeg(OrderBySeg orderBySeg) {
         AstMetaData astMetaDataCur = orderBySeg.getAstMetaData();
 
-        List<OrderBySeg.OrderItem> columnList = orderBySeg.getColumnList();
-        for (OrderBySeg.OrderItem item : columnList) {
-            Token column = item.getColumn();
-            astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(column.getLiteral()));
+        List<Curd> columnList = orderBySeg.getColumnList();
+        for (Curd item : columnList) {
+            astMetaDataCur.mergeColumnReference(item.accept(this));
         }
 
+        return astMetaDataCur;
+    }
+
+    @Override
+    public AstMetaData visitOrderItem(OrderItem orderItem) {
+        final AstMetaData astMetaDataCur = orderItem.getAstMetaData();
+        astMetaDataCur.mergeColumnReference(orderItem.getColumn().accept(this));
         return astMetaDataCur;
     }
 
@@ -315,6 +321,24 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = groupFunction.getAstMetaData();
         Curd curd = groupFunction.getCurd();
         astMetaDataCur.mergeColumnReference(curd.accept(this));
+        return astMetaDataCur;
+    }
+
+    @Override
+    public AstMetaData visitGroupConcat(GroupConcat groupConcat) {
+        final AstMetaData astMetaDataCur = groupConcat.getAstMetaData();
+        final List<Curd> resultList = groupConcat.getResultList();
+        for (Curd curd : resultList) {
+            astMetaDataCur.mergeColumnReference(curd.accept(this));
+        }
+
+        final List<Curd> orderItemList = groupConcat.getOrderItemList();
+        if (orderItemList != null) {
+            for (Curd curd : orderItemList) {
+                astMetaDataCur.mergeColumnReference(curd.accept(this));
+            }
+        }
+
         return astMetaDataCur;
     }
 

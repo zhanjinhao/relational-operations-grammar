@@ -221,10 +221,15 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
 
     @Override
     public Void visitOrderBySeg(OrderBySeg orderBySeg) {
-        List<OrderBySeg.OrderItem> columnList = orderBySeg.getColumnList();
+        List<Curd> columnList = orderBySeg.getColumnList();
         if (columnList.isEmpty()) {
             error(AstROErrorReporterDelegate.SELECT_orderBySeg_VALIDATION);
         }
+        return null;
+    }
+
+    @Override
+    public Void visitOrderItem(OrderItem orderItem) {
         return null;
     }
 
@@ -291,6 +296,15 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             error(AstROErrorReporterDelegate.SELECT_groupFunction_VALIDATION);
         } else {
             curd.accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitGroupConcat(GroupConcat groupConcat) {
+        final List<Curd> resultList = groupConcat.getResultList();
+        if (resultList == null) {
+            error(AstROErrorReporterDelegate.SELECT_groupConcat_VALIDATION);
         }
         return null;
     }

@@ -103,6 +103,13 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
     }
 
     @Override
+    public Void visitOrderItem(OrderItem orderItem) {
+        nullAccept(orderItem.getColumn());
+        nullReset(orderItem);
+        return null;
+    }
+
+    @Override
     public Void visitLimitSeg(LimitSeg limitSeg) {
         nullReset(limitSeg);
         return null;
@@ -112,6 +119,24 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
     public Void visitGroupFunction(GroupFunction groupFunction) {
         nullAccept(groupFunction.getCurd());
         nullReset(groupFunction);
+        return null;
+    }
+
+    @Override
+    public Void visitGroupConcat(GroupConcat groupConcat) {
+        final List<Curd> resultList = groupConcat.getResultList();
+        for (Curd curd : resultList) {
+            curd.accept(this);
+        }
+
+        final List<Curd> orderItemList = groupConcat.getOrderItemList();
+        if (orderItemList != null) {
+            for (Curd curd : orderItemList) {
+                curd.accept(this);
+            }
+        }
+
+        nullReset(groupConcat);
         return null;
     }
 

@@ -66,7 +66,7 @@ public enum TokenType {
     /**
      * GROUP
      */
-    GROUP, FLAT, SUM, COUNT, MIN, MAX, AVG,
+    GROUP, FLAT, SUM, COUNT, MIN, MAX, AVG, GROUP_CONCAT, SEPARATOR,
 
     /**
      * CONDITION

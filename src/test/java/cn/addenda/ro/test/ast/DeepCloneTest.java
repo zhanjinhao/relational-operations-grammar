@@ -1,16 +1,15 @@
 package cn.addenda.ro.test.ast;
 
-import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdParser;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.function.evaluator.DefaultFunctionEvaluator;
 
 /**
- * @author addenda
- * @datetime 2022/8/16 13:42
+ * @Author ISJINHAO
+ * @Date 2022/1/27 15:40
  */
-public class ResetAstMetaDataTest {
+public class DeepCloneTest {
 
 
     static String[] sqls = new String[]{
@@ -272,26 +271,24 @@ public class ResetAstMetaDataTest {
 
     };
 
+
     public static void main(String[] args) {
 
         for (String sql : sqls) {
             CurdParser curdParser = CurdParserFactory.createCurdParser(sql, DefaultFunctionEvaluator.getInstance());
 
             Curd curd = curdParser.parse();
+            Curd deepClone = curd.deepClone();
 
-            final AstMetaData astMetaData1 = curd.getAstMetaData();
-            String astStr1 = astMetaData1.toString();
+            String s1 = curd.toString().replaceAll("\\s+", "");
+            String s2 = deepClone.toString().replaceAll("\\s+", "");
 
-            curd.reSetAstMetaData();
-            final AstMetaData astMetaData2 = curd.getAstMetaData();
-            String astStr2 = astMetaData2.toString();
-
-            if (astStr1.equals(astStr2)) {
-                System.out.println(astStr1);
-                System.out.println(astStr2);
+            if (s1.equals(s2)) {
+                System.out.println(s1);
+                System.out.println(s2);
             } else {
-                System.err.println(astStr1);
-                System.err.println(astStr2);
+                System.err.println(s1);
+                System.err.println(s2);
             }
 
         }
