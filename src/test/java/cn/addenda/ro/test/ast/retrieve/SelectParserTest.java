@@ -221,7 +221,9 @@ public class SelectParserTest {
 
             "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 lock in share mode",
 
-            "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 for update"
+            "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 for update",
+            "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 limit 1 for update",
+            "select a, b from tab2 left join tab3 on tab2.c = tab3.c and tab2.d = tab2.c, (select * from tab5) t5 limit 1 offset 2 for update"
     };
 
     public static void main(String[] args) {

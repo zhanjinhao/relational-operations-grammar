@@ -116,7 +116,7 @@ public enum TokenType {
     /**
      * LIMIT
      */
-    LIMIT,
+    LIMIT, OFFSET,
 
     /**
      * COMMON

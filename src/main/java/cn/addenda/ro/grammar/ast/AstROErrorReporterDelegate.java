@@ -318,7 +318,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_orderBySeg_PARSE_MSG = "The grammar of orderBySeg is : '\"order\" \"by\" IDENTIFIER (\"desc\" | \"asc\") (\",\" IDENTIFIER (\"desc\" | \"asc\"))*'.";
 
     public static final int SELECT_limitSeg_PARSE = 25010;
-    public static final String SELECT_limitSeg_PARSE_MSG = "The grammar of limitSeg is : '\"limit\" INTEGER (\",\" INTEGER)?'.";
+    public static final String SELECT_limitSeg_PARSE_MSG = "The grammar of limitSeg is : '\"limit\" INTEGER (\"offset\" INTEGER)?'.";
 
     public static final int SELECT_condition_PARSE = 25011;
     public static final String SELECT_condition_PARSE_MSG = "The grammar of condition is : 'inCondition | existsCondition | comparison'.";

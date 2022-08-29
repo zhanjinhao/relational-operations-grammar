@@ -98,6 +98,7 @@ public class TokenTypeLexemeMapping {
     public static final String END = "end";
 
     public static final String LIMIT = "limit";
+    public static final String OFFSET = "offset";
 
     public static final String FROM = "from";
     public static final String SET = "set";
@@ -198,6 +199,7 @@ public class TokenTypeLexemeMapping {
 
         // LIMIT
         lexemeToTokenType.put(LIMIT, TokenType.LIMIT);
+        lexemeToTokenType.put(OFFSET, TokenType.OFFSET);
 
         // COMMON
         lexemeToTokenType.put(FROM, TokenType.FROM);

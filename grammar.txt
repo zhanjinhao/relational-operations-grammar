@@ -20,7 +20,7 @@ columnList			->  IDENTIFIER ("," IDENTIFIER)*
 SelectParser
 select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*
 
-singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)?
+singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
 columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*
 columnRep           ->  (* | binaryArithmetic | caseWhen) ("as" IDENTIFIER)?
 caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"
@@ -29,8 +29,11 @@ tableRep            ->  ("(" select ")" | IDENTIFIER) (IDENTIFIER)?
 whereSeg ↑          ->  "where" logic
 groupBySeg          ->  "group" "by" columnList ("having" logic)?
 orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
-limitSeg            ->  "limit" INTEGER ("," INTEGER)?
+limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
+lockSeg             ->  sLock | xLock
 
+sLock               ->  "lock" "in" "share" "mode"
+xLock               ->  "for" "update"
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑+        ->  inCondition | existsCondition | comparison
 inCondition         ->  IDENTIFIER ("not")? "in" "(" select | (primary (, primary)*) ")"

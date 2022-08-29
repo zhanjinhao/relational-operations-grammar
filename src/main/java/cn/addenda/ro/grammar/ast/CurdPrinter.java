@@ -299,7 +299,7 @@ public class CurdPrinter implements CurdVisitor<String> {
             return s;
         }
 
-        return s + "," + BLANK + limitSeg.getOffset().getLiteral();
+        return s + BLANK + "offset" + BLANK + limitSeg.getOffset().getLiteral();
     }
 
     @Override

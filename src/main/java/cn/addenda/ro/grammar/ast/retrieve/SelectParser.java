@@ -36,7 +36,7 @@ public class SelectParser extends ExpressionParser {
      * whereSeg ↑          ->  "where" logic
      * groupBySeg          ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
      * orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
-     * limitSeg            ->  "limit" INTEGER ("," INTEGER)?
+     * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
      * lockSeg             ->  sLock | xLock
      * <p>
      *
@@ -319,7 +319,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * "limit" INTEGER ("," INTEGER)?
+     * "limit" INTEGER ("offset" INTEGER)?
      */
     private Curd limitSeg() {
         consume(TokenType.LIMIT, AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
@@ -328,12 +328,12 @@ public class SelectParser extends ExpressionParser {
         }
         Token token = tokenSequence.takeCur();
         tokenSequence.advance();
-        if (tokenSequence.equalThenAdvance(TokenType.COMMA)) {
+        if (tokenSequence.equalThenAdvance(TokenType.OFFSET)) {
             if (!tokenSequence.curEqual(TokenType.INTEGER)) {
                 error(AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
             }
             // 此时token是跳过的数量
-            LimitSeg limitSeg = new LimitSeg(tokenSequence.takeCur(), token);
+            LimitSeg limitSeg = new LimitSeg(token, tokenSequence.takeCur());
             tokenSequence.advance();
             return limitSeg;
         }
