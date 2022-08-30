@@ -1,5 +1,6 @@
 package cn.addenda.ro.test.ast.update;
 
+import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.update.UpdateParser;
@@ -13,7 +14,7 @@ public class UpdateParserTest {
 
 
     static String[] sqls = new String[]{
-
+        "update runoob_tbl set runoob_title=replace( runoob_title , 'c++', 'python' ) , a=?  + 1 , b=?"
     };
 
     public static void main(String[] args) {
@@ -44,6 +45,9 @@ public class UpdateParserTest {
         for (String sql : SqlReader.read("src/test/resources/update.test", sqls)) {
             UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
             Curd parse = updateParser.parse();
+            AstMetaData astMetaData = parse.getAstMetaData();
+            System.out.println(astMetaData.getParameterCount());
+            System.out.println(astMetaData.getHashMarkCount());
 
             String s2 = parse.toString(" ");
             System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));

@@ -329,13 +329,13 @@ public class SelectParser extends ExpressionParser {
      */
     private Curd limitSeg() {
         consume(TokenType.LIMIT, AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
-        if (!tokenSequence.curEqual(TokenType.INTEGER)) {
+        if (!tokenSequence.curEqual(TokenType.INTEGER, TokenType.PARAMETER, TokenType.HASH_MARK_PLACEHOLDER)) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
         }
         Token token = tokenSequence.takeCur();
         tokenSequence.advance();
         if (tokenSequence.equalThenAdvance(TokenType.OFFSET)) {
-            if (!tokenSequence.curEqual(TokenType.INTEGER)) {
+            if (!tokenSequence.curEqual(TokenType.INTEGER, TokenType.PARAMETER, TokenType.HASH_MARK_PLACEHOLDER)) {
                 error(AstROErrorReporterDelegate.SELECT_limitSeg_PARSE);
             }
             // 此时token是跳过的数量

@@ -53,6 +53,7 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
         if (onDuplicateUpdate != null) {
             InsertAstMetaData onDuplicateUpdateAstMetaData = (InsertAstMetaData) onDuplicateUpdate.accept(this);
             AstMetaDataHelper.mergeColumnReference(onDuplicateUpdateAstMetaData.getConditionColumnReference(), astMetaData.getOnDuplicateUpdateReference());
+            astMetaData.mergeCount(onDuplicateUpdateAstMetaData);
         }
 
         astMetaData.sortMetaData();

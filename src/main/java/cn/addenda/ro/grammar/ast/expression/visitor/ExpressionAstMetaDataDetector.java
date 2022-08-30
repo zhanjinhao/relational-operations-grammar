@@ -71,7 +71,14 @@ public class ExpressionAstMetaDataDetector extends ExpressionVisitorForDelegatio
 
     @Override
     public AstMetaData visitLiteral(Literal literal) {
-        return literal.getAstMetaData();
+        final AstMetaData astMetaDataCur = literal.getAstMetaData();
+        if (TokenType.PARAMETER.equals(literal.getValue().getType())) {
+            astMetaDataCur.incrementParameterCount();
+        }
+        if (TokenType.HASH_MARK_PLACEHOLDER.equals(literal.getValue().getType())) {
+            astMetaDataCur.incrementHashMarkCount();
+        }
+        return astMetaDataCur;
     }
 
     @Override

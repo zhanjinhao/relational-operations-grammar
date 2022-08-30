@@ -8,6 +8,7 @@ import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetecto
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
+import cn.addenda.ro.grammar.lexical.token.TokenType;
 import java.util.List;
 
 /**
@@ -41,16 +42,17 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (leftCurd instanceof Select) {
             AstMetaData accept = leftCurd.accept(this);
             accept.setParent(astMetaDataCur);
-            astMetaDataCur.getSubSegments().add(accept);
+            astMetaDataCur.addSubSegment(accept);
         } else if (leftCurd instanceof SingleSelect) {
             AstMetaData accept = leftCurd.accept(this);
-            astMetaDataCur.getSubSegments().add(accept);
+            astMetaDataCur.addSubSegment(accept);
         }
 
         Curd rightCurd = select.getRightCurd();
         // rightCurd如果不为空，就是SingleSelect
         if (rightCurd != null) {
-            astMetaDataCur.getSubSegments().add(rightCurd.accept(this));
+            final AstMetaData accept = rightCurd.accept(this);
+            astMetaDataCur.addSubSegment(accept);
         }
 
         return astMetaDataCur;
@@ -63,6 +65,8 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         Curd columnSeg = singleSelect.getColumnSeg();
         SingleSelectAstMetaData columnSegAmd = (SingleSelectAstMetaData) columnSeg.accept(this);
         AstMetaDataHelper.mergeColumnReference(columnSegAmd.getConditionColumnReference(), astMetaDataCur.getResultColumnReference());
+        astMetaDataCur.mergeCount(columnSegAmd);
+
         astMetaDataCur.getResultColumnList().addAll(columnSegAmd.getResultColumnList());
 
         TableSeg tableSeg = (TableSeg) singleSelect.getTableSeg();
@@ -79,6 +83,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (groupBySeg != null) {
             AstMetaData accept = groupBySeg.accept(this);
             AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getGroupByColumnReference());
+            astMetaDataCur.mergeCount(accept);
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
@@ -86,10 +91,16 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (orderBySeg != null) {
             AstMetaData accept = orderBySeg.accept(this);
             AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getOrderByColumnReference());
+            astMetaDataCur.mergeCount(accept);
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
         // limit 不存在字段
+        final Curd limitSeg = singleSelect.getLimitSeg();
+        if (limitSeg != null) {
+            final AstMetaData accept = limitSeg.accept(this);
+            astMetaDataCur.mergeCount(accept);
+        }
 
         // lockSeg 不存在字段
 
@@ -149,20 +160,24 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = caseWhen.getAstMetaData();
 
         Curd value = caseWhen.getValue();
-        astMetaDataCur.mergeColumnReference(value.accept(this));
+        AstMetaData accept = value.accept(this);
+        astMetaDataCur.mergeColumnReference(accept);
 
         List<Curd> conditionList = caseWhen.getConditionList();
         for (Curd curd : conditionList) {
-            astMetaDataCur.mergeColumnReference(curd.accept(this));
+            accept = curd.accept(this);
+            astMetaDataCur.mergeColumnReference(accept);
         }
 
         List<Curd> resultList = caseWhen.getResultList();
         for (Curd curd : resultList) {
-            astMetaDataCur.mergeColumnReference(curd.accept(this));
+            accept = curd.accept(this);
+            astMetaDataCur.mergeColumnReference(accept);
         }
 
         Curd defaultValue = caseWhen.getDefaultValue();
-        astMetaDataCur.mergeColumnReference(defaultValue.accept(this));
+        accept = defaultValue.accept(this);
+        astMetaDataCur.mergeColumnReference(accept);
 
         return astMetaDataCur;
     }
@@ -203,6 +218,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (condition != null) {
             AstMetaData accept = condition.accept(this);
             AstMetaDataHelper.mergeColumnReference(accept.getConditionColumnReference(), astMetaDataCur.getJoinColumnReference());
+            astMetaDataCur.mergeCount(accept);
             astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
@@ -256,9 +272,14 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
             accept.setParent(astMetaDataCur);
             astMetaDataCur.addChild(accept);
             return astMetaDataCur;
+        } else {
+            final List<Curd> range = inCondition.getRange();
+            for (Curd item : range) {
+                AstMetaData accept = item.accept(this);
+                astMetaDataCur.mergeCount(accept);
+                // range 模式下，range里的不会包含Identifier，不需要合并ConditionColumn
+            }
         }
-
-        // range 模式下，range里的不会包含Identifier
 
         return astMetaDataCur;
     }
@@ -298,6 +319,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         List<Curd> columnList = orderBySeg.getColumnList();
         for (Curd item : columnList) {
+            // OrderBySeg 不存在 Literal
             astMetaDataCur.mergeColumnReference(item.accept(this));
         }
 
@@ -307,13 +329,33 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitOrderItem(OrderItem orderItem) {
         final AstMetaData astMetaDataCur = orderItem.getAstMetaData();
+        // OrderItem 不存在 Literal
         astMetaDataCur.mergeColumnReference(orderItem.getColumn().accept(this));
         return astMetaDataCur;
     }
 
     @Override
     public AstMetaData visitLimitSeg(LimitSeg limitSeg) {
-        return limitSeg.getAstMetaData();
+        final AstMetaData astMetaData = limitSeg.getAstMetaData();
+        final Token offset = limitSeg.getOffset();
+        if (offset != null) {
+            if (TokenType.HASH_MARK_PLACEHOLDER.equals(offset.getType())) {
+                astMetaData.incrementHashMarkCount();
+            }
+            if (TokenType.PARAMETER.equals(offset.getType())) {
+                astMetaData.incrementParameterCount();
+            }
+        }
+
+        final Token num = limitSeg.getNum();
+        if (TokenType.HASH_MARK_PLACEHOLDER.equals(num.getType())) {
+            astMetaData.incrementHashMarkCount();
+        }
+        if (TokenType.PARAMETER.equals(num.getType())) {
+            astMetaData.incrementParameterCount();
+        }
+
+        return astMetaData;
     }
 
     @Override

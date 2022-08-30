@@ -278,12 +278,13 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
             return null;
         }
-        if (!TokenType.INTEGER.equals(num.getType())) {
+        if (!(TokenType.INTEGER.equals(num.getType()) || TokenType.PARAMETER.equals(num.getType()) || TokenType.HASH_MARK_PLACEHOLDER.equals(num.getType()))) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
             return null;
         }
         Token offset = limitSeg.getOffset();
-        if (offset != null && !TokenType.INTEGER.equals(offset.getType())) {
+        if (offset != null
+            && !(TokenType.INTEGER.equals(offset.getType()) || TokenType.PARAMETER.equals(offset.getType()) || TokenType.HASH_MARK_PLACEHOLDER.equals(offset.getType()))) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
         }
         return null;

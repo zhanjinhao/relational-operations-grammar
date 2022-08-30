@@ -18,6 +18,11 @@ public class SelectAstMetaData extends AstMetaData {
         return subSegments;
     }
 
+    public void addSubSegment(AstMetaData astMetaData) {
+        subSegments.add(astMetaData);
+        this.mergeCount(astMetaData);
+    }
+
     @Override
     public AstMetaData getNewInstance() {
         return new SelectAstMetaData();

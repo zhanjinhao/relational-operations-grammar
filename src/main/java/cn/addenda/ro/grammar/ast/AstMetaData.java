@@ -26,6 +26,9 @@ public class AstMetaData {
 
     protected final Map<String, Set<String>> conditionColumnReference = new HashMap<>();
 
+    protected int hashMarkCount = 0;
+    protected int parameterCount = 0;
+
     public AstMetaData() {
         conditionColumnReference.computeIfAbsent(UNDETERMINED_TABLE, item -> new HashSet<>());
     }
@@ -56,6 +59,12 @@ public class AstMetaData {
      */
     public void mergeColumnReference(AstMetaData astMetaData) {
         AstMetaDataHelper.mergeColumnReference(astMetaData.getConditionColumnReference(), conditionColumnReference);
+        mergeCount(astMetaData);
+    }
+
+    public void mergeCount(AstMetaData astMetaData) {
+        this.hashMarkCount += astMetaData.getHashMarkCount();
+        this.parameterCount += astMetaData.getParameterCount();
     }
 
     public void sortMetaData() {
@@ -90,12 +99,31 @@ public class AstMetaData {
         return conditionColumnReference;
     }
 
+    public int getHashMarkCount() {
+        return hashMarkCount;
+    }
+
+    public int getParameterCount() {
+        return parameterCount;
+    }
+
+    public void incrementHashMarkCount() {
+        hashMarkCount++;
+    }
+
+    public void incrementParameterCount() {
+        parameterCount++;
+    }
+
     @Override
     public String toString() {
         return "AstMetaData{" +
             "curd=" + curd +
-            ", conditionColumnMap=" + conditionColumnReference +
-            ", conditionChildren=" + children +
+            ", parent=" + parent +
+            ", children=" + children +
+            ", conditionColumnReference=" + conditionColumnReference +
+            ", hashMarkCount=" + hashMarkCount +
+            ", parameterCount=" + parameterCount +
             '}';
     }
 

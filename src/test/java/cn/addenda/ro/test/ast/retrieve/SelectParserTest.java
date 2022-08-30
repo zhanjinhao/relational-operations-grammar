@@ -1,5 +1,6 @@
 package cn.addenda.ro.test.ast.retrieve;
 
+import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
@@ -12,11 +13,17 @@ import cn.addenda.ro.test.SqlReader;
 public class SelectParserTest {
 
     static String[] sqls = new String[]{
-
+        " select T.FLIGHT_ID , ROUTE_TOWARDS  "
+            + "from "
+                + "T_DISPATCH_FLIGHT_RELEASE  RELEASE ,  "
+                + "(  select FLIGHT_ID , max( MODIFY_TM  ) as LATEAST_TIME from T_DISPATCH_FLIGHT_RELEASE   where DELETE_FLAG  = 'N'  and FLIGHT_ID in ( ?, ?)  group by FLIGHT_ID )  T  "
+            + "where RELEASE.FLIGHT_ID  = ?   and RELEASE.MODIFY_TM  = ?  and  T.FLIGHT_ID in ( ?, ?)  "
+            + "order by RELEASE.CREATE_TIME limit ?",
+        " select  case a  when b  + 1  then '1' when b  + 2  then '2' else '3' end as A from  (  select 2 as a, 1 as b from dual where a = ?  )  A where a = ?",
     };
 
     public static void main(String[] args) {
-        test2();
+        test1();
     }
 
     private static void test1() {
@@ -24,6 +31,9 @@ public class SelectParserTest {
         for (String sql : SqlReader.read("src/test/resources/select.test", sqls)) {
             SelectParser selectParser = CurdParserFactory.createSelectParser(sql);
             Curd parse = selectParser.parse();
+            final AstMetaData astMetaData = parse.getAstMetaData();
+            System.out.println(astMetaData.getHashMarkCount());
+            System.out.println(astMetaData.getParameterCount());
 
 //            System.out.println(parse);
 

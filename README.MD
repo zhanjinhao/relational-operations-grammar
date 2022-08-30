@@ -38,6 +38,6 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 4、支持group_concat()语法。 √
 
-5、AstMetaData增加 ?计数 和 #{}计数。
+5、AstMetaData增加 ?计数 和 #{}计数。 √
 
 6、limitSeg 仅支持 limit countNum offset skipNum 语法。 √
