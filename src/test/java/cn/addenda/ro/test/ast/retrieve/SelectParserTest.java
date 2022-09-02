@@ -13,6 +13,12 @@ import cn.addenda.ro.test.SqlReader;
 public class SelectParserTest {
 
     static String[] sqls = new String[]{
+            "  select " +
+                    "employee_name , " +
+                    "department , " +
+                    "salary , " +
+                    "nth_value ( employee_name  , 2  ) OVER ( PARTITION BY DEPARTMENT  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary " +
+                    "from basic_pays",
             "select\n" +
                     "    productline,\n" +
                     "    ordervalue,\n" +
@@ -38,8 +44,8 @@ public class SelectParserTest {
             System.out.println(astMetaData.getHashMarkCount());
             System.out.println(astMetaData.getParameterCount());
 
-            String s1 = sql.replaceAll("\\s+", "");
-            String s2 = parse.toString().replaceAll("\\s+", "");
+            String s1 = sql.replaceAll("\\s+", "").toLowerCase();
+            String s2 = parse.toString().replaceAll("\\s+", "").toLowerCase();
 
             if (s1.equals(s2)) {
                 System.out.println(s1);

@@ -28,7 +28,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 # todo
 
-1、增加窗口函数。
+1、增加窗口函数。 √
 
 2、select 增加锁语法。 √
 
@@ -40,7 +40,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 6、limitSeg 仅支持 limit countNum offset skipNum 语法。 √
 
-7、关键字和identifier转小写。
+7、关键字和identifier转小写。 √
 
 8、InCondition range模式，Literal vs Token。
 

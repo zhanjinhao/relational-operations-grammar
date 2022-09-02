@@ -6,6 +6,7 @@ import cn.addenda.ro.grammar.lexical.token.TokenTypeLexemeMapping;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Locale;
 
 /**
  * @author addenda
@@ -137,7 +138,7 @@ public class DefaultScanner extends AbstractScanner {
         while (charSequence.curTest(CharUtil::isAlphaNumericDotStar)) {
             charSequence.advance();
         }
-        String text = charSequence.curLiteral();
+        String text = charSequence.curLiteral().toLowerCase(Locale.ROOT);
         TokenType type = TokenTypeLexemeMapping.getTokenType(text);
         if (type == null) {
             type = TokenType.IDENTIFIER;
