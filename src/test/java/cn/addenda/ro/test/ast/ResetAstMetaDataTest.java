@@ -15,7 +15,7 @@ public class ResetAstMetaDataTest {
 
 
     static String[] sqls = new String[]{
-
+            "insert ignore into score set SNO='1387398', CNO=#{cno}, DEGREE=?"
     };
 
     public static void main(String[] args) {
@@ -24,7 +24,8 @@ public class ResetAstMetaDataTest {
                 "src/test/resources/insert.test",
                 "src/test/resources/delete.test",
                 "src/test/resources/select.test",
-                "src/test/resources/update.test")) {
+                "src/test/resources/update.test"
+        )) {
 
             CurdParser curdParser = CurdParserFactory.createCurdParser(sql, DefaultFunctionEvaluator.getInstance());
 

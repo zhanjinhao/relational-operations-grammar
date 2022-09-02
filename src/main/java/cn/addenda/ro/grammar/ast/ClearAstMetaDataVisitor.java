@@ -344,6 +344,9 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitAssignmentList(AssignmentList assignmentList) {
+        for (AssignmentList.Entry entry : assignmentList.getEntryList()) {
+            entry.getValue().accept(this);
+        }
         nullReset(assignmentList);
         return null;
     }
