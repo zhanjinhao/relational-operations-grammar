@@ -50,6 +50,17 @@ public interface CurdVisitor<R> {
 
     R visitXLock(XLock xLock);
 
+    R visitFrameEdge(FrameEdge frameEdge);
+
+    R visitFrameBetween(FrameBetween frameBetween);
+
+    R visitDynamicFrame(DynamicFrame dynamicFrame);
+
+    R visitWindow(Window window);
+
+    R visitWindowFunction(WindowFunction windowFunction);
+
+
     // ----------------------------------------------------------
     // create 的观察方法
     // ----------------------------------------------------------
@@ -128,6 +139,5 @@ public interface CurdVisitor<R> {
         }
         return curd.accept(this);
     }
-
 
 }

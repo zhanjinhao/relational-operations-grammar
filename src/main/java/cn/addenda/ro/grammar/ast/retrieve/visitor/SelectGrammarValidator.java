@@ -147,6 +147,37 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
     }
 
     @Override
+    public Void visitFrameEdge(FrameEdge frameEdge) {
+        if (TokenType.CURRENT.equals(frameEdge.getEdge().getType()) && !TokenType.ROW.equals(frameEdge.getTowards().getType())) {
+            error(AstROErrorReporterDelegate.SELECT_frameEdge_VALIDATION);
+        }
+        if (!TokenType.CURRENT.equals(frameEdge.getEdge().getType()) && TokenType.ROW.equals(frameEdge.getTowards().getType())) {
+            error(AstROErrorReporterDelegate.SELECT_frameEdge_VALIDATION);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitFrameBetween(FrameBetween frameBetween) {
+        return null;
+    }
+
+    @Override
+    public Void visitDynamicFrame(DynamicFrame dynamicFrame) {
+        return null;
+    }
+
+    @Override
+    public Void visitWindow(Window window) {
+        return null;
+    }
+
+    @Override
+    public Void visitWindowFunction(WindowFunction windowFunction) {
+        return null;
+    }
+
+    @Override
     public Void visitTableSeg(TableSeg tableSeg) {
 
         Curd leftCurd = tableSeg.getLeftCurd();
@@ -189,7 +220,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         }
 
         if (condition == null && qualifier != null &&
-            (TokenType.LEFT.equals(qualifier.getType()) || TokenType.RIGHT.equals(qualifier.getType()))) {
+                (TokenType.LEFT.equals(qualifier.getType()) || TokenType.RIGHT.equals(qualifier.getType()))) {
             error(AstROErrorReporterDelegate.SELECT_tableSeg_VALIDATION);
         }
 
@@ -284,7 +315,7 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         }
         Token offset = limitSeg.getOffset();
         if (offset != null
-            && !(TokenType.INTEGER.equals(offset.getType()) || TokenType.PARAMETER.equals(offset.getType()) || TokenType.HASH_MARK_PLACEHOLDER.equals(offset.getType()))) {
+                && !(TokenType.INTEGER.equals(offset.getType()) || TokenType.PARAMETER.equals(offset.getType()) || TokenType.HASH_MARK_PLACEHOLDER.equals(offset.getType()))) {
             error(AstROErrorReporterDelegate.SELECT_limitSeg_VALIDATION);
         }
         return null;

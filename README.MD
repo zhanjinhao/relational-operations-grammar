@@ -6,7 +6,6 @@ sql解析器。并可以对语法树进行分析，获取表、列、别名等�
 
 参考：grammar.txt
 
-
 ## insert 测试
 
 cn.addenda.ro.test.ast.create.InsertParserTest
@@ -22,7 +21,6 @@ cn.addenda.ro.test.ast.delete.DeleteParserTest
 ## select 测试
 
 cn.addenda.ro.test.ast.retrieve.SelectParserTest
-
 
 # 依赖
 
@@ -41,3 +39,9 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 5、AstMetaData增加 ?计数 和 #{}计数。 √
 
 6、limitSeg 仅支持 limit countNum offset skipNum 语法。 √
+
+7、关键字和identifier转小写。
+
+8、InCondition range模式，Literal vs Token。
+
+9、被 `` 包裹的都是Identifier。

@@ -193,6 +193,49 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     }
 
     @Override
+    public Void visitFrameEdge(FrameEdge frameEdge) {
+        return null;
+    }
+
+    @Override
+    public Void visitFrameBetween(FrameBetween frameBetween) {
+        frameBetween.getFrom().accept(this);
+        frameBetween.getTo().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visitDynamicFrame(DynamicFrame dynamicFrame) {
+        dynamicFrame.getFrameRange().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visitWindow(Window window) {
+        List<Curd> partitionByList = window.getPartitionByList();
+        if (partitionByList != null && !partitionByList.isEmpty()) {
+            for (Curd curd : partitionByList) {
+                curd.accept(this);
+            }
+        }
+        nullAccept(window.getOrderBySeg());
+        nullAccept(window.getDynamicFrame());
+        return null;
+    }
+
+    @Override
+    public Void visitWindowFunction(WindowFunction windowFunction) {
+        List<Curd> parameterList = windowFunction.getParameterList();
+        if (parameterList != null && !parameterList.isEmpty()) {
+            for (Curd curd : parameterList) {
+                nullAccept(curd);
+            }
+        }
+        nullAccept(windowFunction.getWindow());
+        return null;
+    }
+
+    @Override
     public Void visitInsert(Insert insert) {
         insert.getInsertRep().accept(this);
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();

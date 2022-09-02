@@ -7,8 +7,8 @@ import cn.addenda.ro.grammar.ast.expression.*;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.lexical.token.Token;
-
 import cn.addenda.ro.grammar.lexical.token.TokenType;
+
 import java.util.List;
 
 /**
@@ -190,6 +190,62 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitXLock(XLock xLock) {
         return xLock.getAstMetaData();
+    }
+
+    @Override
+    public AstMetaData visitFrameEdge(FrameEdge frameEdge) {
+        return frameEdge.getAstMetaData();
+    }
+
+    @Override
+    public AstMetaData visitFrameBetween(FrameBetween frameBetween) {
+        AstMetaData astMetaData = frameBetween.getAstMetaData();
+        astMetaData.mergeColumnReference(frameBetween.getFrom().accept(this));
+        astMetaData.mergeColumnReference(frameBetween.getTo().accept(this));
+        return astMetaData;
+    }
+
+    @Override
+    public AstMetaData visitDynamicFrame(DynamicFrame dynamicFrame) {
+        AstMetaData astMetaData = dynamicFrame.getAstMetaData();
+        astMetaData.mergeColumnReference(dynamicFrame.getFrameRange().accept(this));
+        return astMetaData;
+    }
+
+    @Override
+    public AstMetaData visitWindow(Window window) {
+        AstMetaData astMetaData = window.getAstMetaData();
+        List<Curd> partitionByList = window.getPartitionByList();
+        if (partitionByList != null && !partitionByList.isEmpty()) {
+            for (Curd curd : partitionByList) {
+                astMetaData.mergeColumnReference(curd.accept(this));
+            }
+        }
+        Curd orderBySeg = window.getOrderBySeg();
+        if (orderBySeg != null) {
+            astMetaData.mergeColumnReference(orderBySeg.accept(this));
+        }
+        Curd dynamicFrame = window.getDynamicFrame();
+        if (dynamicFrame != null) {
+            astMetaData.mergeColumnReference(dynamicFrame.accept(this));
+        }
+        return astMetaData;
+    }
+
+    @Override
+    public AstMetaData visitWindowFunction(WindowFunction windowFunction) {
+        AstMetaData astMetaData = windowFunction.getAstMetaData();
+        List<Curd> parameterList = windowFunction.getParameterList();
+        if (parameterList != null && !parameterList.isEmpty()) {
+            for (Curd curd : parameterList) {
+                astMetaData.mergeColumnReference(curd.accept(this));
+            }
+        }
+        Curd window = windowFunction.getWindow();
+        if (window != null) {
+            astMetaData.mergeColumnReference(window.accept(this));
+        }
+        return astMetaData;
     }
 
 

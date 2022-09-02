@@ -39,7 +39,7 @@ public class SelectParser extends ExpressionParser {
      * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
      * lockSeg             ->  sLock | xLock
      * <p>
-     *
+     * <p>
      * orderItem           ->  binaryArithmetic ("desc" | "asc")?
      * sLock               ->  "lock" "in" "share" "mode"
      * xLock               ->  "for" "update"
@@ -206,7 +206,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -493,6 +493,9 @@ public class SelectParser extends ExpressionParser {
         if (checkGroupFunctionName(token)) {
             return groupFunction();
         }
+        if (checkWindowFunctionName(token)) {
+            return windowFunction();
+        }
 
         // select
         if (checkSelectValue(tokenSequence)) {
@@ -518,7 +521,7 @@ public class SelectParser extends ExpressionParser {
     protected Curd groupFunction() {
         Token method = tokenSequence.takeCur();
         if (TokenType.GROUP_CONCAT.equals(method.getType())) {
-            return groupConcatFunction();
+            return groupConcat();
         }
         tokenSequence.advance();
         consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_groupFunction_PARSE);
@@ -536,7 +539,7 @@ public class SelectParser extends ExpressionParser {
     /**
      * "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
      */
-    private Curd groupConcatFunction() {
+    private Curd groupConcat() {
         // 跳过 group_concat
         tokenSequence.advance();
         consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_groupConcat_PARSE);
@@ -595,6 +598,138 @@ public class SelectParser extends ExpressionParser {
         Token cur = tokenSequence.takeCur();
         Token next = tokenSequence.takeNext();
         return TokenType.LEFT_PAREN.equals(cur.getType()) && TokenType.SELECT.equals(next.getType());
+    }
+
+
+    protected static Set<TokenType> windowFunctionTypeSet = new HashSet<>();
+
+    static {
+        windowFunctionTypeSet.add(TokenType.CUME_DIST);
+        windowFunctionTypeSet.add(TokenType.DENSE_RANK);
+        windowFunctionTypeSet.add(TokenType.FIRST_VALUE);
+        windowFunctionTypeSet.add(TokenType.LAG);
+        windowFunctionTypeSet.add(TokenType.LAST_VALUE);
+        windowFunctionTypeSet.add(TokenType.LEAD);
+        windowFunctionTypeSet.add(TokenType.NTH_VALUE);
+        windowFunctionTypeSet.add(TokenType.NTILE);
+        windowFunctionTypeSet.add(TokenType.PERCENT_RANK);
+        windowFunctionTypeSet.add(TokenType.RANK);
+        windowFunctionTypeSet.add(TokenType.ROW_NUMBER);
+    }
+
+    protected boolean checkWindowFunctionName(Token token) {
+        return windowFunctionTypeSet.contains(token.getType());
+    }
+
+    /**
+     * IDENTIFIER "(" binaryArithmetic? ")" window
+     */
+    private Curd windowFunction() {
+
+        Token method = tokenSequence.takeCur();
+        tokenSequence.advance();
+
+        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_windowFunction_PARSE);
+
+        if (tokenSequence.equalThenAdvance(TokenType.RIGHT_PAREN)) {
+            return new WindowFunction(method, null, window());
+        }
+        List<Curd> parameterList = new ArrayList<>();
+        do {
+            parameterList.add(binaryArithmetic());
+        } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
+
+        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_windowFunction_PARSE);
+
+        return new WindowFunction(method, parameterList, window());
+    }
+
+
+    /**
+     * "over" "(" ("partition" "by" binaryArithmetic ("," binaryArithmetic)*)? orderBySeg? dynamicFrame? ")"
+     */
+    private Curd window() {
+        consume(TokenType.OVER, AstROErrorReporterDelegate.SELECT_window_PARSE);
+        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_window_PARSE);
+        List<Curd> curdList = null;
+        if (tokenSequence.equalThenAdvance(TokenType.PARTITION)) {
+            consume(TokenType.BY, AstROErrorReporterDelegate.SELECT_window_PARSE);
+            curdList = new ArrayList<>();
+            do {
+                curdList.add(binaryArithmetic());
+            } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
+        }
+
+        Curd orderBySeg = null;
+        if (tokenSequence.curEqual(TokenType.ORDER)) {
+            orderBySeg = orderBySeg();
+        }
+
+        Curd dynamicFrame = null;
+        if (tokenSequence.curEqual(TokenType.ROWS, TokenType.RANGE)) {
+            dynamicFrame = dynamicFrame();
+        }
+
+        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_window_PARSE);
+
+        return new Window(curdList, orderBySeg, dynamicFrame);
+    }
+
+
+    /**
+     * ("rows" | "range") (frameBetween | frameEdge)
+     */
+    private Curd dynamicFrame() {
+        Token type;
+        if (tokenSequence.equalThenAdvance(TokenType.ROWS, TokenType.RANGE)) {
+            type = tokenSequence.takePre();
+        } else {
+            error(AstROErrorReporterDelegate.SELECT_dynamicFrame_PARSE);
+            return null;
+        }
+
+        if (tokenSequence.curEqual(TokenType.BETWEEN)) {
+            return new DynamicFrame(type, frameBetween());
+        }
+
+        return new DynamicFrame(type, frameEdge());
+    }
+
+
+    /**
+     * "between" frameEdge "and" frameEdge
+     */
+    private Curd frameBetween() {
+        consume(TokenType.BETWEEN, AstROErrorReporterDelegate.SELECT_frameBetween_PARSE);
+        Curd from = frameEdge();
+
+        consume(TokenType.AND, AstROErrorReporterDelegate.SELECT_frameBetween_PARSE);
+        Curd to = frameEdge();
+
+        return new FrameBetween(from, to);
+    }
+
+
+    /**
+     * (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
+     */
+    private Curd frameEdge() {
+        Token edge;
+        Token towards;
+        if (tokenSequence.equalThenAdvance(TokenType.INTEGER, TokenType.UNBOUNDED, TokenType.CURRENT)) {
+            edge = tokenSequence.takePre();
+        } else {
+            error(AstROErrorReporterDelegate.SELECT_frameEdge_PARSE);
+            return null;
+        }
+
+        if (tokenSequence.equalThenAdvance(TokenType.PRECEDING, TokenType.FOLLOWING, TokenType.ROW)) {
+            towards = tokenSequence.takePre();
+        } else {
+            error(AstROErrorReporterDelegate.SELECT_frameEdge_PARSE);
+            return null;
+        }
+        return new FrameEdge(edge, towards);
     }
 
 }

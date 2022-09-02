@@ -119,7 +119,6 @@ public class AstMetaData {
     public String toString() {
         return "AstMetaData{" +
             "curd=" + curd +
-            ", parent=" + parent +
             ", children=" + children +
             ", conditionColumnReference=" + conditionColumnReference +
             ", hashMarkCount=" + hashMarkCount +

@@ -25,6 +25,31 @@ public abstract class UpdateVisitor<R> extends AbstractCurdVisitor<R> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public R visitFrameEdge(FrameEdge frameEdge) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitFrameBetween(FrameBetween frameBetween) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitDynamicFrame(DynamicFrame dynamicFrame) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitWindow(Window window) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitWindowFunction(WindowFunction windowFunction) {
+        throw new UnsupportedOperationException();
+    }
+
     public final R visitSingleSelect(SingleSelect singleSelect) {
         throw new UnsupportedOperationException();
     }

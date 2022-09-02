@@ -87,6 +87,31 @@ public abstract class DeleteVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
+    public R visitFrameEdge(FrameEdge frameEdge) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitFrameBetween(FrameBetween frameBetween) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitDynamicFrame(DynamicFrame dynamicFrame) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitWindow(Window window) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public R visitWindowFunction(WindowFunction windowFunction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public final R visitLimitSeg(LimitSeg limitSeg) {
         throw new UnsupportedOperationException();
     }

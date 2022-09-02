@@ -13,13 +13,16 @@ import cn.addenda.ro.test.SqlReader;
 public class SelectParserTest {
 
     static String[] sqls = new String[]{
-        " select T.FLIGHT_ID , ROUTE_TOWARDS  "
-            + "from "
-                + "T_DISPATCH_FLIGHT_RELEASE  RELEASE ,  "
-                + "(  select FLIGHT_ID , max( MODIFY_TM  ) as LATEAST_TIME from T_DISPATCH_FLIGHT_RELEASE   where DELETE_FLAG  = 'N'  and FLIGHT_ID in ( ?, ?)  group by FLIGHT_ID )  T  "
-            + "where RELEASE.FLIGHT_ID  = ?   and RELEASE.MODIFY_TM  = ?  and  T.FLIGHT_ID in ( ?, ?)  "
-            + "order by RELEASE.CREATE_TIME limit ?",
-        " select  case a  when b  + 1  then '1' when b  + 2  then '2' else '3' end as A from  (  select 2 as a, 1 as b from dual where a = ?  )  A where a = ?",
+            "select\n" +
+                    "    productline,\n" +
+                    "    ordervalue,\n" +
+                    "    round(\n" +
+                    "       percent_rank() over (\n" +
+                    "          order by ordervalue\n" +
+                    "       )\n" +
+                    "    ,2) as percentile_rank\n" +
+                    "from\n" +
+                    "    t",
     };
 
     public static void main(String[] args) {
@@ -34,8 +37,6 @@ public class SelectParserTest {
             final AstMetaData astMetaData = parse.getAstMetaData();
             System.out.println(astMetaData.getHashMarkCount());
             System.out.println(astMetaData.getParameterCount());
-
-//            System.out.println(parse);
 
             String s1 = sql.replaceAll("\\s+", "");
             String s2 = parse.toString().replaceAll("\\s+", "");

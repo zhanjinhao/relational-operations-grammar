@@ -14,7 +14,7 @@ public class UpdateParserTest {
 
 
     static String[] sqls = new String[]{
-        "update runoob_tbl set runoob_title=replace( runoob_title , 'c++', 'python' ) , a=?  + 1 , b=?"
+
     };
 
     public static void main(String[] args) {

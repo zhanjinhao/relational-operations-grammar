@@ -98,6 +98,11 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_groupFunction_PARSE, SELECT_groupFunction_PARSE_MSG);
         addErrorMsg(SELECT_lockSeg_PARSE, SELECT_lockSeg_PARSE_MSG);
         addErrorMsg(SELECT_groupConcat_PARSE, SELECT_groupConcat_PARSE_MSG);
+        addErrorMsg(SELECT_windowFunction_PARSE, SELECT_windowFunction_PARSE_MSG);
+        addErrorMsg(SELECT_window_PARSE, SELECT_window_PARSE_MSG);
+        addErrorMsg(SELECT_dynamicFrame_PARSE, SELECT_dynamicFrame_PARSE_MSG);
+        addErrorMsg(SELECT_frameBetween_PARSE, SELECT_frameBetween_PARSE_MSG);
+        addErrorMsg(SELECT_frameEdge_PARSE, SELECT_frameEdge_PARSE_MSG);
 
         addErrorMsg(SELECT_select_VALIDATION, SELECT_select_VALIDATION_MSG);
         addErrorMsg(SELECT_singleSelect_VALIDATION, SELECT_singleSelect_VALIDATION_MSG);
@@ -116,6 +121,11 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_groupFunction_VALIDATION, SELECT_groupFunction_VALIDATION_MSG);
         addErrorMsg(SELECT_lockSeg_VALIDATION, SELECT_lockSeg_VALIDATION_MSG);
         addErrorMsg(SELECT_groupConcat_VALIDATION, SELECT_groupConcat_VALIDATION_MSG);
+        addErrorMsg(SELECT_windowFunction_VALIDATION, SELECT_windowFunction_VALIDATION_MSG);
+        addErrorMsg(SELECT_window_VALIDATION, SELECT_window_VALIDATION_MSG);
+        addErrorMsg(SELECT_dynamicFrame_VALIDATION, SELECT_dynamicFrame_VALIDATION_MSG);
+        addErrorMsg(SELECT_frameBetween_VALIDATION, SELECT_frameBetween_VALIDATION_MSG);
+        addErrorMsg(SELECT_frameEdge_VALIDATION, SELECT_frameEdge_VALIDATION_MSG);
 
         addErrorMsg(CURD_unknow_syntax_PARSE, CURD_unknow_syntax_PARSE_MSG);
         addErrorMsg(CURD_token_undefined_PARSE, CURD_token_undefined_PARSE_MSG);
@@ -342,7 +352,23 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final String SELECT_lockSeg_PARSE_MSG = "The grammar of lockSeg is : 'sLock | xLock'.";
 
     public static final int SELECT_groupConcat_PARSE = 25017;
-    public static final String SELECT_groupConcat_PARSE_MSG = "The grammar of lockSeg is : '\"group_concat\" \"(\" (\"distinct\")? binaryArithmetic (\",\" binaryArithmetic)* \"order\" \"by\" orderItem (\",\" orderItem)* (\"separator\" primary)? \")\"'.";
+    public static final String SELECT_groupConcat_PARSE_MSG = "The grammar of groupConcat is : '\"group_concat\" \"(\" (\"distinct\")? binaryArithmetic (\",\" binaryArithmetic)* \"order\" \"by\" orderItem (\",\" orderItem)* (\"separator\" primary)? \")\"'.";
+
+    public static final int SELECT_windowFunction_PARSE = 25018;
+    public static final String SELECT_windowFunction_PARSE_MSG = "The grammar of windowFunction is : 'IDENTIFIER \"(\" binaryArithmetic? \")\" window'.";
+
+    public static final int SELECT_window_PARSE = 25019;
+    public static final String SELECT_window_PARSE_MSG = "The grammar of window is : '\"over\" \"(\" \"partition\" \"by\" binaryArithmetic (\",\" binaryArithmetic)* orderBySeg? dynamic_frame? \")\"'.";
+
+    public static final int SELECT_dynamicFrame_PARSE = 25020;
+    public static final String SELECT_dynamicFrame_PARSE_MSG = "The grammar of dynamicFrame is : '(\"rows\" | \"range\") (frame_between | frame_edge)'.";
+
+    public static final int SELECT_frameBetween_PARSE = 25021;
+    public static final String SELECT_frameBetween_PARSE_MSG = "The grammar of frameBetween is : '\"between\" frameEdge \"and\" frameEdge'.";
+
+    public static final int SELECT_frameEdge_PARSE = 25022;
+    public static final String SELECT_frameEdge_PARSE_MSG = "The grammar of frameEdge is : '(INTEGER | \"unbounded\" | \"current\") (\"preceding\" | \"following\" | \"row\")'.";
+
 
     /**
      * select 语法的语法验证错误代码从25501开始
@@ -397,6 +423,21 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
 
     public static final int SELECT_groupConcat_VALIDATION = 25517;
     public static final String SELECT_groupConcat_VALIDATION_MSG = "groupConcat grammar validation failed : '\"group_concat\" \"(\" (\"distinct\")? binaryArithmetic (\",\" binaryArithmetic)* \"order\" \"by\" orderItem (\",\" orderItem)* (\"separator\" primary)? \")\"'.";
+
+    public static final int SELECT_windowFunction_VALIDATION = 25518;
+    public static final String SELECT_windowFunction_VALIDATION_MSG = "windowFunction grammar validation failed : 'IDENTIFIER \"(\" binaryArithmetic? \")\" window'.";
+
+    public static final int SELECT_window_VALIDATION = 25519;
+    public static final String SELECT_window_VALIDATION_MSG = "window grammar validation failed : '\"over\" \"(\" \"partition\" \"by\" binaryArithmetic (\",\" binaryArithmetic)* orderBySeg? dynamic_frame? \")\"'.";
+
+    public static final int SELECT_dynamicFrame_VALIDATION = 25520;
+    public static final String SELECT_dynamicFrame_VALIDATION_MSG = "dynamicFrame grammar validation failed : '(\"rows\" | \"range\") (frame_between | frame_edge)'.";
+
+    public static final int SELECT_frameBetween_VALIDATION = 25521;
+    public static final String SELECT_frameBetween_VALIDATION_MSG = "frameBetween grammar validation failed : '\"between\" frameEdge \"and\" frameEdge'.";
+
+    public static final int SELECT_frameEdge_VALIDATION = 25522;
+    public static final String SELECT_frameEdge_VALIDATION_MSG = "frameEdge grammar validation failed : '(INTEGER | \"unbounded\" | \"current\") (\"preceding\" | \"following\" | \"row\")'.";
 
 
     /**

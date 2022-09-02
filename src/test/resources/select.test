@@ -1,3 +1,26 @@
+  select employee_name , department , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
+  select employee_name , salary , nth_value ( employee_name  , 2  ) over ( order by salary  desc )   as second_highest_salary from basic_pays
+  select name , score , row_number (  ) over ( order by score   )   as row_num, cume_dist (  ) over ( order by score   )   as cume_dist_val from scores
+  select val , dense_rank (  ) over ( order by val   )   as my_rank from rankdemo
+  select sales_employee , fiscal_year , sale , dense_rank (  ) over ( partition by fiscal_year  order by sale  desc )   as sales_rank from sales
+  select employee_name , hours , first_value ( employee_name   ) over ( order by hours   )   as least_over_time from overtime
+  select employee_name , department , hours , first_value ( employee_name   ) over ( partition by department  order by hours   )   as least_over_time from overtime
+  select productline , order_year , order_value , lag ( order_value  , 1  ) over ( partition by productline  order by order_year   )   as prev_year_order_value from productline_sales
+  select employee_name , hours , last_value ( employee_name   ) over ( order by hours   range between unbounded preceding  and unbounded following    )   as highest_overtime_employee from overtime
+  select employee_name , department , hours , last_value ( employee_name   ) over ( partition by department  order by hours   range between unbounded preceding  and unbounded following    )   as most_overtime_employee from overtime
+  select customername , orderdate , lead ( orderdate  , 1  ) over ( partition by customernumber  order by orderdate   )   as nextorderdate from orders  inner join customers
+  select employee_name , salary , nth_value ( employee_name  , 2  ) over ( order by salary  desc )   as second_highest_salary from basic_pays
+  select employee_name , department , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
+  select val , ntile ( 3  ) over ( order by val   )   as group_no from ntiledemo
+  select productline , order_year , order_value , ntile ( 3  ) over ( partition by order_year  order by order_value  desc )   as product_line_group from productline_sales
+  select val , rank (  ) over ( order by val   )   as my_rank from rankdemo
+  select sales_employee , fiscal_year , sale , rank (  ) over ( partition by fiscal_year  order by sale  desc )   as sales_rank from sales
+  select row_number (  ) over ( order by productname   )   as row_num, productname , msrp  from products   order by productname
+  select productline , productname , quantityinstock , row_number (  ) over ( partition by productline  order by quantityinstock  desc )   as row_num from products
+  select id , name , row_number (  ) over ( partition by name  order by name   )   as row_num from rownumberdemo
+  select *  from  (  select productname , msrp , row_number (  ) over ( order by msrp   )   as row_num from products   )  t  where row_num  < 11  and row_num  > 20
+ select T.FLIGHT_ID , ROUTE_TOWARDS  from T_DISPATCH_FLIGHT_RELEASE  RELEASE ,  (  select FLIGHT_ID , max( MODIFY_TM  ) as LATEAST_TIME from T_DISPATCH_FLIGHT_RELEASE   where DELETE_FLAG  = 'N'  and FLIGHT_ID in ( ?, ?)  group by FLIGHT_ID )  T  where RELEASE.FLIGHT_ID  = ?  and RELEASE.MODIFY_TM  = ?   and T.FLIGHT_ID in ( ?, ?)  order by RELEASE.CREATE_TIME   limit ?
+ select  case a  when b  + 1  then '1' when b  + 2  then '2' else '3' end as A from  (  select 2 as a, 1 as b from dual   where a  = ?  )  A  where a  = ?
  select  group_concat (  DELETE_FLAG ,  CREATOR  + '1'  separator ';' ) as a from t_fp_day_navigation   group by DELETE_FLAG, CREATOR having  group_concat (  DELETE_FLAG  + ' '  order by CREATOR  asc separator ';' ) != ''  order by  ( '1' + DELETE_FLAG   )  desc
  select *  from STUDENT   order by CLASS  desc, NAME  asc
  select a  from  (  select *  from A   )  aa  where a  > 100  and a  < 50

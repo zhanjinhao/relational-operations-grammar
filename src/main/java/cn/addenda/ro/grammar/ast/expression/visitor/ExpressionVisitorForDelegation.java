@@ -137,6 +137,31 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
+    public R visitFrameEdge(FrameEdge frameEdge) {
+        return frameEdge.accept(client);
+    }
+
+    @Override
+    public R visitFrameBetween(FrameBetween frameBetween) {
+        return frameBetween.accept(client);
+    }
+
+    @Override
+    public R visitDynamicFrame(DynamicFrame dynamicFrame) {
+        return dynamicFrame.accept(client);
+    }
+
+    @Override
+    public R visitWindow(Window window) {
+        return window.accept(client);
+    }
+
+    @Override
+    public R visitWindowFunction(WindowFunction windowFunction) {
+        return windowFunction.accept(client);
+    }
+
+    @Override
     public R visitUpdate(Update update) {
         return update.accept(client);
     }

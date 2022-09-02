@@ -134,6 +134,16 @@ public enum TokenType {
     LOCK, SHARE, MODE, FOR,
 
     /**
+     * WINDOW
+     */
+    OVER, PARTITION, ROWS, RANGE, BETWEEN, UNBOUNDED, CURRENT, PRECEDING, FOLLOWING, ROW,
+
+    /**
+     * WINDOW FUNCTION
+     */
+    CUME_DIST, DENSE_RANK, FIRST_VALUE, LAG, LAST_VALUE, LEAD, NTH_VALUE, NTILE, PERCENT_RANK, RANK, ROW_NUMBER,
+
+    /**
      * END.
      */
     EOF,

@@ -113,6 +113,29 @@ public class TokenTypeLexemeMapping {
     public static final String MODE = "mode";
     public static final String FOR = "for";
 
+    public static final String OVER = "over";
+    public static final String PARTITION = "partition";
+    public static final String ROWS = "rows";
+    public static final String RANGE = "range";
+    public static final String BETWEEN = "between";
+    public static final String UNBOUNDED = "unbounded";
+    public static final String CURRENT = "current";
+    public static final String PRECEDING = "preceding";
+    public static final String FOLLOWING = "following";
+    public static final String ROW = "row";
+
+    public static final String CUME_DIST = "cume_dist";
+    public static final String DENSE_RANK = "dense_rank";
+    public static final String FIRST_VALUE = "first_value";
+    public static final String LAG = "lag";
+    public static final String LAST_VALUE = "last_value";
+    public static final String LEAD = "lead";
+    public static final String NTH_VALUE = "nth_value";
+    public static final String NTILE = "ntile";
+    public static final String PERCENT_RANK = "percent_rank";
+    public static final String RANK = "rank";
+    public static final String ROW_NUMBER = "row_number";
+
     static {
         // symbol
         lexemeToTokenType.put(PLUS, TokenType.PLUS);
@@ -218,6 +241,34 @@ public class TokenTypeLexemeMapping {
         lexemeToTokenType.put(SHARE, TokenType.SHARE);
         lexemeToTokenType.put(MODE, TokenType.MODE);
         lexemeToTokenType.put(FOR, TokenType.FOR);
+
+
+        // WINDOW
+        lexemeToTokenType.put(OVER, TokenType.OVER);
+        lexemeToTokenType.put(PARTITION, TokenType.PARTITION);
+        lexemeToTokenType.put(ROWS, TokenType.ROWS);
+        lexemeToTokenType.put(RANGE, TokenType.RANGE);
+        lexemeToTokenType.put(BETWEEN, TokenType.BETWEEN);
+        lexemeToTokenType.put(UNBOUNDED, TokenType.UNBOUNDED);
+        lexemeToTokenType.put(CURRENT, TokenType.CURRENT);
+        lexemeToTokenType.put(PRECEDING, TokenType.PRECEDING);
+        lexemeToTokenType.put(FOLLOWING, TokenType.FOLLOWING);
+        lexemeToTokenType.put(ROW, TokenType.ROW);
+
+
+        // WINDOW FUNCTION
+        lexemeToTokenType.put(CUME_DIST, TokenType.CUME_DIST);
+        lexemeToTokenType.put(DENSE_RANK, TokenType.DENSE_RANK);
+        lexemeToTokenType.put(FIRST_VALUE, TokenType.FIRST_VALUE);
+        lexemeToTokenType.put(LAG, TokenType.LAG);
+        lexemeToTokenType.put(LAST_VALUE, TokenType.LAST_VALUE);
+        lexemeToTokenType.put(LEAD, TokenType.LEAD);
+        lexemeToTokenType.put(NTH_VALUE, TokenType.NTH_VALUE);
+        lexemeToTokenType.put(NTILE, TokenType.NTILE);
+        lexemeToTokenType.put(PERCENT_RANK, TokenType.PERCENT_RANK);
+        lexemeToTokenType.put(RANK, TokenType.RANK);
+        lexemeToTokenType.put(ROW_NUMBER, TokenType.ROW_NUMBER);
+
 
         // CASE WHEN
         lexemeToTokenType.put(CASE, TokenType.CASE);

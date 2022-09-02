@@ -417,10 +417,10 @@ public class CurdPrinter implements CurdVisitor<String> {
             }
         }
 
-        final String separator = groupConcat.getSeparator();
-        if (separator != null) {
+        final String gs = groupConcat.getSeparator();
+        if (gs != null) {
             sb.append(this.separator).append("separator");
-            sb.append(this.separator).append("'").append(separator).append("'");
+            sb.append(this.separator).append("'").append(gs).append("'");
         }
 
         sb.append(this.separator).append(")");
@@ -476,6 +476,69 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitXLock(XLock xLock) {
         return "for" + separator + "update" + separator;
+    }
+
+    @Override
+    public String visitFrameEdge(FrameEdge frameEdge) {
+        return frameEdge.getEdge().getLiteral() + separator
+                + frameEdge.getTowards().getLiteral() + separator;
+    }
+
+    @Override
+    public String visitFrameBetween(FrameBetween frameBetween) {
+        return "between" + separator
+                + frameBetween.getFrom().accept(this) + separator
+                + "and" + separator
+                + frameBetween.getTo().accept(this) + separator;
+    }
+
+    @Override
+    public String visitDynamicFrame(DynamicFrame dynamicFrame) {
+        return dynamicFrame.getType().getLiteral() + separator
+                + dynamicFrame.getFrameRange().accept(this) + separator;
+    }
+
+    @Override
+    public String visitWindow(Window window) {
+        StringBuilder sb = new StringBuilder(
+                "over" + separator
+                        + "(" + separator);
+        List<Curd> partitionByList = window.getPartitionByList();
+        if (partitionByList != null && !partitionByList.isEmpty()) {
+            sb.append("partition").append(separator)
+                    .append("by").append(separator);
+            for (Curd curd : partitionByList) {
+                sb.append(curd.accept(this)).append(separator);
+            }
+        }
+        Curd orderBySeg = window.getOrderBySeg();
+        if (orderBySeg != null) {
+            sb.append(orderBySeg.accept(this)).append(separator);
+        }
+        Curd dynamicFrame = window.getDynamicFrame();
+        if (dynamicFrame != null) {
+            sb.append(dynamicFrame.accept(this)).append(separator);
+        }
+        return sb + ")" + separator;
+    }
+
+    @Override
+    public String visitWindowFunction(WindowFunction windowFunction) {
+        List<Curd> parameterList = windowFunction.getParameterList();
+        StringBuilder s = new StringBuilder();
+        if (parameterList != null && !parameterList.isEmpty()) {
+            Curd curd = parameterList.get(0);
+            s.append(curd.accept(this)).append(separator);
+            for (int i = 1; i < parameterList.size(); i++) {
+                s.append(",").append(separator).append(parameterList.get(i).accept(this)).append(separator);
+            }
+        }
+
+        return windowFunction.getMethod().getLiteral() + separator
+                + "(" + separator
+                + s + separator
+                + ")" + separator
+                + windowFunction.getWindow().accept(this) + separator;
     }
 
     @Override

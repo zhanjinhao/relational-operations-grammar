@@ -28,34 +28,41 @@ tableSeg            ->  "from" tableRep (("left" | "right" | "cross")? ("join" |
 tableRep            ->  ("(" select ")" | IDENTIFIER) (IDENTIFIER)?
 whereSeg ↑          ->  "where" logic
 groupBySeg          ->  "group" "by" columnList ("having" logic)?
-orderBySeg          ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
+orderBySeg          ->  "order" "by" orderItem ("," orderItem)*
 limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
 lockSeg             ->  sLock | xLock
 
+orderItem           ->  binaryArithmetic ("desc" | "asc")?
 sLock               ->  "lock" "in" "share" "mode"
 xLock               ->  "for" "update"
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑+        ->  inCondition | existsCondition | comparison
-inCondition         ->  IDENTIFIER ("not")? "in" "(" select | (primary (, primary)*) ")"
+inCondition         ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"
 existsCondition     ->  ("not")? "exists" "(" select ")"
 comparison ↑        ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
 isNot ↑             ->  "is" ("not")?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction
+primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction  | windowFunction
 grouping ↑          ->  "(" logic ")"
 function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
 functionParameter ↑ ->  logic | timeInterval | timeUnit | function
 timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
 timeUnit ↑          ->  IDENTIFIER "from" primary
-groupFunction       ->  groupConcat | ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")"
+groupFunction       ->  groupConcat | ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")" window?
 groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
 columnList			->  IDENTIFIER ("," IDENTIFIER)*
+
+windowFunction      ->  IDENTIFIER "(" binaryArithmetic? ")" window
+window              ->  "over" "(" "partition" "by" binaryArithmetic ("," binaryArithmetic)* orderBySeg? dynamicFrame? ")"
+dynamicFrame       ->  ("rows" | "range") (frameBetween | frameEdge)
+frameBetween       ->  "between" frameEdge "and" frameEdge
+frameEdge          ->  (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 InsertParser
 insert              ->  "insert" (constrict)? "into" IDENTIFIER (insertValuesRep | insertSetRep | insertSelectRep) onDuplicateKey?
 constrict           ->  ignore
-insertValuesRep     ->  "(" columnList ")" "values" ("(" binaryArithmetic (, binaryArithmetic)* ")") ("," "(" binaryArithmetic (, binaryArithmetic)* ")")*
+insertValuesRep     ->  "(" columnList ")" "values" ("(" binaryArithmetic ("," binaryArithmetic)* ")") ("," "(" binaryArithmetic ("," binaryArithmetic)* ")")*
 insertSetRep        ->  "set" assignmentList
 insertSelectRep     ->  "(" columnList ")" select
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*

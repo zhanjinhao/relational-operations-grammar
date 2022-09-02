@@ -161,11 +161,61 @@ public class ClearAstMetaDataVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitSLock(SLock sLock) {
+        nullReset(sLock);
         return null;
     }
 
     @Override
     public Void visitXLock(XLock xLock) {
+        nullReset(xLock);
+        return null;
+    }
+
+    @Override
+    public Void visitFrameEdge(FrameEdge frameEdge) {
+        nullReset(frameEdge);
+        return null;
+    }
+
+    @Override
+    public Void visitFrameBetween(FrameBetween frameBetween) {
+        nullAccept(frameBetween.getFrom());
+        nullAccept(frameBetween.getTo());
+        nullReset(frameBetween);
+        return null;
+    }
+
+    @Override
+    public Void visitDynamicFrame(DynamicFrame dynamicFrame) {
+        nullAccept(dynamicFrame.getFrameRange());
+        nullReset(dynamicFrame);
+        return null;
+    }
+
+    @Override
+    public Void visitWindow(Window window) {
+        List<Curd> partitionByList = window.getPartitionByList();
+        if (partitionByList != null && !partitionByList.isEmpty()) {
+            for (Curd curd : partitionByList) {
+                nullReset(curd);
+            }
+        }
+        nullAccept(window.getOrderBySeg());
+        nullAccept(window.getDynamicFrame());
+        nullReset(window);
+        return null;
+    }
+
+    @Override
+    public Void visitWindowFunction(WindowFunction windowFunction) {
+        List<Curd> parameterList = windowFunction.getParameterList();
+        if (parameterList != null && !parameterList.isEmpty()) {
+            for (Curd curd : parameterList) {
+                nullAccept(curd);
+            }
+        }
+        nullAccept(windowFunction.getWindow());
+        nullReset(windowFunction);
         return null;
     }
 
