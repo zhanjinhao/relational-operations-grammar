@@ -1,3 +1,4 @@
+   select employee_name , department , salary , nth_value ( employee_name  , 2  ) OVER ( PARTITION BY DEPARTMENT  order by salary  desc range BETWEEN unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
   select employee_name , department , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
   select employee_name , salary , nth_value ( employee_name  , 2  ) over ( order by salary  desc )   as second_highest_salary from basic_pays
   select name , score , row_number (  ) over ( order by score   )   as row_num, cume_dist (  ) over ( order by score   )   as cume_dist_val from scores

@@ -13,26 +13,30 @@ import cn.addenda.ro.test.SqlReader;
 public class SelectParserTest {
 
     static String[] sqls = new String[]{
-            "  select " +
+            "select " +
                     "employee_name , " +
-                    "department , " +
+                    "`count` , " +
                     "salary , " +
-                    "nth_value ( employee_name  , 2  ) OVER ( PARTITION BY DEPARTMENT  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary " +
-                    "from basic_pays",
-            "select\n" +
-                    "    productline,\n" +
-                    "    ordervalue,\n" +
-                    "    round(\n" +
-                    "       percent_rank() over (\n" +
-                    "          order by ordervalue\n" +
-                    "       )\n" +
-                    "    ,2) as percentile_rank\n" +
-                    "from\n" +
-                    "    t",
+                    "nth_value ( employee_name  , 2  ) " +
+                        "over ( " +
+                            "partition by department  " +
+                            "order by salary  desc " +
+                            "range between unbounded preceding  and unbounded following    )   as second_highest_salary " +
+                    "from basic_pays  \n",
+//            "select\n" +
+//                    "    productline,\n" +
+//                    "    ordervalue,\n" +
+//                    "    round(\n" +
+//                    "       percent_rank() over (\n" +
+//                    "          order by ordervalue\n" +
+//                    "       )\n" +
+//                    "    ,2) as percentile_rank\n" +
+//                    "from\n" +
+//                    "    t",
     };
 
     public static void main(String[] args) {
-        test1();
+        test2();
     }
 
     private static void test1() {

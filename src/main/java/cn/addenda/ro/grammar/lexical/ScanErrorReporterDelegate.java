@@ -14,6 +14,7 @@ public class ScanErrorReporterDelegate extends AbstractROErrorReporterDelegate {
         addErrorMsg(LEXICAL_UNEXPECTED_CHAR, LEXICAL_UNEXPECTED_CHAR_MSG);
         addErrorMsg(LEXICAL_HASHMARK_FORMAT, LEXICAL_HASHMARK_FORMAT_MSG);
         addErrorMsg(LEXICAL_STRING, LEXICAL_STRING_MSG);
+        addErrorMsg(LEXICAL_GRAVE_ACCENT, LEXICAL_GRAVE_ACCENT_MSG);
 
     }
 
@@ -30,6 +31,9 @@ public class ScanErrorReporterDelegate extends AbstractROErrorReporterDelegate {
 
     public static final int LEXICAL_STRING = 10003;
     public static final String LEXICAL_STRING_MSG = "Unterminated string. Expect : '''";
+
+    public static final int LEXICAL_GRAVE_ACCENT = 10004;
+    public static final String LEXICAL_GRAVE_ACCENT_MSG = "Unterminated identifier. Expect : '`'";
 
 
 }

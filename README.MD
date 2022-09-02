@@ -44,4 +44,4 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 8、InCondition range模式，Literal vs Token。
 
-9、被 `` 包裹的都是Identifier。
+9、被 `` 包裹的都是Identifier。 √

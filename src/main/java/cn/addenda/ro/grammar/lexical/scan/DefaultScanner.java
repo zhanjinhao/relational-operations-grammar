@@ -23,6 +23,9 @@ public class DefaultScanner extends AbstractScanner {
         char c = charSequence.takeCur();
         charSequence.advance();
         switch (c) {
+            case '`':
+                identifier();
+                break;
             case '?':
                 addToken(TokenType.PARAMETER);
                 break;
@@ -135,15 +138,26 @@ public class DefaultScanner extends AbstractScanner {
     }
 
     private void identifier() {
-        while (charSequence.curTest(CharUtil::isAlphaNumericDotStar)) {
+        while (charSequence.curTest(CharUtil::isAlphaNumericDotStarGraveAccent)) {
             charSequence.advance();
         }
         String text = charSequence.curLiteral().toLowerCase(Locale.ROOT);
-        TokenType type = TokenTypeLexemeMapping.getTokenType(text);
-        if (type == null) {
-            type = TokenType.IDENTIFIER;
+        if (text.startsWith("`")) {
+            if (text.length() <= 2) {
+                error(ScanErrorReporterDelegate.LEXICAL_GRAVE_ACCENT);
+            }
+            if (!text.endsWith("`")) {
+                error(ScanErrorReporterDelegate.LEXICAL_GRAVE_ACCENT);
+            }
+            text = text.substring(1, text.length() - 1);
+            addToken(TokenType.IDENTIFIER, text);
+        } else {
+            TokenType type = TokenTypeLexemeMapping.getTokenType(text);
+            if (type == null) {
+                type = TokenType.IDENTIFIER;
+            }
+            addToken(type, text);
         }
-        addToken(type, text);
     }
 
 
@@ -152,8 +166,8 @@ public class DefaultScanner extends AbstractScanner {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
         }
 
-        public static boolean isAlphaNumericDotStar(char c) {
-            return isAlpha(c) || isDigit(c) || isDot(c) || isStar(c);
+        public static boolean isAlphaNumericDotStarGraveAccent(char c) {
+            return isAlpha(c) || isDigit(c) || isDot(c) || isStar(c) || isGraveAccent(c);
         }
 
         public static boolean isDigit(char c) {
@@ -166,6 +180,10 @@ public class DefaultScanner extends AbstractScanner {
 
         public static boolean isStar(char c) {
             return c == '*';
+        }
+
+        public static boolean isGraveAccent(char c) {
+            return c == '`';
         }
 
     }
