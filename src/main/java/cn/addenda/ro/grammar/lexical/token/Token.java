@@ -34,9 +34,9 @@ public class Token implements ROError, DeepCloneable<Token> {
     @Override
     public String toString() {
         return "Token {" +
-                "type: " + type +
-                ", literal: \"" + literal +
-                "\"}";
+            "type: " + type +
+            ", literal: \"" + literal +
+            "\"}";
     }
 
     public TokenType getType() {
@@ -53,8 +53,12 @@ public class Token implements ROError, DeepCloneable<Token> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Token token = (Token) o;
         return type == token.type && Objects.equals(literal, token.literal);
     }
@@ -62,11 +66,6 @@ public class Token implements ROError, DeepCloneable<Token> {
     @Override
     public int hashCode() {
         return Objects.hash(type, literal);
-    }
-
-    public boolean checkSimplePrimary() {
-        return this.type != null && (this.type.equals(TokenType.INTEGER) || this.type.equals(TokenType.DECIMAL) || this.type.equals(TokenType.STRING) ||
-                this.type.equals(TokenType.FALSE) || this.type.equals(TokenType.TRUE) || this.type.equals(TokenType.NULL));
     }
 
     @Override

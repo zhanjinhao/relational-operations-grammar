@@ -1,9 +1,8 @@
 package cn.addenda.ro.test.ast.update;
 
 import cn.addenda.ro.grammar.ast.AstMetaData;
-import cn.addenda.ro.grammar.ast.CurdParserFactory;
+import cn.addenda.ro.grammar.ast.CurdUtils;
 import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.update.UpdateParser;
 import cn.addenda.ro.test.SqlReader;
 
 /**
@@ -18,20 +17,18 @@ public class UpdateParserTest {
     };
 
     public static void main(String[] args) {
-        test2();
+        test1();
+        test1();
     }
 
     private static void test1() {
         for (String sql : SqlReader.read("src/test/resources/update.test", sqls)) {
-            UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
-            Curd parse = updateParser.parse();
+            Curd parse = CurdUtils.parse(sql);
 
-            System.out.println(parse);
+            String s1 = sql.replaceAll("\\s+", "").toLowerCase();
+            String s2 = parse.toString().replaceAll("\\s+", "").toLowerCase();
 
-            String s1 = sql.replaceAll("\\s+", "");
-            String s2 = parse.toString().replaceAll("\\s+", "");
-
-            if (s1.equals(s2)) {
+            if (s1.equalsIgnoreCase(s2)) {
                 System.out.println(s1);
                 System.out.println(s2);
             } else {
@@ -43,8 +40,7 @@ public class UpdateParserTest {
 
     private static void test2() {
         for (String sql : SqlReader.read("src/test/resources/update.test", sqls)) {
-            UpdateParser updateParser = CurdParserFactory.createUpdateParser(sql);
-            Curd parse = updateParser.parse();
+            Curd parse = CurdUtils.parse(sql);
             AstMetaData astMetaData = parse.getAstMetaData();
             System.out.println(astMetaData.getParameterCount());
             System.out.println(astMetaData.getHashMarkCount());

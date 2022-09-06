@@ -60,7 +60,6 @@ public interface CurdVisitor<R> {
 
     R visitWindowFunction(WindowFunction windowFunction);
 
-
     // ----------------------------------------------------------
     // create 的观察方法
     // ----------------------------------------------------------

@@ -1,6 +1,7 @@
 package cn.addenda.ro.test.ast.expression;
 
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
+import cn.addenda.ro.grammar.ast.CurdUtils;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
 
@@ -12,15 +13,14 @@ public class ExpressionParserTest {
 
 
     static String[] sqls = new String[]{
-            "a > c + b and now() > e and f is not null",
-            "-(100+200)",
+        "a > c + b and now() > e and f is not null",
+        "-(100+200)",
     };
 
     public static void main(String[] args) {
 
         for (int i = 0; i < sqls.length; i++) {
-            ExpressionParser expressionParser = CurdParserFactory.createExpressionParser(sqls[i]);
-            Curd parse = expressionParser.parse();
+            Curd parse = CurdUtils.parseExpression(sqls[i]);
 
 //            System.out.println(parse);
 

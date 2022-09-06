@@ -19,7 +19,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitSelect(Select select) {
         return new Select(select.getLeftCurd().accept(this), nullClone(select.getToken()),
-                nullClone(select.getAllToken()), nullClone(select.getRightCurd()));
+            nullClone(select.getAllToken()), nullAccept(select.getRightCurd()));
     }
 
     @Override
@@ -32,15 +32,11 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         Curd limitSeg = singleSelect.getLimitSeg();
         Curd lockSeg = singleSelect.getLockSeg();
 
-        SingleSelect newSingleSelect = new SingleSelect(columnSeg.accept(this), tableSeg.accept(this),
-                nullClone(whereSeg), nullClone(groupBySeg), nullClone(orderBySeg), nullClone(limitSeg), nullClone(lockSeg));
+        SingleSelect newSingleSelect = new SingleSelect(nullAccept(columnSeg), nullAccept(tableSeg),
+            nullAccept(whereSeg), nullAccept(groupBySeg), nullAccept(orderBySeg), nullAccept(limitSeg), nullAccept(lockSeg));
         newSingleSelect.setSingleSelectType(singleSelect.getSingleSelectType());
 
         return newSingleSelect;
-    }
-
-    private Curd nullClone(Curd curd) {
-        return curd == null ? null : curd.accept(this);
     }
 
     private Token nullClone(Token curd) {
@@ -59,13 +55,13 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitColumnRep(ColumnRep columnRep) {
-        return new ColumnRep(nullClone(columnRep.getCurd()), nullClone(columnRep.getOperator()));
+        return new ColumnRep(nullAccept(columnRep.getCurd()), nullClone(columnRep.getOperator()));
     }
 
     @Override
     public Curd visitTableSeg(TableSeg tableSeg) {
-        return new TableSeg(nullClone(tableSeg.getQualifier()), nullClone(tableSeg.getLeftCurd()),
-                nullClone(tableSeg.getToken()), nullClone(tableSeg.getRightCurd()), nullClone(tableSeg.getCondition()));
+        return new TableSeg(nullClone(tableSeg.getQualifier()), nullAccept(tableSeg.getLeftCurd()),
+            nullClone(tableSeg.getToken()), nullAccept(tableSeg.getRightCurd()), nullAccept(tableSeg.getCondition()));
     }
 
     @Override
@@ -108,7 +104,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
             newColumnList.add(token.deepClone());
         }
 
-        return new GroupBySeg(newColumnList, nullClone(groupBySeg.getHaving()));
+        return new GroupBySeg(newColumnList, nullAccept(groupBySeg.getHaving()));
     }
 
     @Override
@@ -123,7 +119,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitOrderItem(OrderItem orderItem) {
-        return new OrderItem(orderItem.getColumn().deepClone(), nullClone(orderItem.getOrderType()));
+        return new OrderItem(nullAccept(orderItem.getColumn()), nullClone(orderItem.getOrderType()));
     }
 
     @Override
@@ -171,7 +167,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         }
 
         return new CaseWhen(caseWhen.getValue().accept(this),
-                newConditionList, newResultList, caseWhen.getDefaultValue().accept(this));
+            newConditionList, newResultList, caseWhen.getDefaultValue().accept(this));
     }
 
     @Override
@@ -191,12 +187,12 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitFrameBetween(FrameBetween frameBetween) {
-        return new FrameBetween(nullClone(frameBetween.getFrom()), nullClone(frameBetween.getTo()));
+        return new FrameBetween(nullAccept(frameBetween.getFrom()), nullAccept(frameBetween.getTo()));
     }
 
     @Override
     public Curd visitDynamicFrame(DynamicFrame dynamicFrame) {
-        return new DynamicFrame(nullClone(dynamicFrame.getType()), nullClone(dynamicFrame.getFrameRange()));
+        return new DynamicFrame(nullClone(dynamicFrame.getType()), nullAccept(dynamicFrame.getFrameRange()));
     }
 
     @Override
@@ -204,14 +200,14 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         List<Curd> partitionByList = window.getPartitionByList();
         if (partitionByList == null) {
             return new Window(null,
-                    nullClone(window.getOrderBySeg()), nullClone(window.getDynamicFrame()));
+                nullAccept(window.getOrderBySeg()), nullAccept(window.getDynamicFrame()));
         }
         List<Curd> newPartitionByList = new ArrayList<>();
         for (Curd curd : partitionByList) {
             newPartitionByList.add(curd.accept(this));
         }
         return new Window(newPartitionByList,
-                nullClone(window.getOrderBySeg()), nullClone(window.getDynamicFrame()));
+            nullAccept(window.getOrderBySeg()), nullAccept(window.getDynamicFrame()));
     }
 
     @Override
@@ -223,10 +219,10 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
                 newParameterList.add(curd.accept(this));
             }
             return new WindowFunction(nullClone(windowFunction.getMethod()),
-                    newParameterList, nullClone(windowFunction.getWindow()));
+                newParameterList, nullAccept(windowFunction.getWindow()));
         }
 
-        return new WindowFunction(nullClone(windowFunction.getMethod()), null, nullClone(windowFunction.getWindow()));
+        return new WindowFunction(nullClone(windowFunction.getMethod()), null, nullAccept(windowFunction.getWindow()));
     }
 
     @Override
@@ -236,8 +232,8 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         Curd curd = insert.getInsertRep();
         Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
 
-        return new Insert(nullClone(constrict), tableName.deepClone(),
-                curd.accept(this), nullClone(onDuplicateUpdate), insert.getInsertType());
+        return new Insert(nullClone(constrict), nullClone(tableName),
+            nullAccept(curd), nullAccept(onDuplicateUpdate), insert.getInsertType());
     }
 
     @Override
@@ -247,7 +243,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         for (List<Curd> curdList : curdListList) {
             List<Curd> newCurdList = new ArrayList<>();
             for (Curd curd : curdList) {
-                newCurdList.add(curd.accept(this));
+                newCurdList.add(nullAccept(curd));
             }
             newCurdListList.add(newCurdList);
         }
@@ -285,55 +281,55 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     @Override
     public Curd visitUpdate(Update update) {
         return new Update(update.getTableName().deepClone(),
-                update.getAssignmentList().accept(this), nullClone(update.getWhereSeg()));
+            nullAccept(update.getAssignmentList()), nullAccept(update.getWhereSeg()));
     }
 
     @Override
     public Curd visitDelete(Delete delete) {
-        return new Delete(delete.getTableName().deepClone(), nullClone(delete.getWhereSeg()));
+        return new Delete(nullClone(delete.getTableName()), nullAccept(delete.getWhereSeg()));
     }
 
     @Override
     public Curd visitWhereSeg(WhereSeg whereSeg) {
-        return new WhereSeg(whereSeg.getLogic().accept(this));
+        return new WhereSeg(nullAccept(whereSeg.getLogic()));
     }
 
     @Override
     public Curd visitLogic(Logic logic) {
-        return new Logic(logic.getLeftCurd().accept(this),
-                nullClone(logic.getToken().deepClone()), nullClone(logic.getRightCurd()));
+        return new Logic(nullAccept(logic.getLeftCurd()),
+            nullClone(logic.getToken()), nullAccept(logic.getRightCurd()));
     }
 
     @Override
     public Curd visitComparison(Comparison comparison) {
-        return new Comparison(comparison.getLeftCurd().accept(this),
-                nullClone(comparison.getComparisonSymbol()), nullClone(comparison.getRightCurd()));
+        return new Comparison(nullAccept(comparison.getLeftCurd()),
+            nullAccept(comparison.getComparisonSymbol()), nullAccept(comparison.getRightCurd()));
     }
 
     @Override
     public Curd visitBinaryArithmetic(BinaryArithmetic binaryArithmetic) {
-        return new BinaryArithmetic(binaryArithmetic.getLeftCurd().accept(this),
-                nullClone(binaryArithmetic.getToken()), nullClone(binaryArithmetic.getRightCurd()));
+        return new BinaryArithmetic(nullAccept(binaryArithmetic.getLeftCurd()),
+            nullClone(binaryArithmetic.getToken()), nullAccept(binaryArithmetic.getRightCurd()));
     }
 
     @Override
     public Curd visitUnaryArithmetic(UnaryArithmetic unaryArithmetic) {
-        return new UnaryArithmetic(unaryArithmetic.getOperator().deepClone(), unaryArithmetic.getCurd().accept(this));
+        return new UnaryArithmetic(nullClone(unaryArithmetic.getOperator()), nullAccept(unaryArithmetic.getCurd()));
     }
 
     @Override
     public Curd visitLiteral(Literal literal) {
-        return new Literal(literal.getValue().deepClone());
+        return new Literal(nullClone(literal.getValue()));
     }
 
     @Override
     public Curd visitGrouping(Grouping grouping) {
-        return new Grouping(grouping.getCurd().accept(this));
+        return new Grouping(nullAccept(grouping.getCurd()));
     }
 
     @Override
     public Curd visitIdentifier(Identifier identifier) {
-        return new Identifier(identifier.getName().deepClone());
+        return new Identifier(nullClone(identifier.getName()));
     }
 
     @Override
@@ -343,11 +339,11 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         if (parameterList != null) {
             List<Curd> newParameterList = new ArrayList<>();
             for (Curd curd : parameterList) {
-                newParameterList.add(curd.accept(this));
+                newParameterList.add(nullAccept(curd));
             }
-            return new Function(method.deepClone(), newParameterList);
+            return new Function(nullClone(method), newParameterList);
         }
-        return new Function(method.deepClone(), null);
+        return new Function(nullClone(method), null);
     }
 
     @Override
@@ -373,7 +369,7 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     public Curd visitTimeUnit(TimeUnit timeUnit) {
         Curd curd = timeUnit.getCurd();
         Token timeType = timeUnit.getTimeType();
-        return new TimeUnit(timeType.deepClone(), curd.accept(this));
+        return new TimeUnit(nullClone(timeType), nullAccept(curd));
     }
 
     @Override
@@ -381,6 +377,6 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
         Token notToken = isNot.getNotToken();
         Token isToken = isNot.getIsToken();
 
-        return new IsNot(isToken.deepClone(), nullClone(notToken));
+        return new IsNot(nullClone(isToken), nullClone(notToken));
     }
 }

@@ -52,12 +52,15 @@ public abstract class Curd implements DeepCloneable<Curd> {
 
     @Override
     public Curd deepClone() {
-        return this.accept(DEEP_CLONE_VISITOR);
+        Curd accept = this.accept(DEEP_CLONE_VISITOR);
+        accept.setDetector(this.detector);
+        accept.accept(accept.detector);
+        return accept;
     }
 
     public void fillTableName(String tableName) {
         IdentifierFillTNVisitor identifierFillTNVisitor =
-                T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
+            T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
         this.accept(identifierFillTNVisitor);
     }
 

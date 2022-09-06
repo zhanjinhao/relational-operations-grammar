@@ -1,6 +1,7 @@
 package cn.addenda.ro.test.ast.create;
 
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
+import cn.addenda.ro.grammar.ast.CurdUtils;
 import cn.addenda.ro.grammar.ast.create.InsertParser;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.test.SqlReader;
@@ -12,24 +13,25 @@ import cn.addenda.ro.test.SqlReader;
 public class InsertParserTest {
 
     static String[] sqls = new String[]{
-
+        "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76 )",
+        "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76     )"
     };
 
     public static void main(String[] args) {
-        test2();
+        test1();
+        test1();
     }
 
     private static void test1() {
         for (String sql : SqlReader.read("src/test/resources/insert.test", sqls)) {
-            InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
-            Curd parse = insertParser.parse();
+            Curd parse = CurdUtils.parse(sql);
 
 //            System.out.println(parse);
 
             String s1 = sql.replaceAll("\\s+", "");
             String s2 = parse.toString().replaceAll("\\s+", "");
 
-            if (s1.equals(s2)) {
+            if (s1.equalsIgnoreCase(s2)) {
                 System.out.println(s1);
                 System.out.println(s2);
             } else {
@@ -41,8 +43,7 @@ public class InsertParserTest {
 
     private static void test2() {
         for (String sql : SqlReader.read("src/test/resources/insert.test", sqls)) {
-            InsertParser insertParser = CurdParserFactory.createInsertParser(sql);
-            Curd parse = insertParser.parse();
+            Curd parse = CurdUtils.parse(sql);
 
             String s2 = parse.toString(" ");
             System.out.println(s2.replaceAll("\\t", "").replaceAll("\\n", ""));

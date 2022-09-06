@@ -1,5 +1,6 @@
 package cn.addenda.ro.grammar.lexical;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -20,7 +21,7 @@ public abstract class Sequence<T, I> {
     protected int last = -1;
     protected int current = 0;
 
-    public Sequence(T source, I endItem) {
+    protected Sequence(T source, I endItem) {
         this.source = source;
         this.length = length();
         this.END_ITEM = endItem;
@@ -74,8 +75,6 @@ public abstract class Sequence<T, I> {
 
     /**
      * current 永远指向待处理的token
-     *
-     * @return
      */
     public boolean isAtEnd() {
         return current >= length;
@@ -83,8 +82,6 @@ public abstract class Sequence<T, I> {
 
     /**
      * 存在返回true，不存在返回false
-     *
-     * @return
      */
     public boolean checkExistsToken() {
         return !indexOf(current).equals(END_ITEM);
@@ -129,4 +126,31 @@ public abstract class Sequence<T, I> {
 
     protected abstract boolean equalSequenceItem(I c1, I c2);
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Sequence<?, ?> sequence = (Sequence<?, ?>) o;
+        if (length != sequence.length) {
+            return false;
+        }
+        Object thatSource = sequence.source;
+        if (!Objects.equals(thatSource.getClass(), source.getClass())) {
+            return false;
+        }
+        return doEquals((T) thatSource);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(doHashCode(), length);
+    }
+
+    protected abstract boolean doEquals(T source);
+
+    protected abstract int doHashCode();
 }

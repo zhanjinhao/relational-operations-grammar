@@ -8,6 +8,7 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
 import cn.addenda.ro.grammar.lexical.token.TokenTypeLexemeMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,6 +102,22 @@ public class TokenSequence extends Sequence<List<Token>, Token> implements ROErr
         TokenSequence tokenSequence = new TokenSequence();
         source.forEach(token -> tokenSequence.addItem(token.deepClone()));
         return tokenSequence;
+    }
+
+    @Override
+    protected boolean doEquals(List<Token> source) {
+        int size = source.size();
+        for (int i = 0; i < size; i++) {
+            if (!this.source.get(i).equals(source.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected int doHashCode() {
+        return Arrays.hashCode(source.toArray());
     }
 
 }
