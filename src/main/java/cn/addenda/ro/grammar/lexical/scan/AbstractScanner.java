@@ -51,6 +51,11 @@ public abstract class AbstractScanner implements Scanner<TokenSequence>, ROError
         index++;
     }
 
+    protected void addToken(TokenType type, Object literal, boolean graveFg) {
+        tokenSequence.addItem(new Token(type, literal, index, graveFg));
+        index++;
+    }
+
     @Override
     public void error(int errorCode) {
         roErrorReporter.error(errorCode);

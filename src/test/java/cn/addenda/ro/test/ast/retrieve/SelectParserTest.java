@@ -34,8 +34,8 @@ public class SelectParserTest {
         for (String sql : SqlReader.read("src/test/resources/select.test", sqls)) {
             Curd parse = CurdUtils.parse(sql);
             final AstMetaData astMetaData = parse.getAstMetaData();
-            System.out.println(astMetaData.getHashMarkCount());
-            System.out.println(astMetaData.getParameterCount());
+//            System.out.println(astMetaData.getHashMarkCount());
+//            System.out.println(astMetaData.getParameterCount());
 
             String s1 = sql.replaceAll("\\s+", "").toLowerCase();
             String s2 = parse.toString().replaceAll("\\s+", "").toLowerCase();

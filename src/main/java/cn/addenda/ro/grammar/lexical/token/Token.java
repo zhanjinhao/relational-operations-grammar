@@ -17,17 +17,28 @@ public class Token implements ROError, DeepCloneable<Token> {
      */
     private Object literal;
 
+    private boolean graveFg;
+
     private int index = -1;
 
     public Token(TokenType type, Object literal) {
         this.type = type;
         this.literal = literal;
+        this.graveFg = false;
     }
 
     public Token(TokenType type, Object literal, int index) {
         this.type = type;
         this.literal = literal;
         this.index = index;
+        this.graveFg = false;
+    }
+
+    public Token(TokenType type, Object literal, int index, boolean graveFg) {
+        this.type = type;
+        this.literal = literal;
+        this.index = index;
+        this.graveFg = graveFg;
     }
 
 
@@ -51,6 +62,10 @@ public class Token implements ROError, DeepCloneable<Token> {
         return index;
     }
 
+    public boolean isGraveFg() {
+        return graveFg;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -70,7 +85,7 @@ public class Token implements ROError, DeepCloneable<Token> {
 
     @Override
     public Token deepClone() {
-        return new Token(this.getType(), this.getLiteral(), this.getIndex());
+        return new Token(this.getType(), this.getLiteral(), this.getIndex(), graveFg);
     }
 
 }

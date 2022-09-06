@@ -150,7 +150,7 @@ public class DefaultScanner extends AbstractScanner {
                 error(ScanErrorReporterDelegate.LEXICAL_GRAVE_ACCENT);
             }
             text = text.substring(1, text.length() - 1);
-            addToken(TokenType.IDENTIFIER, text);
+            addToken(TokenType.IDENTIFIER, text, true);
         } else {
             TokenType type = TokenTypeLexemeMapping.getTokenType(text);
             if (type == null) {

@@ -1,8 +1,6 @@
 package cn.addenda.ro.test.ast.delete;
 
-import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.CurdUtils;
-import cn.addenda.ro.grammar.ast.delete.DeleteParser;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.test.SqlReader;
 
