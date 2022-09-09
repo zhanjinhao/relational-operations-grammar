@@ -62,11 +62,6 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
-    public final R visitInCondition(InCondition inCondition) {
-        return inCondition.accept(client);
-    }
-
-    @Override
     public final R visitExistsCondition(ExistsCondition existsCondition) {
         return existsCondition.accept(client);
     }

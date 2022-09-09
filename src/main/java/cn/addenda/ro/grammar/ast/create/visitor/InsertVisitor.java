@@ -3,6 +3,7 @@ package cn.addenda.ro.grammar.ast.create.visitor;
 import cn.addenda.ro.grammar.ast.AbstractCurdVisitor;
 import cn.addenda.ro.grammar.ast.delete.Delete;
 import cn.addenda.ro.grammar.ast.expression.Comparison;
+import cn.addenda.ro.grammar.ast.expression.InCondition;
 import cn.addenda.ro.grammar.ast.expression.Logic;
 import cn.addenda.ro.grammar.ast.expression.WhereSeg;
 import cn.addenda.ro.grammar.ast.retrieve.*;

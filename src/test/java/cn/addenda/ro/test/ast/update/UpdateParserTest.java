@@ -13,7 +13,7 @@ public class UpdateParserTest {
 
 
     static String[] sqls = new String[]{
-
+        "update A set a = 1 where id in (1, 2, 3)"
     };
 
     public static void main(String[] args) {

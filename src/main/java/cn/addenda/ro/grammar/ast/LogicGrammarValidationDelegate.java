@@ -2,7 +2,6 @@ package cn.addenda.ro.grammar.ast;
 
 import cn.addenda.ro.grammar.ast.expression.*;
 import cn.addenda.ro.grammar.ast.retrieve.ExistsCondition;
-import cn.addenda.ro.grammar.ast.retrieve.InCondition;
 import cn.addenda.ro.grammar.ast.retrieve.Select;
 import cn.addenda.ro.grammar.ast.retrieve.SingleSelect;
 import cn.addenda.ro.grammar.lexical.token.Token;

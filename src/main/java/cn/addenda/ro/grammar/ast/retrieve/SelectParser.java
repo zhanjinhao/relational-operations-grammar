@@ -393,7 +393,8 @@ public class SelectParser extends ExpressionParser {
     /**
      * IDENTIFIER ("not")? "in" "(" select | (primary (, primary)*) ")"
      */
-    private Curd inCondition() {
+    @Override
+    protected Curd inCondition() {
         Token identifier = tokenSequence.takeCur();
         tokenSequence.advance();
         Token in = tokenSequence.takeCur();
@@ -403,24 +404,24 @@ public class SelectParser extends ExpressionParser {
         tokenSequence.advance();
 
         if (checkSelectValue(tokenSequence)) {
-            consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_inCondition_PARSE);
+            consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
             Select select = (Select) select();
-            consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_inCondition_PARSE);
+            consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
             InCondition inCondition = new InCondition(in, identifier, select);
             select.setSelectType(SelectType.IN);
             return inCondition;
         }
-        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_inCondition_PARSE);
+        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
         List<Curd> ranges = new ArrayList<>();
         do {
             Curd primary = primary();
             if (primary instanceof Literal) {
                 ranges.add(primary);
             } else {
-                error(AstROErrorReporterDelegate.SELECT_inCondition_PARSE);
+                error(AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
             }
         } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
-        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_inCondition_PARSE);
+        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
         return new InCondition(in, identifier, ranges);
     }
 

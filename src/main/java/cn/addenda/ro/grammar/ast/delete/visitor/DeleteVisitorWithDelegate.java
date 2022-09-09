@@ -79,4 +79,9 @@ public abstract class DeleteVisitorWithDelegate<R> extends DeleteVisitor<R> {
     public R visitIsNot(IsNot isNot) {
         return isNot.accept(delegate);
     }
+
+    @Override
+    public R visitInCondition(InCondition inCondition) {
+        return inCondition.accept(delegate);
+    }
 }

@@ -82,11 +82,6 @@ public abstract class UpdateVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
-    public final R visitInCondition(InCondition inCondition) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public final R visitExistsCondition(ExistsCondition existsCondition) {
         throw new UnsupportedOperationException();
     }

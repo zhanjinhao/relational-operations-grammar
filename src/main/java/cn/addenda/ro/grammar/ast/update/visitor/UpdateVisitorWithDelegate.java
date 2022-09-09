@@ -77,6 +77,11 @@ public abstract class UpdateVisitorWithDelegate<R> extends UpdateVisitor<R> {
 
     @Override
     public R visitIsNot(IsNot isNot) {
-        return isNot.accept(this);
+        return isNot.accept(delegate);
+    }
+
+    @Override
+    public R visitInCondition(InCondition inCondition) {
+        return inCondition.accept(delegate);
     }
 }

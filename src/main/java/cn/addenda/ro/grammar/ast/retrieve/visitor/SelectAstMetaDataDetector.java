@@ -313,34 +313,6 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     }
 
     @Override
-    public AstMetaData visitInCondition(InCondition inCondition) {
-
-        AstMetaData astMetaDataCur = inCondition.getAstMetaData();
-
-        // 条件字段需要加入
-        Token identifier = inCondition.getIdentifier();
-        astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(identifier.getLiteral()));
-
-        Curd curd = inCondition.getSelect();
-        // select 模式
-        if (curd != null) {
-            AstMetaData accept = curd.accept(this);
-            accept.setParent(astMetaDataCur);
-            astMetaDataCur.addChild(accept);
-            return astMetaDataCur;
-        } else {
-            final List<Curd> range = inCondition.getRange();
-            for (Curd item : range) {
-                AstMetaData accept = item.accept(this);
-                astMetaDataCur.mergeCount(accept);
-                // range 模式下，range里的不会包含Identifier，不需要合并ConditionColumn
-            }
-        }
-
-        return astMetaDataCur;
-    }
-
-    @Override
     public AstMetaData visitExistsCondition(ExistsCondition existsCondition) {
         AstMetaData astMetaData = existsCondition.getAstMetaData();
 

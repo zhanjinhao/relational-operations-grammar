@@ -50,6 +50,6 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 11、CurdUtils 按 FunctionEvaluator 进行缓存
 
-12、InCondition 作为 Expression 的语法
+12、InCondition 作为 Expression 的语法。 √
 
 13、增加ExpressionVisitor，不用于Delegate。 √

@@ -85,4 +85,8 @@ public abstract class SelectVisitorWithDelegate<R> extends SelectVisitor<R> {
         return isNot.accept(delegate);
     }
 
+    @Override
+    public R visitInCondition(InCondition inCondition) {
+        return inCondition.accept(delegate);
+    }
 }

@@ -303,6 +303,33 @@ public class ExpressionParser extends AbstractCurdParser {
 
 
     /**
+     * IDENTIFIER ("not")? "in" "(" primary (, primary)* ")"
+     */
+    protected Curd inCondition() {
+        Token identifier = tokenSequence.takeCur();
+        tokenSequence.advance();
+        Token in = tokenSequence.takeCur();
+        if (tokenSequence.curEqual(TokenType.NOT)) {
+            tokenSequence.advance();
+        }
+        tokenSequence.advance();
+
+        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+        List<Curd> ranges = new ArrayList<>();
+        do {
+            Curd primary = primary();
+            if (primary instanceof Literal) {
+                ranges.add(primary);
+            } else {
+                error(AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+            }
+        } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
+        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+        return new InCondition(in, identifier, ranges);
+    }
+
+
+    /**
      * IDENTIFIER ("," IDENTIFIER)*
      */
     protected List<Token> columnList() {

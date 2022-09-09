@@ -92,7 +92,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_orderBySeg_PARSE, SELECT_orderBySeg_PARSE_MSG);
         addErrorMsg(SELECT_limitSeg_PARSE, SELECT_limitSeg_PARSE_MSG);
         addErrorMsg(SELECT_condition_PARSE, SELECT_condition_PARSE_MSG);
-        addErrorMsg(SELECT_inCondition_PARSE, SELECT_inCondition_PARSE_MSG);
+        addErrorMsg(EXPRESSION_inCondition_PARSE, EXPRESSION_inCondition_PARSE_MSG);
         addErrorMsg(SELECT_existsCondition_PARSE, SELECT_existsCondition_PARSE_MSG);
         addErrorMsg(SELECT_primary_PARSE, SELECT_primary_PARSE_MSG);
         addErrorMsg(SELECT_groupFunction_PARSE, SELECT_groupFunction_PARSE_MSG);
@@ -115,7 +115,7 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
         addErrorMsg(SELECT_orderBySeg_VALIDATION, SELECT_orderBySeg_VALIDATION_MSG);
         addErrorMsg(SELECT_limitSeg_VALIDATION, SELECT_limitSeg_VALIDATION_MSG);
         addErrorMsg(SELECT_condition_VALIDATION, SELECT_condition_VALIDATION_MSG);
-        addErrorMsg(SELECT_inCondition_VALIDATION, SELECT_inCondition_VALIDATION_MSG);
+        addErrorMsg(EXPRESSION_inCondition_VALIDATION, EXPRESSION_inCondition_VALIDATION_MSG);
         addErrorMsg(SELECT_existsCondition_VALIDATION, SELECT_existsCondition_VALIDATION_MSG);
         addErrorMsg(SELECT_primary_VALIDATION, SELECT_primary_VALIDATION_MSG);
         addErrorMsg(SELECT_groupFunction_VALIDATION, SELECT_groupFunction_VALIDATION_MSG);
@@ -185,6 +185,10 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final int EXPRESSION_columnList_PARSE = 21015;
     public static final String EXPRESSION_columnList_PARSE_MSG = "The grammar of columnList is : 'IDENTIFIER (\",\" IDENTIFIER)*'.";
 
+    public static final int EXPRESSION_inCondition_PARSE = 21016;
+    public static final String EXPRESSION_inCondition_PARSE_MSG = "The grammar of inCondition is : 'IDENTIFIER (\"not\")? \"in\" \"(\" (single | (primary (, primary)*) \")\"'.";
+
+
     /**
      * expression 语法的语法验证错误代码从21501开
      */
@@ -235,6 +239,10 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
 
     public static final int EXPRESSION_identifierName_VALIDATION = 21516;
     public static final String EXPRESSION_identifierName_VALIDATION_MSG = "illegal identifier name.";
+
+    public static final int EXPRESSION_inCondition_VALIDATION = 21517;
+    public static final String EXPRESSION_inCondition_VALIDATION_MSG = "inCondition grammar validation failed : 'IDENTIFIER (\"not\")? \"in\" \"(\" (single | (primary (, primary)*) \")\"'.";
+
 
     /**
      * insert 语法的语法检测错误代码从22001开始
@@ -336,9 +344,6 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
     public static final int SELECT_condition_PARSE = 25011;
     public static final String SELECT_condition_PARSE_MSG = "The grammar of condition is : 'inCondition | existsCondition | comparison'.";
 
-    public static final int SELECT_inCondition_PARSE = 25012;
-    public static final String SELECT_inCondition_PARSE_MSG = "The grammar of inCondition is : 'IDENTIFIER (\"not\")? \"in\" \"(\" (single | (primary (, primary)*) \")\"'.";
-
     public static final int SELECT_existsCondition_PARSE = 25013;
     public static final String SELECT_existsCondition_PARSE_MSG = "The grammar of existsCondition is : '(\"not\")? \"exists\" \"(\" singleSelect \")\"'.";
 
@@ -405,9 +410,6 @@ public class AstROErrorReporterDelegate extends AbstractROErrorReporterDelegate 
 
     public static final int SELECT_condition_VALIDATION = 25511;
     public static final String SELECT_condition_VALIDATION_MSG = "condition grammar validation failed : 'inCondition | existsCondition | comparison'.";
-
-    public static final int SELECT_inCondition_VALIDATION = 25512;
-    public static final String SELECT_inCondition_VALIDATION_MSG = "inCondition grammar validation failed : 'IDENTIFIER (\"not\")? \"in\" \"(\" (single | (primary (, primary)*) \")\"'.";
 
     public static final int SELECT_existsCondition_VALIDATION = 25513;
     public static final String SELECT_existsCondition_VALIDATION_MSG = "existsCondition grammar validation failed : '(\"not\")? \"exists\" \"(\" singleSelect \")\"'.";

@@ -1,7 +1,6 @@
-package cn.addenda.ro.grammar.ast.retrieve;
+package cn.addenda.ro.grammar.ast.expression;
 
 import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class InCondition extends Curd {
 
     // select 场景
     public InCondition(Token in, Token identifier, Curd select) {
-        super(new SingleSelectAstMetaData());
         this.in = in;
         this.identifier = identifier;
         this.select = select;
@@ -33,7 +31,6 @@ public class InCondition extends Curd {
 
     // list 场景
     public InCondition(Token in, Token identifier, List<Curd> range) {
-        super(new SingleSelectAstMetaData());
         this.in = in;
         this.identifier = identifier;
         this.range = range;

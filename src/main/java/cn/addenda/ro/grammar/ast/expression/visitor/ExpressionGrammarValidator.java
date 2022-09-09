@@ -26,6 +26,32 @@ public class ExpressionGrammarValidator extends ExpressionVisitorForDelegation<V
         setErrorReporter(roErrorReporter);
     }
 
+
+    @Override
+    public Void visitInCondition(InCondition inCondition) {
+        Curd curd = inCondition.getSelect();
+        List<Curd> range = inCondition.getRange();
+
+        if (curd == null && range == null) {
+            error(AstROErrorReporterDelegate.EXPRESSION_inCondition_VALIDATION);
+        }
+        if (curd != null && range != null) {
+            error(AstROErrorReporterDelegate.EXPRESSION_inCondition_VALIDATION);
+        }
+        if (curd != null) {
+            curd.accept(this);
+        }
+        if (range != null) {
+            for (Curd item : range) {
+                if (!(item instanceof Literal)) {
+                    error(AstROErrorReporterDelegate.EXPRESSION_inCondition_VALIDATION);
+                }
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public Void visitWhereSeg(WhereSeg whereSeg) {
         Curd logic = whereSeg.getLogic();

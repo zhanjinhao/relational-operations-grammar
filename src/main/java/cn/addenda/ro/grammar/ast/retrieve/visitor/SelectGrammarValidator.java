@@ -264,33 +264,6 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         return null;
     }
 
-
-    @Override
-    public Void visitInCondition(InCondition inCondition) {
-
-        Curd curd = inCondition.getSelect();
-        List<Curd> range = inCondition.getRange();
-
-        if (curd == null && range == null) {
-            error(AstROErrorReporterDelegate.SELECT_inCondition_VALIDATION);
-        }
-        if (curd != null && range != null) {
-            error(AstROErrorReporterDelegate.SELECT_inCondition_VALIDATION);
-        }
-        if (curd != null) {
-            curd.accept(this);
-        }
-        if (range != null) {
-            for (Curd item : range) {
-                if (!(item instanceof Literal)) {
-                    error(AstROErrorReporterDelegate.SELECT_inCondition_VALIDATION);
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public Void visitExistsCondition(ExistsCondition existsCondition) {
         Curd curd = existsCondition.getCurd();
