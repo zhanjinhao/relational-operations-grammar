@@ -47,7 +47,7 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
-    public R visitCaseWhen(CaseWhen caseWhen) {
+    public final R visitCaseWhen(CaseWhen caseWhen) {
         return caseWhen.accept(client);
     }
 
@@ -82,7 +82,7 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
-    public R visitOrderItem(OrderItem orderItem) {
+    public final R visitOrderItem(OrderItem orderItem) {
         return orderItem.accept(client);
     }
 
@@ -97,7 +97,7 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
-    public R visitGroupConcat(GroupConcat groupConcat) {
+    public final R visitGroupConcat(GroupConcat groupConcat) {
         return groupConcat.accept(client);
     }
 
@@ -127,47 +127,47 @@ public abstract class ExpressionVisitorForDelegation<R> extends AbstractCurdVisi
     }
 
     @Override
-    public R visitSLock(SLock sLock) {
+    public final R visitSLock(SLock sLock) {
         return sLock.accept(client);
     }
 
     @Override
-    public R visitXLock(XLock xLock) {
+    public final R visitXLock(XLock xLock) {
         return xLock.accept(client);
     }
 
     @Override
-    public R visitFrameEdge(FrameEdge frameEdge) {
+    public final R visitFrameEdge(FrameEdge frameEdge) {
         return frameEdge.accept(client);
     }
 
     @Override
-    public R visitFrameBetween(FrameBetween frameBetween) {
+    public final R visitFrameBetween(FrameBetween frameBetween) {
         return frameBetween.accept(client);
     }
 
     @Override
-    public R visitDynamicFrame(DynamicFrame dynamicFrame) {
+    public final R visitDynamicFrame(DynamicFrame dynamicFrame) {
         return dynamicFrame.accept(client);
     }
 
     @Override
-    public R visitWindow(Window window) {
+    public final R visitWindow(Window window) {
         return window.accept(client);
     }
 
     @Override
-    public R visitWindowFunction(WindowFunction windowFunction) {
+    public final R visitWindowFunction(WindowFunction windowFunction) {
         return windowFunction.accept(client);
     }
 
     @Override
-    public R visitUpdate(Update update) {
+    public final R visitUpdate(Update update) {
         return update.accept(client);
     }
 
     @Override
-    public R visitDelete(Delete delete) {
+    public final R visitDelete(Delete delete) {
         return delete.accept(client);
     }
 }

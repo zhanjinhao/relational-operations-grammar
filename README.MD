@@ -28,20 +28,28 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 # todo
 
-1、增加窗口函数。 √
+01、增加窗口函数。 √
 
-2、select 增加锁语法。 √
+02、select 增加锁语法。 √
 
-3、toString()支持分隔符为 ''。 √
+03、toString()支持分隔符为 ''。 √
 
-4、支持group_concat()语法。 √
+04、支持group_concat()语法。 √
 
-5、AstMetaData增加 ?计数 和 #{}计数。 √
+05、AstMetaData增加 ?计数 和 #{}计数。 √
 
-6、limitSeg 仅支持 limit countNum offset skipNum 语法。 √
+06、limitSeg 仅支持 limit countNum offset skipNum 语法。 √
 
-7、关键字和identifier转小写。 √
+07、关键字和identifier转小写。 √
 
-8、InCondition range模式，Literal vs Token。
+08、InCondition range模式，Literal vs Token。
 
-9、被 `` 包裹的都是Identifier。 √
+09、被 `` 包裹的都是Identifier。 √
+
+10、FunctionDescriptor 增加 isIndependent 方法
+
+11、CurdUtils 按 FunctionEvaluator 进行缓存
+
+12、InCondition 作为 Expression 的语法
+
+13、增加ExpressionVisitor，不用于Delegate。 √

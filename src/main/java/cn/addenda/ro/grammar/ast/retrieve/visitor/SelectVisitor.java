@@ -48,7 +48,7 @@ public abstract class SelectVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
-    public R visitDelete(Delete delete) {
+    public final R visitDelete(Delete delete) {
         throw new UnsupportedOperationException();
     }
 }

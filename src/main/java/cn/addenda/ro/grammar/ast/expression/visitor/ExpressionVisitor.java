@@ -1,21 +1,18 @@
-package cn.addenda.ro.grammar.ast.create.visitor;
+package cn.addenda.ro.grammar.ast.expression.visitor;
 
 import cn.addenda.ro.grammar.ast.AbstractCurdVisitor;
+import cn.addenda.ro.grammar.ast.create.*;
 import cn.addenda.ro.grammar.ast.delete.Delete;
-import cn.addenda.ro.grammar.ast.expression.Comparison;
-import cn.addenda.ro.grammar.ast.expression.Logic;
-import cn.addenda.ro.grammar.ast.expression.WhereSeg;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.update.Update;
 
 /**
- *
- * 所有的非insert语法抛异常。
+ * 此类本质是一个delegate
  *
  * @author addenda
- * @datetime 2021/4/3 19:14
+ * @datetime 2021/4/7 18:07
  */
-public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
+public abstract class ExpressionVisitor<R> extends AbstractCurdVisitor<R> {
 
     @Override
     public final R visitSelect(Select select) {
@@ -53,11 +50,6 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
-    public final R visitWhereSeg(WhereSeg whereSeg) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public final R visitInCondition(InCondition inCondition) {
         throw new UnsupportedOperationException();
     }
@@ -88,22 +80,37 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
     }
 
     @Override
-    public final R visitLogic(Logic logic) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final R visitComparison(Comparison comparison) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public final R visitGroupFunction(GroupFunction groupFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public final R visitGroupConcat(GroupConcat groupConcat) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final R visitInsert(Insert insert) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final R visitInsertValuesRep(InsertValuesRep insertValuesRep) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final R visitInsertSetRep(InsertSetRep insertSetRep) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final R visitInsertSelectRep(InsertSelectRep insertSelectRep) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final R visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
         throw new UnsupportedOperationException();
     }
 
@@ -152,5 +159,3 @@ public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
         throw new UnsupportedOperationException();
     }
 }
-
-
