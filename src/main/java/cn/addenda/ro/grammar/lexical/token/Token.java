@@ -3,13 +3,17 @@ package cn.addenda.ro.grammar.lexical.token;
 import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.DeepCloneable;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author addenda
  * @datetime 2021/2/20 17:03
  */
 public class Token implements ROError, DeepCloneable<Token> {
+
+    public static final Set<Class<?>> LITERAL_CLASS_SET = new HashSet<>();
 
     private final TokenType type;
     /**
@@ -25,6 +29,9 @@ public class Token implements ROError, DeepCloneable<Token> {
         this.type = type;
         this.literal = literal;
         this.graveFg = false;
+        if (literal != null) {
+            LITERAL_CLASS_SET.add(literal.getClass());
+        }
     }
 
     public Token(TokenType type, Object literal, int index) {
@@ -32,6 +39,9 @@ public class Token implements ROError, DeepCloneable<Token> {
         this.literal = literal;
         this.index = index;
         this.graveFg = false;
+        if (literal != null) {
+            LITERAL_CLASS_SET.add(literal.getClass());
+        }
     }
 
     public Token(TokenType type, Object literal, int index, boolean graveFg) {
@@ -39,15 +49,18 @@ public class Token implements ROError, DeepCloneable<Token> {
         this.literal = literal;
         this.index = index;
         this.graveFg = graveFg;
+        if (literal != null) {
+            LITERAL_CLASS_SET.add(literal.getClass());
+        }
     }
 
 
     @Override
     public String toString() {
         return "Token {" +
-            "type: " + type +
-            ", literal: \"" + literal +
-            "\"}";
+                "type: " + type +
+                ", literal: \"" + literal +
+                "\"}";
     }
 
     public TokenType getType() {
