@@ -18,6 +18,11 @@ public class TimestampDiffDescriptor extends AbstractFunctionDescriptor {
     }
 
     @Override
+    public boolean isIndependent() {
+        return true;
+    }
+
+    @Override
     public String functionName() {
         return "timestampdiff";
     }

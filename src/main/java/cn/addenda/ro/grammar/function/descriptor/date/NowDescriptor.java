@@ -16,6 +16,11 @@ import java.util.List;
 public class NowDescriptor extends ErrorReportableFunctionDescriptor {
 
     @Override
+    public boolean isIndependent() {
+        return false;
+    }
+
+    @Override
     public String functionName() {
         return "now";
     }

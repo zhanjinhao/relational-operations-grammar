@@ -16,6 +16,11 @@ import java.util.List;
 public class DecodeDescriptor extends ErrorReportableFunctionDescriptor {
 
     @Override
+    public boolean isIndependent() {
+        return true;
+    }
+
+    @Override
     public String functionName() {
         return "decode";
     }

@@ -21,6 +21,11 @@ public class ExtractDescriptor extends AbstractFunctionDescriptor {
     }
 
     @Override
+    public boolean isIndependent() {
+        return true;
+    }
+
+    @Override
     public String functionName() {
         return "extract";
     }

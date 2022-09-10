@@ -46,7 +46,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 09、被 `` 包裹的都是Identifier。 √
 
-10、FunctionDescriptor 增加 isIndependent 方法
+10、FunctionDescriptor 增加 isIndependent 方法。 √
 
 11、CurdUtils 按 FunctionEvaluator 进行缓存。 √
 

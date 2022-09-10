@@ -23,6 +23,11 @@ public class StrToDateDescriptor extends AbstractFunctionDescriptor {
     }
 
     @Override
+    public boolean isIndependent() {
+        return true;
+    }
+
+    @Override
     public String functionName() {
         return "str_to_date";
     }

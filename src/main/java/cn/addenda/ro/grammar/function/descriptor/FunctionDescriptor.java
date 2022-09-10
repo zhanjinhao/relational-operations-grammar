@@ -10,6 +10,8 @@ import cn.addenda.ro.grammar.ast.expression.Function;
  */
 public interface FunctionDescriptor extends ROError {
 
+    boolean isIndependent();
+
     String functionName();
 
     int innerType();
