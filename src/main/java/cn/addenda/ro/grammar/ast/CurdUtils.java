@@ -1,6 +1,10 @@
 package cn.addenda.ro.grammar.ast;
 
+import cn.addenda.ro.grammar.ast.create.Insert;
+import cn.addenda.ro.grammar.ast.delete.Delete;
 import cn.addenda.ro.grammar.ast.expression.Curd;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.update.Update;
 import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptor;
 import cn.addenda.ro.grammar.function.evaluator.DefaultFunctionEvaluator;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
@@ -61,81 +65,81 @@ public class CurdUtils {
                 .deepClone();
     }
 
-    public static Curd parseInsert(String sql) {
+    public static Insert parseInsert(String sql) {
         return parseInsert(sql, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseInsert(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+    public static Insert parseInsert(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseInsert(tokenSequence, functionEvaluator);
     }
 
-    public static Curd parseInsert(TokenSequence tokenSequence) {
+    public static Insert parseInsert(TokenSequence tokenSequence) {
         return parseInsert(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseInsert(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Insert parseInsert(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+        return (Insert) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createInsertParser(tokenSequence, functionEvaluator).parse())
                 .deepClone();
     }
 
-    public static Curd parseUpdate(String sql) {
+    public static Update parseUpdate(String sql) {
         return parseUpdate(sql, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseUpdate(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+    public static Update parseUpdate(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseUpdate(tokenSequence, functionEvaluator);
     }
 
-    public static Curd parseUpdate(TokenSequence tokenSequence) {
+    public static Update parseUpdate(TokenSequence tokenSequence) {
         return parseUpdate(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseUpdate(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Update parseUpdate(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+        return (Update) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createUpdateParser(tokenSequence, functionEvaluator).parse())
                 .deepClone();
     }
 
-    public static Curd parseDelete(String sql) {
+    public static Delete parseDelete(String sql) {
         return parseDelete(sql, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseDelete(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+    public static Delete parseDelete(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseDelete(tokenSequence, functionEvaluator);
     }
 
-    public static Curd parseDelete(TokenSequence tokenSequence) {
+    public static Delete parseDelete(TokenSequence tokenSequence) {
         return parseDelete(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseDelete(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Delete parseDelete(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+        return (Delete) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createDeleteParser(tokenSequence, functionEvaluator).parse())
                 .deepClone();
     }
 
-    public static Curd parseSelect(String sql) {
+    public static Select parseSelect(String sql) {
         return parseSelect(sql, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseSelect(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+    public static Select parseSelect(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseSelect(tokenSequence, functionEvaluator);
     }
 
-    public static Curd parseSelect(TokenSequence tokenSequence) {
+    public static Select parseSelect(TokenSequence tokenSequence) {
         return parseSelect(tokenSequence, DefaultFunctionEvaluator.getInstance());
     }
 
-    public static Curd parseSelect(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Select parseSelect(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
+        return (Select) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createSelectParser(tokenSequence, functionEvaluator).parse())
                 .deepClone();
