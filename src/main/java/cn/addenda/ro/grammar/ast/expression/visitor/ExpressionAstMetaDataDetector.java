@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class ExpressionAstMetaDataDetector extends ExpressionVisitorForDelegation<AstMetaData> {
 
+    private static final ExpressionAstMetaDataDetector defaultInstance = new ExpressionAstMetaDataDetector(null);
+
     public ExpressionAstMetaDataDetector(CurdVisitor<AstMetaData> client) {
         super(client);
         setErrorReporter(DumbROErrorReporterDelegate.getInstance());
@@ -24,6 +26,9 @@ public class ExpressionAstMetaDataDetector extends ExpressionVisitorForDelegatio
     //  Expression涉及到的字段都先认为是条件列，具体是什么由client决定
     // ---------------------------------------------------------
 
+    public static ExpressionAstMetaDataDetector getDefaultInstance() {
+        return defaultInstance;
+    }
 
     @Override
     public AstMetaData visitInCondition(InCondition inCondition) {

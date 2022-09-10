@@ -2,6 +2,16 @@ package cn.addenda.ro.grammar.ast.expression;
 
 import cn.addenda.ro.grammar.DeepCloneable;
 import cn.addenda.ro.grammar.ast.*;
+import cn.addenda.ro.grammar.ast.create.InsertAstMetaData;
+import cn.addenda.ro.grammar.ast.create.visitor.InsertAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.delete.DeleteAstMetaData;
+import cn.addenda.ro.grammar.ast.delete.visitor.DeleteAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.retrieve.SelectAstMetaData;
+import cn.addenda.ro.grammar.ast.retrieve.SingleSelectAstMetaData;
+import cn.addenda.ro.grammar.ast.retrieve.visitor.SelectAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.update.UpdateAstMetaData;
+import cn.addenda.ro.grammar.ast.update.visitor.UpdateAstMetaDataDetector;
 
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +29,7 @@ public abstract class Curd implements DeepCloneable<Curd> {
 
     private static final DeepCloneVisitor DEEP_CLONE_VISITOR = new DeepCloneVisitor();
 
-    private CurdVisitor<AstMetaData> detector;
+    private final CurdVisitor<AstMetaData> detector;
 
     private static final ClearAstMetaDataVisitor CLEAR_AST_META_DATA_VISITOR = new ClearAstMetaDataVisitor();
 
@@ -28,11 +38,23 @@ public abstract class Curd implements DeepCloneable<Curd> {
     protected Curd() {
         this.astMetaData = new AstMetaData();
         this.astMetaData.setCurd(this);
+        this.detector = ExpressionAstMetaDataDetector.getDefaultInstance();
     }
 
     protected Curd(AstMetaData astMetaData) {
         this.astMetaData = astMetaData;
         this.astMetaData.setCurd(this);
+        if (astMetaData instanceof InsertAstMetaData) {
+            this.detector = InsertAstMetaDataDetector.getInstance();
+        } else if (astMetaData instanceof DeleteAstMetaData) {
+            this.detector = DeleteAstMetaDataDetector.getInstance();
+        } else if (astMetaData instanceof UpdateAstMetaData) {
+            this.detector = UpdateAstMetaDataDetector.getInstance();
+        } else if (astMetaData instanceof SelectAstMetaData || astMetaData instanceof SingleSelectAstMetaData) {
+            this.detector = SelectAstMetaDataDetector.getInstance();
+        } else {
+            this.detector = ExpressionAstMetaDataDetector.getDefaultInstance();
+        }
     }
 
     public abstract <R> R accept(CurdVisitor<R> curdVisitor);
@@ -53,14 +75,13 @@ public abstract class Curd implements DeepCloneable<Curd> {
     @Override
     public Curd deepClone() {
         Curd accept = this.accept(DEEP_CLONE_VISITOR);
-        accept.setDetector(this.detector);
-        accept.accept(accept.detector);
+        accept.detectAstMetaData();
         return accept;
     }
 
     public void fillTableName(String tableName) {
         IdentifierFillTNVisitor identifierFillTNVisitor =
-            T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
+                T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
         this.accept(identifierFillTNVisitor);
     }
 
@@ -84,13 +105,13 @@ public abstract class Curd implements DeepCloneable<Curd> {
         return Objects.hash(toString().replaceAll("\\s+", ""));
     }
 
-    public void reSetAstMetaData() {
-        this.accept(CLEAR_AST_META_DATA_VISITOR);
+    public void detectAstMetaData() {
         this.accept(detector);
     }
 
-    public void setDetector(CurdVisitor<AstMetaData> detector) {
-        this.detector = detector;
+    public void reSetAstMetaData() {
+        this.accept(CLEAR_AST_META_DATA_VISITOR);
+        this.accept(detector);
     }
 
 }

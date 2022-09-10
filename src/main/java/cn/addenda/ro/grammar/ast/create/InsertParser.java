@@ -1,7 +1,6 @@
 package cn.addenda.ro.grammar.ast.create;
 
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
-import cn.addenda.ro.grammar.ast.create.visitor.InsertAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.create.visitor.InsertGrammarValidator;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
@@ -46,8 +45,7 @@ public class InsertParser extends ExpressionParser {
         Curd insert = insert();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         insert.accept(new InsertGrammarValidator(this.errorReporterDelegate));
-        insert.accept(InsertAstMetaDataDetector.getInstance());
-        insert.setDetector(InsertAstMetaDataDetector.getInstance());
+        insert.detectAstMetaData();
         return insert;
     }
 

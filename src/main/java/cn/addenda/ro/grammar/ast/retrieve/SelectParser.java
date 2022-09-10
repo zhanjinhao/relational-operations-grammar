@@ -2,7 +2,6 @@ package cn.addenda.ro.grammar.ast.retrieve;
 
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.expression.*;
-import cn.addenda.ro.grammar.ast.retrieve.visitor.SelectAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.retrieve.visitor.SelectGrammarValidator;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
@@ -68,8 +67,7 @@ public class SelectParser extends ExpressionParser {
         saveSingleSelectContext(select, SingleSelectType.TOP);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
-        select.setDetector(SelectAstMetaDataDetector.getInstance());
-        select.accept(SelectAstMetaDataDetector.getInstance());
+        select.detectAstMetaData();
         return select;
     }
 

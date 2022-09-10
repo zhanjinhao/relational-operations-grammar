@@ -1,7 +1,6 @@
 package cn.addenda.ro.grammar.ast.delete;
 
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
-import cn.addenda.ro.grammar.ast.delete.visitor.DeleteAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.delete.visitor.DeleteGrammarValidator;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
@@ -36,8 +35,7 @@ public class DeleteParser extends ExpressionParser {
         Curd delete = delete();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         delete.accept(new DeleteGrammarValidator(this.errorReporterDelegate));
-        delete.setDetector(DeleteAstMetaDataDetector.getInstance());
-        delete.accept(DeleteAstMetaDataDetector.getInstance());
+        delete.detectAstMetaData();
         return delete;
     }
 
