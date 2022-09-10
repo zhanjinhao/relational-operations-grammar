@@ -1,8 +1,7 @@
 package cn.addenda.ro.test.ast.expression;
 
-import cn.addenda.ro.grammar.ast.CurdParserFactory;
+import cn.addenda.ro.grammar.ast.CurdUtils;
 import cn.addenda.ro.grammar.ast.expression.Curd;
-import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
 
 /**
@@ -20,8 +19,7 @@ public class ExpressionDetectorTest {
     public static void main(String[] args) {
 
         for (String sql : sqls) {
-            ExpressionParser expressionParser = CurdParserFactory.createExpressionParser(sql);
-            Curd parse = expressionParser.parse();
+            Curd parse = CurdUtils.parse(sql);
             parse.accept(new ExpressionAstMetaDataDetector(null));
             System.out.println(parse.getAstMetaData());
 

@@ -40,4 +40,9 @@ public class DefaultFunctionEvaluator extends AbstractFunctionEvaluator {
         addFunction(IfDescriptor.class);
     }
 
+    @Override
+    public String name() {
+        return "DefaultFunctionEvaluator";
+    }
+
 }

@@ -1,8 +1,6 @@
 package cn.addenda.ro.test.ast.create;
 
-import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.CurdUtils;
-import cn.addenda.ro.grammar.ast.create.InsertParser;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.test.SqlReader;
 

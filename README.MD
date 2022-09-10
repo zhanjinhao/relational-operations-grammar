@@ -48,7 +48,7 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 
 10、FunctionDescriptor 增加 isIndependent 方法
 
-11、CurdUtils 按 FunctionEvaluator 进行缓存
+11、CurdUtils 按 FunctionEvaluator 进行缓存。 √
 
 12、InCondition 作为 Expression 的语法。 √
 

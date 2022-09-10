@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public interface FunctionEvaluator<T extends FunctionDescriptor> extends ROError {
 
+    String name();
+
     FunctionDescriptor getFunction(String functionName);
 
     Set<String> functionNameSet();
