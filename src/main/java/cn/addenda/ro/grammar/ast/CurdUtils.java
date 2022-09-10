@@ -27,6 +27,14 @@ public class CurdUtils {
 
     public static Curd parse(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parse(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parse(TokenSequence tokenSequence) {
+        return parse(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parse(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createCurdParser(tokenSequence, functionEvaluator).parse())
@@ -39,6 +47,14 @@ public class CurdUtils {
 
     public static Curd parseExpression(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parseExpression(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parseExpression(TokenSequence tokenSequence) {
+        return parseExpression(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parseExpression(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createExpressionParser(tokenSequence, functionEvaluator).parse())
@@ -51,6 +67,14 @@ public class CurdUtils {
 
     public static Curd parseInsert(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parseInsert(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parseInsert(TokenSequence tokenSequence) {
+        return parseInsert(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parseInsert(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createInsertParser(tokenSequence, functionEvaluator).parse())
@@ -63,6 +87,14 @@ public class CurdUtils {
 
     public static Curd parseUpdate(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parseUpdate(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parseUpdate(TokenSequence tokenSequence) {
+        return parseUpdate(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parseUpdate(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createUpdateParser(tokenSequence, functionEvaluator).parse())
@@ -75,6 +107,14 @@ public class CurdUtils {
 
     public static Curd parseDelete(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parseDelete(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parseDelete(TokenSequence tokenSequence) {
+        return parseDelete(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parseDelete(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createDeleteParser(tokenSequence, functionEvaluator).parse())
@@ -87,6 +127,14 @@ public class CurdUtils {
 
     public static Curd parseSelect(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
+        return parseSelect(tokenSequence, functionEvaluator);
+    }
+
+    public static Curd parseSelect(TokenSequence tokenSequence) {
+        return parseSelect(tokenSequence, DefaultFunctionEvaluator.getInstance());
+    }
+
+    public static Curd parseSelect(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator) {
         return TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
                 .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createSelectParser(tokenSequence, functionEvaluator).parse())
