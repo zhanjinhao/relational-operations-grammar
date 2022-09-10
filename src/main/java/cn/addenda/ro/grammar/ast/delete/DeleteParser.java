@@ -59,12 +59,5 @@ public class DeleteParser extends ExpressionParser {
         return new Delete(tableName, null);
     }
 
-    @Override
-    protected Curd condition() {
-        if (tokenSequence.nextEqual(TokenType.NOT, TokenType.IN)) {
-            return inCondition();
-        }
-        return comparison();
-    }
 
 }

@@ -72,12 +72,4 @@ public class UpdateParser extends ExpressionParser {
         return new Update(tableName, curd, null);
     }
 
-    @Override
-    protected Curd condition() {
-        if (tokenSequence.nextEqual(TokenType.NOT, TokenType.IN)) {
-            return inCondition();
-        }
-        return comparison();
-    }
-
 }

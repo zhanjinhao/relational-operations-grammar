@@ -74,9 +74,11 @@ public class ExpressionParser extends AbstractCurdParser {
      * comparison
      */
     protected Curd condition() {
+        if (tokenSequence.nextEqual(TokenType.NOT, TokenType.IN)) {
+            return inCondition();
+        }
         return comparison();
     }
-
 
     /**
      * binaryArithmetic (comparisonSymbol binaryArithmetic)?
