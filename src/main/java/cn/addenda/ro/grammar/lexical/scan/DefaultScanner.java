@@ -102,6 +102,9 @@ public class DefaultScanner extends AbstractScanner {
 
     private void string() {
         while (!charSequence.isAtEnd() && !charSequence.curEqual('\'')) {
+            if (charSequence.curEqual('\\')) {
+                charSequence.advance();
+            }
             charSequence.advance();
         }
 

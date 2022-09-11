@@ -10,6 +10,8 @@ import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 public class LexicalTest {
 
     static String[] sqlList = new String[]{
+            "select '\\'a\\'' from dual",
+
             "select * from SCORE where C < '12'",
 //
 //            "select * from STUDENT order by CLASS desc",
@@ -111,7 +113,7 @@ public class LexicalTest {
         TokenSequence tokenSequence = defaultScanner.scanTokens();
 
         String afterLexicalAnalysis = tokenSequence.toString().replaceAll("\\s+", "");
-        if (!rawSql.equals(afterLexicalAnalysis)) {
+        if (!rawSql.equalsIgnoreCase(afterLexicalAnalysis)) {
             System.out.println("rawSql: " + rawSql);
             System.out.println("newSql: " + afterLexicalAnalysis);
             System.out.println("tokenSequence: " + tokenSequence);
