@@ -6,6 +6,7 @@ import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
 import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
 import cn.addenda.ro.grammar.ast.retrieve.SelectType;
 import cn.addenda.ro.grammar.ast.retrieve.SingleSelectType;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
@@ -161,6 +162,22 @@ public class InsertParser extends ExpressionParser {
             error(AstROErrorReporterDelegate.INSERT_insertSetRep_PARSE);
         }
         return new InsertSetRep(curd);
+    }
+
+
+    private static class InsertSelectParser extends SelectParser {
+
+        public InsertSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
+            super(tokenSequence, functionEvaluator);
+        }
+
+        @Override
+        public Curd parse() {
+            Select select = (Select) select();
+            select.setSelectType(SelectType.INSERT);
+            return select;
+        }
+
     }
 
 }

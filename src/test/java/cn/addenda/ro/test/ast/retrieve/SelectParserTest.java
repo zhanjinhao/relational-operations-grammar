@@ -12,6 +12,7 @@ import cn.addenda.ro.test.SqlReader;
 public class SelectParserTest {
 
     static String[] sqls = new String[]{
+            "insert  into table_listnames ( name, address, tele )   select *  from  (  select 'rupert', 'somewhere', '022' from dual   )  tmp  where  not exists  (  select name  from table_listnames   where name  = 'rupert'  )  limit 1"
 //            "select\n" +
 //                    "    productline,\n" +
 //                    "    ordervalue,\n" +
