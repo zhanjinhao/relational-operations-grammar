@@ -23,7 +23,7 @@
   select *  from  (  select productname , msrp , row_number (  ) over ( order by msrp   )   as row_num from products   )  t  where row_num  < 11  and row_num  > 20
  select T.FLIGHT_ID , ROUTE_TOWARDS  from T_DISPATCH_FLIGHT_RELEASE  RELEASE ,  (  select FLIGHT_ID , max( MODIFY_TM  ) as LATEAST_TIME from T_DISPATCH_FLIGHT_RELEASE   where DELETE_FLAG  = 'N'  and FLIGHT_ID in ( ?, ?)  group by FLIGHT_ID )  T  where RELEASE.FLIGHT_ID  = ?  and RELEASE.MODIFY_TM  = ?   and T.FLIGHT_ID in ( ?, ?)  order by RELEASE.CREATE_TIME   limit ?
  select  case a  when b  + 1  then '1' when b  + 2  then '2' else '3' end as A from  (  select 2 as a, 1 as b from dual   where a  = ?  )  A  where a  = ?
- select  group_concat (  DELETE_FLAG ,  CREATOR  + '1'  separator ';' ) as a from t_fp_day_navigation   group by DELETE_FLAG, CREATOR having  group_concat (  DELETE_FLAG  + ' '  order by CREATOR  asc separator ';' ) != ''  order by  ( '1' + DELETE_FLAG   )  desc
+ select  group_concat (  DELETE_FLAG ,  CREATOR  + '1'  separator ';' ) as a from t_fp_day_navigation   group by DELETE_FLAG, CREATOR having  group_concat (  DELETE_FLAG  + '1'  order by CREATOR  asc separator ';' ) != ''  order by  ( '1' + DELETE_FLAG   )  desc
  select *  from STUDENT   order by CLASS  desc, NAME  asc
  select a  from  (  select *  from A   )  aa  where a  > 100  and a  < 50
  select date_add( A.date ,  interval 1 day )  as tomorrow from  (  select *  from a   )  A

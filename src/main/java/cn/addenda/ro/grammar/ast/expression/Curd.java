@@ -97,12 +97,13 @@ public abstract class Curd implements DeepCloneable<Curd> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return Objects.equals(toString().replaceAll("\\s+", " "), o.toString().replaceAll("\\s+", " "));
+        return Objects.equals(toString("").replace("\t", "").replace("\n", ""),
+                ((Curd) o).toString("").replace("\t", "").replace("\n", ""));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(toString().replaceAll("\\s+", ""));
+        return Objects.hash(toString("").replace("\t", "").replace("\n", ""));
     }
 
     public void detectAstMetaData() {
