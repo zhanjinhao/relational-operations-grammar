@@ -48,6 +48,7 @@ public class ExpressionParser extends AbstractCurdParser {
             return null;
         }
         logic.accept(new ExpressionGrammarValidator(null, this.errorReporterDelegate));
+        logic.detectAstMetaData();
         return logic;
     }
 
