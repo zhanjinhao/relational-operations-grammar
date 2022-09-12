@@ -101,4 +101,9 @@ public class Token implements ROError, DeepCloneable<Token> {
         return new Token(this.getType(), this.getLiteral(), this.getIndex(), graveFg);
     }
 
+    @Override
+    public Token deepClone(boolean detectAstMetaData) {
+        throw new UnsupportedOperationException();
+    }
+
 }

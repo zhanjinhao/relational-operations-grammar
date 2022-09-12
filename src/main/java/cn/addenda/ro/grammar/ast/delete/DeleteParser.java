@@ -15,8 +15,8 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
  */
 public class DeleteParser extends ExpressionParser {
 
-    public DeleteParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-        super(tokenSequence, functionEvaluator);
+    public DeleteParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+        super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
     /**
@@ -35,7 +35,9 @@ public class DeleteParser extends ExpressionParser {
         Curd delete = delete();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         delete.accept(new DeleteGrammarValidator(this.errorReporterDelegate));
-        delete.detectAstMetaData();
+        if (detectAstMetaData) {
+            delete.detectAstMetaData();
+        }
         return delete;
     }
 

@@ -105,6 +105,11 @@ public class TokenSequence extends Sequence<List<Token>, Token> implements ROErr
     }
 
     @Override
+    public TokenSequence deepClone(boolean detectAstMetaData) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     protected boolean doEquals(List<Token> source) {
         int size = source.size();
         for (int i = 0; i < size; i++) {

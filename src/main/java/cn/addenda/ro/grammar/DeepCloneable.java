@@ -8,4 +8,6 @@ public interface DeepCloneable<T> {
 
     T deepClone();
 
+    T deepClone(boolean detectAstMetaData);
+
 }

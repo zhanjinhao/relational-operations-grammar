@@ -16,8 +16,8 @@ import cn.addenda.ro.grammar.lexical.token.TokenType;
  */
 public class UpdateParser extends ExpressionParser {
 
-    public UpdateParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-        super(tokenSequence, functionEvaluator);
+    public UpdateParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+        super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
     /**
@@ -37,7 +37,9 @@ public class UpdateParser extends ExpressionParser {
         Curd update = update();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         update.accept(new UpdateGrammarValidator(this.errorReporterDelegate));
-        update.detectAstMetaData();
+        if (detectAstMetaData) {
+            update.detectAstMetaData();
+        }
         return update;
     }
 

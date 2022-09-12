@@ -73,10 +73,17 @@ public abstract class Curd implements DeepCloneable<Curd> {
     }
 
     @Override
-    public Curd deepClone() {
+    public Curd deepClone(boolean detectAstMetaData) {
         Curd accept = this.accept(DEEP_CLONE_VISITOR);
-        accept.detectAstMetaData();
+        if (detectAstMetaData) {
+            accept.detectAstMetaData();
+        }
         return accept;
+    }
+
+    @Override
+    public Curd deepClone() {
+        return deepClone(true);
     }
 
     public void fillTableName(String tableName) {

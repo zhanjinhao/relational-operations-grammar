@@ -18,20 +18,20 @@ public class CurdParser extends AbstractCurdParser {
 
     // 这里可以对 Parser做一层缓存，避免每次都new对象引起Full GC。
 
-    public CurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-        super(tokenSequence, functionEvaluator);
+    public CurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+        super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
     @Override
     public Curd parse() {
         if (tokenSequence.curEqual(TokenType.SELECT)) {
-            return new SelectParser(tokenSequence, getFunctionEvaluator()).parse();
+            return new SelectParser(tokenSequence, getFunctionEvaluator(), detectAstMetaData).parse();
         } else if (tokenSequence.curEqual(TokenType.INSERT)) {
-            return new InsertParser(tokenSequence, getFunctionEvaluator()).parse();
+            return new InsertParser(tokenSequence, getFunctionEvaluator(), detectAstMetaData).parse();
         } else if (tokenSequence.curEqual(TokenType.DELETE)) {
-            return new DeleteParser(tokenSequence, getFunctionEvaluator()).parse();
+            return new DeleteParser(tokenSequence, getFunctionEvaluator(), detectAstMetaData).parse();
         } else if (tokenSequence.curEqual(TokenType.UPDATE)) {
-            return new UpdateParser(tokenSequence, getFunctionEvaluator()).parse();
+            return new UpdateParser(tokenSequence, getFunctionEvaluator(), detectAstMetaData).parse();
         }
         error(AstROErrorReporterDelegate.CURD_unknow_syntax_PARSE);
         return null;

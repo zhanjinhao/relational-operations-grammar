@@ -33,11 +33,14 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
 
     protected final ROErrorReporter errorReporterDelegate;
 
-    protected AbstractCurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
+    protected boolean detectAstMetaData;
+
+    protected AbstractCurdParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
         this.errorReporterDelegate = new AstROErrorReporterDelegate(tokenSequence);
         this.tokenSequence = tokenSequence;
         this.functionEvaluator = functionEvaluator;
         functionNameSet.addAll(functionEvaluator.functionNameSet());
+        this.detectAstMetaData = detectAstMetaData;
     }
 
     @Override

@@ -19,8 +19,8 @@ import java.util.Set;
  */
 public class SelectParser extends ExpressionParser {
 
-    public SelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-        super(tokenSequence, functionEvaluator);
+    public SelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+        super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
     /**
@@ -67,7 +67,9 @@ public class SelectParser extends ExpressionParser {
         saveSingleSelectContext(select, SingleSelectType.TOP);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
-        select.detectAstMetaData();
+        if (detectAstMetaData) {
+            select.detectAstMetaData();
+        }
         return select;
     }
 

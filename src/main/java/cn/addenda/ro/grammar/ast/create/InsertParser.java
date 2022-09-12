@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class InsertParser extends ExpressionParser {
 
-    public InsertParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-        super(tokenSequence, functionEvaluator);
+    public InsertParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+        super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
     /**
@@ -46,7 +46,9 @@ public class InsertParser extends ExpressionParser {
         Curd insert = insert();
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         insert.accept(new InsertGrammarValidator(this.errorReporterDelegate));
-        insert.detectAstMetaData();
+        if (detectAstMetaData) {
+            insert.detectAstMetaData();
+        }
         return insert;
     }
 
@@ -93,7 +95,7 @@ public class InsertParser extends ExpressionParser {
     }
 
     private Curd insertSelectRep(List<Token> tokens) {
-        InsertSelectParser insertSelectParser = new InsertSelectParser(this.tokenSequence, getFunctionEvaluator());
+        InsertSelectParser insertSelectParser = new InsertSelectParser(this.tokenSequence, getFunctionEvaluator(), detectAstMetaData);
         Select select = (Select) insertSelectParser.parse();
         InsertSelectRep insertSelectRep = new InsertSelectRep(tokens, select);
         select.setSelectType(SelectType.INSERT);
@@ -167,8 +169,8 @@ public class InsertParser extends ExpressionParser {
 
     private static class InsertSelectParser extends SelectParser {
 
-        public InsertSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator) {
-            super(tokenSequence, functionEvaluator);
+        public InsertSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+            super(tokenSequence, functionEvaluator, detectAstMetaData);
         }
 
         @Override
