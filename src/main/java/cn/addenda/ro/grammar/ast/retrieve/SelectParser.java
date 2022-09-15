@@ -14,6 +14,48 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*
+ *
+ * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
+ * columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*
+ * columnRep           ->  (* | caseWhen | binaryArithmetic) ("as" IDENTIFIER)?
+ * caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"
+ * tableSeg            ->  "from" tableRep (("left" | "right" | "cross")? ("join" | ",") tableRep ("on" logic)?)*
+ * tableRep            ->  ("(" select ")" | IDENTIFIER) IDENTIFIER?
+ * whereSeg ↑          ->  "where" logic
+ * groupBySeg          ->  "group" "by" columnList ("having" logic)?
+ * orderBySeg          ->  "order" "by" orderItem ("," orderItem)*
+ * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
+ * lockSeg             ->  sLock | xLock
+ *
+ * orderItem           ->  binaryArithmetic ("desc" | "asc")?
+ * sLock               ->  "lock" "in" "share" "mode"
+ * xLock               ->  "for" "update"
+ * logic ↑             ->  condition (("or" | "and") condition)*
+ * condition ↑+        ->  inCondition | existsCondition | comparison
+ * inCondition ↑+      ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"
+ * existsCondition     ->  ("not")? "exists" "(" select ")"
+ * comparison ↑        ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
+ * comparisonSymbol ↑  ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
+ * isNot ↑             ->  "is" ("not")?
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
+ * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction
+ * grouping ↑          ->  "(" logic ")"
+ * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
+ * functionParameter ↑ ->  condition | timeInterval | timeUnit | function
+ * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
+ * timeUnit ↑          ->  IDENTIFIER "from" primary
+ * groupFunction       ->  groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")" window?)
+ * groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
+ * columnList		   ->  IDENTIFIER ("," IDENTIFIER)*
+ *
+ * windowFunction      ->  IDENTIFIER "(" binaryArithmetic? ")" window
+ * window              ->  "over" "(" "partition" "by" binaryArithmetic ("," binaryArithmetic)* orderBySeg? dynamicFrame? ")"
+ * dynamicFrame        ->  ("rows" | "range") (frameBetween | frameEdge)
+ * frameBetween        ->  "between" frameEdge "and" frameEdge
+ * frameEdge           ->  (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
+ *
  * @author addenda
  * @datetime 2021/3/2
  */
@@ -23,43 +65,6 @@ public class SelectParser extends ExpressionParser {
         super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
-    /**
-     * select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*
-     * <p>
-     * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
-     * columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*
-     * columnRep           ->  (* | binaryArithmetic | caseWhen) ("as" IDENTIFIER)?
-     * caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"
-     * tableSeg            ->  "from" tableRep (("left" | "right" | "cross")? ("join" | ",") tableRep ("on" logic)?)*
-     * tableRep            ->  ("(" select ")" | IDENTIFIER) ("as" IDENTIFIER)?
-     * whereSeg ↑          ->  "where" logic
-     * groupBySeg          ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
-     * orderBySeg          ->  "order" "by" orderItem ("," orderItem)*
-     * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
-     * lockSeg             ->  sLock | xLock
-     * <p>
-     * <p>
-     * orderItem           ->  binaryArithmetic ("desc" | "asc")?
-     * sLock               ->  "lock" "in" "share" "mode"
-     * xLock               ->  "for" "update"
-     * logic ↑             ->  condition (("or" | "and") condition)*
-     * condition ↑+        ->  inCondition | existsCondition | comparison
-     * inCondition         ->  IDENTIFIER ("not")? "in" "(" select | (primary (, primary)*) ")"
-     * existsCondition     ->  ("not")? "exists" "(" select ")"
-     * comparison ↑        ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
-     * isNot ↑             ->  "is" ("not")?
-     * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
-     * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | "(" singleSelect ")" | groupFunction
-     * grouping ↑          ->  "(" logic ")"
-     * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
-     * functionParameter ↑ ->  logic | timeInterval | timeUnit | function
-     * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
-     * timeUnit ↑          ->  IDENTIFIER "from" primary
-     * groupFunction       ->  groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" IDENTIFIER ")")
-     * groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
-     * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
-     */
     @Override
     public Curd parse() {
         Select select = (Select) select();
@@ -206,7 +211,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -237,7 +242,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * ("(" select ")" | IDENTIFIER) ("as" IDENTIFIER)?
+     * ("(" select ")" | IDENTIFIER) IDENTIFIER?
      */
     private Curd tableRep() {
         boolean flag = false;
@@ -285,7 +290,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
+     * "group" "by" columnList ("having" logic)?
      */
     private Curd groupBySeg() {
         consume(TokenType.GROUP, AstROErrorReporterDelegate.SELECT_groupBySeg_PARSE);
@@ -427,7 +432,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * ("not")? "exists" "(" singleSelect ")"
+     * ("not")? "exists" "(" select ")"
      */
     private Curd existsCondition() {
         Token exists = tokenSequence.takeCur();
@@ -447,7 +452,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains") binaryArithmetic)?
+     * binaryArithmetic (comparisonSymbol binaryArithmetic)?
      */
     @Override
     protected Curd comparison() {
@@ -486,7 +491,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | function | "(" singleSelect ")" | "(" logic ")" | groupFunction
+     * #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction
      */
     @Override
     protected Curd primary() {
@@ -517,7 +522,7 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * groupConcat | (("avg" | "max" | "min" | "count" | "sum", "flat") "(" IDENTIFIER ")")
+     * groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")" window?)
      */
     protected Curd groupFunction() {
         Token method = tokenSequence.takeCur();

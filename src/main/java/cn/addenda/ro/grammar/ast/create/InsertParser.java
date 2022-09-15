@@ -18,6 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * insert              ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))
+ * constrict           ->  ignore
+ * insertValuesRep     ->  "(" columnList ")" "values" ("(" binaryArithmetic ("," binaryArithmetic)* ")") ("," "(" binaryArithmetic ("," binaryArithmetic)* ")")*
+ * insertSetRep        ->  "set" assignmentList
+ * insertSelectRep     ->  "(" columnList ")" select
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
+ * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
+ * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+ * onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
+ * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
+ * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
+ *
  * @author addenda
  * @datetime 2021/4/3 17:50
  */
@@ -27,20 +40,6 @@ public class InsertParser extends ExpressionParser {
         super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
-    /**
-     * insert              ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))
-     * constrict           ->  ignore
-     * insertValuesRep     ->  "(" IDENTIFIER (, IDENTIFIER)* ")" "values" ("(" binaryArithmetic (, binaryArithmetic)* ")") ("," "(" binaryArithmetic (, binaryArithmetic)* ")")*
-     * insertSetRep        ->  "set" assignmentList
-     * insertSelectRep     ->  ("(" IDENTIFIER (, IDENTIFIER)* ")")? select
-     * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
-     * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
-     * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
-     * onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
-     * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
-     * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
-     */
     @Override
     public Curd parse() {
         Curd insert = insert();
@@ -52,6 +51,9 @@ public class InsertParser extends ExpressionParser {
         return insert;
     }
 
+    /**
+     * "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))
+     */
     private Curd insert() {
         consume(TokenType.INSERT, AstROErrorReporterDelegate.INSERT_insert_PARSE);
 
@@ -80,7 +82,7 @@ public class InsertParser extends ExpressionParser {
                 curd = insertSelectRep(tokens);
                 insertType = InsertType.SELECT;
             } else if (tokenSequence.curEqual(TokenType.VALUES)) {
-                curd = valuesRep(tokens);
+                curd = insertValuesRep(tokens);
                 insertType = InsertType.VALUES;
             } else {
                 error(AstROErrorReporterDelegate.INSERT_insert_PARSE);
@@ -94,6 +96,9 @@ public class InsertParser extends ExpressionParser {
         return new Insert(constrict, tableName, curd, onDuplicateKey(), insertType);
     }
 
+    /**
+     * "(" columnList ")" select
+     */
     private Curd insertSelectRep(List<Token> tokens) {
         InsertSelectParser insertSelectParser = new InsertSelectParser(this.tokenSequence, getFunctionEvaluator(), detectAstMetaData);
         Select select = (Select) insertSelectParser.parse();
@@ -103,7 +108,9 @@ public class InsertParser extends ExpressionParser {
         return insertSelectRep;
     }
 
-
+    /**
+     * "on" "duplicate" "key" "update" assignmentList
+     */
     private Curd onDuplicateKey() {
         consume(TokenType.ON, AstROErrorReporterDelegate.INSERT_onDuplicateKey_PARSE);
         consume(TokenType.DUPLICATE, AstROErrorReporterDelegate.INSERT_onDuplicateKey_PARSE);
@@ -116,11 +123,9 @@ public class InsertParser extends ExpressionParser {
 
 
     /**
-     * ("(" IDENTIFIER (, IDENTIFIER)* ")")? "values" ("(" binaryArithmetic (, binaryArithmetic)* ")") ("," "(" binaryArithmetic (, binaryArithmetic)* ")")*
-     *
-     * @param tokenList
+     * "(" columnList ")" "values" ("(" binaryArithmetic ("," binaryArithmetic)* ")") ("," "(" binaryArithmetic ("," binaryArithmetic)* ")")*
      */
-    private Curd valuesRep(List<Token> tokenList) {
+    private Curd insertValuesRep(List<Token> tokenList) {
 
         consume(TokenType.VALUES, AstROErrorReporterDelegate.INSERT_insertValuesRep_PARSE);
 
@@ -150,7 +155,7 @@ public class InsertParser extends ExpressionParser {
     }
 
     /**
-     * "set" (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
+     * "set" assignmentList
      */
     private Curd insertSetRep() {
         consume(TokenType.SET, AstROErrorReporterDelegate.INSERT_insertSetRep_PARSE);

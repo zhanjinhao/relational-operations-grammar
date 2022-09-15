@@ -10,6 +10,25 @@ import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
 
 /**
+ * delete              ->  "delete" "from" IDENTIFIER (whereSeg)?
+ * logic  ↑            ->  condition (("or" | "and") condition)*
+ * condition  ↑        ->  inCondition | comparison
+ * inCondition  ↑      ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
+ * comparison  ↑       ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
+ * comparisonSymbol ↑  ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
+ * isNot ↑             ->  "is" ("not")?
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
+ * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
+ * grouping ↑          ->  "(" logic ")"
+ *
+ * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
+ * functionParameter ↑ ->  condition | timeInterval | timeUnit | function
+ * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
+ * timeUnit ↑          ->  IDENTIFIER "from" primary
+ *
+ * whereSeg ↑          ->  "where" logic
+ *
  * @author addenda
  * @datetime 2021/4/8 20:37
  */
@@ -19,17 +38,7 @@ public class DeleteParser extends ExpressionParser {
         super(tokenSequence, functionEvaluator, detectAstMetaData);
     }
 
-    /**
-     * delete              ->  "delete" "from" IDENTIFIER whereSeg
-     * whereSeg ↑          ->  "where" logic
-     * logic ↑             ->  condition (("or" | "and") condition)*
-     * condition ↑         ->  comparison
-     * comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
-     * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
-     * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-     * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
-     * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
-     */
+
     @Override
     public Curd parse() {
         Curd delete = delete();

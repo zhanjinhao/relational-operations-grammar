@@ -14,22 +14,24 @@ import java.util.List;
 
 /**
  * logic               ->  condition (("or" | "and") condition)*
- * condition           ->  comparison
- * comparison          ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot) binaryArithmetic)?
+ * condition           ->  inCondition | comparison
+ * inCondition         ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
+ * comparison          ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
+ * comparisonSymbol	   ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
  * isNot               ->  "is" ("not")?
  * binaryArithmetic    ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
  * unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary
  * primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
  * grouping            ->  "(" logic ")"
- * <p>
+ *
  * function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"
- * functionParameter   ->  logic | timeInterval | timeUnit | function
+ * functionParameter   ->  condition | timeInterval | timeUnit | function
  * timeInterval        ->  "interval" INTEGER IDENTIFIER
  * timeUnit            ->  IDENTIFIER "from" primary
- * <p>
+ *
  * whereSeg            ->  "where" logic
  * assignmentList      ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
- * columnList	       ->  IDENTIFIER ("," IDENTIFIER)*
+ * columnList			->  IDENTIFIER ("," IDENTIFIER)*
  *
  * @author addenda
  * @datetime 2021/4/5 12:11
@@ -72,7 +74,7 @@ public class ExpressionParser extends AbstractCurdParser {
 
 
     /**
-     * comparison
+     * inCondition | comparison
      */
     protected Curd condition() {
         if (tokenSequence.nextEqual(TokenType.NOT, TokenType.IN)) {
@@ -104,7 +106,7 @@ public class ExpressionParser extends AbstractCurdParser {
      */
     private Curd comparisonSymbol() {
         if (tokenSequence.curEqual(TokenType.LIKE, TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS,
-                TokenType.LESS_EQUAL, TokenType.BANG_EQUAL, TokenType.EQUAL, TokenType.CONTAINS)) {
+            TokenType.LESS_EQUAL, TokenType.BANG_EQUAL, TokenType.EQUAL, TokenType.CONTAINS)) {
             Token token = tokenSequence.takeCur();
             tokenSequence.advance();
             return new Identifier(token);
@@ -128,7 +130,7 @@ public class ExpressionParser extends AbstractCurdParser {
     protected Curd binaryArithmetic() {
         Curd expression = unaryArithmetic();
         while (tokenSequence.curEqual(TokenType.PLUS, TokenType.MINUS,
-                TokenType.STAR, TokenType.SLASH)) {
+            TokenType.STAR, TokenType.SLASH)) {
             Token operator = tokenSequence.takeCur();
             tokenSequence.advance();
             Curd right = unaryArithmetic();
@@ -162,7 +164,7 @@ public class ExpressionParser extends AbstractCurdParser {
      */
     protected Curd primary() {
         if (tokenSequence.equalThenAdvance(TokenType.HASH_MARK_PLACEHOLDER, TokenType.PARAMETER,
-                TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER, TokenType.DECIMAL, TokenType.STRING)) {
+            TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER, TokenType.DECIMAL, TokenType.STRING)) {
             return new Literal(tokenSequence.takePre());
         }
 
@@ -213,7 +215,7 @@ public class ExpressionParser extends AbstractCurdParser {
 
 
     /**
-     * logic | timeInterval | timeUnit | function
+     * condition | timeInterval | timeUnit | function
      */
     protected Curd functionParameter() {
         Curd curd;
@@ -226,7 +228,7 @@ public class ExpressionParser extends AbstractCurdParser {
         } else if (checkTimeUnit(current, next)) {
             curd = timeUnit();
         } else {
-            curd = logic();
+            curd = condition();
         }
         return curd;
     }
