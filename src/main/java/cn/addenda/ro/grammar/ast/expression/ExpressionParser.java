@@ -23,12 +23,12 @@ import java.util.List;
  * unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary
  * primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
  * grouping            ->  "(" logic ")"
- *
+ * <p>
  * function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"
  * functionParameter   ->  condition | timeInterval | timeUnit | function
  * timeInterval        ->  "interval" INTEGER IDENTIFIER
  * timeUnit            ->  IDENTIFIER "from" primary
- *
+ * <p>
  * whereSeg            ->  "where" logic
  * assignmentList      ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
  * columnList			->  IDENTIFIER ("," IDENTIFIER)*
@@ -50,7 +50,9 @@ public class ExpressionParser extends AbstractCurdParser {
             return null;
         }
         logic.accept(new ExpressionGrammarValidator(null, this.errorReporterDelegate));
-        logic.detectAstMetaData();
+        if (detectAstMetaData) {
+            logic.detectAstMetaData();
+        }
         return logic;
     }
 
@@ -106,7 +108,7 @@ public class ExpressionParser extends AbstractCurdParser {
      */
     private Curd comparisonSymbol() {
         if (tokenSequence.curEqual(TokenType.LIKE, TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS,
-            TokenType.LESS_EQUAL, TokenType.BANG_EQUAL, TokenType.EQUAL, TokenType.CONTAINS)) {
+                TokenType.LESS_EQUAL, TokenType.BANG_EQUAL, TokenType.EQUAL, TokenType.CONTAINS)) {
             Token token = tokenSequence.takeCur();
             tokenSequence.advance();
             return new Identifier(token);
@@ -130,7 +132,7 @@ public class ExpressionParser extends AbstractCurdParser {
     protected Curd binaryArithmetic() {
         Curd expression = unaryArithmetic();
         while (tokenSequence.curEqual(TokenType.PLUS, TokenType.MINUS,
-            TokenType.STAR, TokenType.SLASH)) {
+                TokenType.STAR, TokenType.SLASH)) {
             Token operator = tokenSequence.takeCur();
             tokenSequence.advance();
             Curd right = unaryArithmetic();
@@ -164,7 +166,7 @@ public class ExpressionParser extends AbstractCurdParser {
      */
     protected Curd primary() {
         if (tokenSequence.equalThenAdvance(TokenType.HASH_MARK_PLACEHOLDER, TokenType.PARAMETER,
-            TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER, TokenType.DECIMAL, TokenType.STRING)) {
+                TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER, TokenType.DECIMAL, TokenType.STRING)) {
             return new Literal(tokenSequence.takePre());
         }
 
