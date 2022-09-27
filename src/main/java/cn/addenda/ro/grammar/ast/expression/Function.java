@@ -16,13 +16,17 @@ public class Function extends Curd implements ROError {
 
     private List<Curd> parameterList;
 
-    public Function(Token method, List<Curd> parameterList) {
+    private boolean independent;
+
+    public Function(Token method, List<Curd> parameterList, boolean independent) {
         this.method = method;
         this.parameterList = parameterList;
+        this.independent = independent;
     }
 
-    public Function(Token method) {
+    public Function(Token method, boolean independent) {
         this.method = method;
+        this.independent = independent;
     }
 
     @Override
@@ -36,5 +40,9 @@ public class Function extends Curd implements ROError {
 
     public List<Curd> getParameterList() {
         return parameterList;
+    }
+
+    public boolean isIndependent() {
+        return independent;
     }
 }

@@ -341,9 +341,9 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
             for (Curd curd : parameterList) {
                 newParameterList.add(nullAccept(curd));
             }
-            return new Function(nullClone(method), newParameterList);
+            return new Function(nullClone(method), newParameterList, function.isIndependent());
         }
-        return new Function(nullClone(method), null);
+        return new Function(nullClone(method), null, function.isIndependent());
     }
 
     @Override
