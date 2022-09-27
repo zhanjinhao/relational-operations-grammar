@@ -12,7 +12,8 @@ public class InsertParserTest {
 
     static String[] sqls = new String[]{
         "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76 )",
-        "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76     )"
+        "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76     )",
+        "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '\\3-105', 76     )"
     };
 
     public static void main(String[] args) {

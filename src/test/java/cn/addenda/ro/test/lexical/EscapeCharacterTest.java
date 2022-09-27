@@ -9,6 +9,12 @@ public class EscapeCharacterTest {
     public static void main(String[] args) {
         String a = "\'a\'";
         System.out.println(a.replace("\\", "\\\\"));
+
+        String regex = "^\\\\$";
+
+        System.out.println("\\".matches(regex));
+        System.out.println("\\\\".matches(regex));
+
     }
 
 }
