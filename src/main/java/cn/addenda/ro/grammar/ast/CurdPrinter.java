@@ -21,12 +21,21 @@ public class CurdPrinter implements CurdVisitor<String> {
 
     private final String separator;
 
+    private final boolean storable;
+
     public CurdPrinter(String separator) {
         this.separator = separator;
+        storable = false;
     }
 
     public CurdPrinter() {
         this.separator = " ";
+        storable = false;
+    }
+
+    public CurdPrinter(String separator, boolean storable) {
+        this.separator = separator;
+        this.storable = storable;
     }
 
     @Override
@@ -371,7 +380,27 @@ public class CurdPrinter implements CurdVisitor<String> {
         Object value = token.getLiteral();
 
         if (TokenType.STRING.equals(token.getType())) {
-            return "'" + value + "'";
+            String result = String.valueOf(value);
+            StringBuilder sb = new StringBuilder();
+            if (storable) {
+                sb.append("\\'");
+            } else {
+                sb.append("'");
+            }
+            int length = result.length();
+            for (int i = 0; i < length; i++) {
+                char c = result.charAt(i);
+                if (c == '\'') {
+                    sb.append("\\'");
+                }
+                sb.append(c);
+            }
+            if (storable) {
+                sb.append("\\'");
+            } else {
+                sb.append("'");
+            }
+            return sb.toString();
         }
 
         return value.toString();
@@ -420,7 +449,25 @@ public class CurdPrinter implements CurdVisitor<String> {
         final String gs = groupConcat.getSeparator();
         if (gs != null) {
             sb.append(this.separator).append("separator");
-            sb.append(this.separator).append("'").append(gs).append("'");
+            sb.append(this.separator);
+            if (storable) {
+                sb.append("\\'");
+            } else {
+                sb.append("'");
+            }
+            int length = gs.length();
+            for (int i = 0; i < length; i++) {
+                char c = gs.charAt(i);
+                if (c == '\'') {
+                    sb.append("\\'");
+                }
+                sb.append(c);
+            }
+            if (storable) {
+                sb.append("\\'");
+            } else {
+                sb.append("'");
+            }
         }
 
         sb.append(this.separator).append(")");
