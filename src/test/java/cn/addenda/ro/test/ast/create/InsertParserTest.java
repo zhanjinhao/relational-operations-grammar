@@ -11,6 +11,7 @@ import cn.addenda.ro.test.SqlReader;
 public class InsertParserTest {
 
     static String[] sqls = new String[]{
+        "insert into t_cdc_test(long_d, int_d, string_d, date_d, time_d, datetime_d, float_d, double_d) values (? + 1, ?, replace(?,'a','b'), date_add(?, interval 1 day), ?, now(), ?, ?)",
         "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76 )",
         "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '3-105', 76     )",
         "insert  into score ( SNO, CNO, DEGREE ) values ( 109, '\\3-105', 76     )"

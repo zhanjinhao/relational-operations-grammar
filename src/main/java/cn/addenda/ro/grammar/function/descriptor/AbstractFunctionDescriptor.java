@@ -5,7 +5,9 @@ import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.Function;
 import cn.addenda.ro.grammar.ast.expression.Identifier;
+import cn.addenda.ro.grammar.ast.expression.Literal;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
+import cn.addenda.ro.grammar.lexical.token.TokenType;
 
 import java.util.List;
 
@@ -35,6 +37,13 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
     protected void checkDate(Curd date, ROError attachment) {
         if (date instanceof Identifier) {
             return;
+        }
+        if (date instanceof Literal) {
+            Literal literal = (Literal) date;
+            TokenType type = literal.getValue().getType();
+            if (TokenType.HASH_MARK_PLACEHOLDER.equals(type) || TokenType.PARAMETER.equals(type) || TokenType.STRING.equals(type)) {
+                return;
+            }
         }
         if (!(date instanceof Function)) {
             error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
