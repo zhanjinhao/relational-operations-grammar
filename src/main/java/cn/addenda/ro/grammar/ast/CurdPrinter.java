@@ -390,7 +390,7 @@ public class CurdPrinter implements CurdVisitor<String> {
             int length = result.length();
             for (int i = 0; i < length; i++) {
                 char c = result.charAt(i);
-                if (c == '\'') {
+                if (storable && (c == '\'')) {
                     sb.append("\\'");
                 }
                 sb.append(c);
@@ -458,7 +458,7 @@ public class CurdPrinter implements CurdVisitor<String> {
             int length = gs.length();
             for (int i = 0; i < length; i++) {
                 char c = gs.charAt(i);
-                if (c == '\'') {
+                if (storable && (c == '\'')) {
                     sb.append("\\'");
                 }
                 sb.append(c);
