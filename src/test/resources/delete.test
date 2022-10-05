@@ -1,5 +1,6 @@
 delete from score where CREATE_TM  < date_add( now(),  interval 1 day )   and DEGREE  + 1  < 60 - 1
 delete from score where DEGREE  < 50
 delete from score where CREATE_TM  < now()
+delete from score where CREATE_TM  < now(3)
 delete from score where DEGREE  + 1  < 60 - 1
 delete from score
