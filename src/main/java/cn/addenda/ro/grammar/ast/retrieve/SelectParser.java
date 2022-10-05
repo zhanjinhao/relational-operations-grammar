@@ -14,47 +14,47 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*
- *
- * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?
- * columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*
- * columnRep           ->  (* | caseWhen | binaryArithmetic) ("as" IDENTIFIER)?
- * caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"
- * tableSeg            ->  "from" tableRep (("left" | "right" | "cross")? ("join" | ",") tableRep ("on" logic)?)*
- * tableRep            ->  ("(" select ")" | IDENTIFIER) IDENTIFIER?
- * whereSeg ↑          ->  "where" logic
- * groupBySeg          ->  "group" "by" columnList ("having" logic)?
- * orderBySeg          ->  "order" "by" orderItem ("," orderItem)*
- * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?
- * lockSeg             ->  sLock | xLock
- *
- * orderItem           ->  binaryArithmetic ("desc" | "asc")?
- * sLock               ->  "lock" "in" "share" "mode"
- * xLock               ->  "for" "update"
- * logic ↑             ->  condition (("or" | "and") condition)*
- * condition ↑+        ->  inCondition | existsCondition | comparison
- * inCondition ↑+      ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"
- * existsCondition     ->  ("not")? "exists" "(" select ")"
- * comparison ↑        ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
- * comparisonSymbol ↑  ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
- * isNot ↑             ->  "is" ("not")?
- * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
- * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
- * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction
- * grouping ↑          ->  "(" logic ")"
- * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
- * functionParameter ↑ ->  condition | timeInterval | timeUnit | function
- * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
- * timeUnit ↑          ->  IDENTIFIER "from" primary
- * groupFunction       ->  groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")" window?)
- * groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"
- * columnList		   ->  IDENTIFIER ("," IDENTIFIER)*
- *
- * windowFunction      ->  IDENTIFIER "(" binaryArithmetic? ")" window
- * window              ->  "over" "(" "partition" "by" binaryArithmetic ("," binaryArithmetic)* orderBySeg? dynamicFrame? ")"
- * dynamicFrame        ->  ("rows" | "range") (frameBetween | frameEdge)
- * frameBetween        ->  "between" frameEdge "and" frameEdge
- * frameEdge           ->  (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
+ * select              ->  singleSelect (("union" | "minus" | "intersect" | "except") ("all")? singleSelect)*<p/>
+ * <p/>
+ * singleSelect        ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)? (lockSeg)?<p/>
+ * columnSeg           ->  "select" ("distinct")? columnRep ("," columnRep)*<p/>
+ * columnRep           ->  (* | caseWhen | binaryArithmetic) ("as" IDENTIFIER)?<p/>
+ * caseWhen            ->  "case" binaryArithmetic ("when" binaryArithmetic "then" binaryArithmetic)+ "else" binaryArithmetic "end"<p/>
+ * tableSeg            ->  "from" tableRep (("left" | "right" | "cross")? ("join" | ",") tableRep ("on" logic)?)*<p/>
+ * tableRep            ->  ("(" select ")" | IDENTIFIER) IDENTIFIER?<p/>
+ * whereSeg ↑          ->  "where" logic<p/>
+ * groupBySeg          ->  "group" "by" columnList ("having" logic)?<p/>
+ * orderBySeg          ->  "order" "by" orderItem ("," orderItem)*<p/>
+ * limitSeg            ->  "limit" INTEGER ("offset" INTEGER)?<p/>
+ * lockSeg             ->  sLock | xLock<p/>
+ * <p/>
+ * orderItem           ->  binaryArithmetic ("desc" | "asc")?<p/>
+ * sLock               ->  "lock" "in" "share" "mode"<p/>
+ * xLock               ->  "for" "update"<p/>
+ * logic ↑             ->  condition (("or" | "and") condition)*<p/>
+ * condition ↑+        ->  inCondition | existsCondition | comparison<p/>
+ * inCondition ↑+      ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"<p/>
+ * existsCondition     ->  ("not")? "exists" "(" select ")"<p/>
+ * comparison ↑        ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?<p/>
+ * comparisonSymbol ↑  ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot<p/>
+ * isNot ↑             ->  "is" ("not")?<p/>
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*<p/>
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary<p/>
+ * primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction<p/>
+ * grouping ↑          ->  "(" logic ")"<p/>
+ * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"<p/>
+ * functionParameter ↑ ->  condition | timeInterval | timeUnit | function<p/>
+ * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER<p/>
+ * timeUnit ↑          ->  IDENTIFIER "from" primary<p/>
+ * groupFunction       ->  groupConcat | (("avg" | "max" | "min" | "count" | "sum" | "flat") "(" binaryArithmetic ")" window?)<p/>
+ * groupConcat         ->  "group_concat" "(" ("distinct")? binaryArithmetic ("," binaryArithmetic)* ("order" "by" orderItem ("," orderItem)*)? ("separator" primary)? ")"<p/>
+ * columnList		   ->  IDENTIFIER ("," IDENTIFIER)*<p/>
+ * <p/>
+ * windowFunction      ->  IDENTIFIER "(" binaryArithmetic? ")" window<p/>
+ * window              ->  "over" "(" "partition" "by" binaryArithmetic ("," binaryArithmetic)* orderBySeg? dynamicFrame? ")"<p/>
+ * dynamicFrame        ->  ("rows" | "range") (frameBetween | frameEdge)<p/>
+ * frameBetween        ->  "between" frameEdge "and" frameEdge<p/>
+ * frameEdge           ->  (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")<p/>
  *
  * @author addenda
  * @datetime 2021/3/2

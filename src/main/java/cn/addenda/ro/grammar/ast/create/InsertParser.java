@@ -18,18 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * insert              ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))
- * constrict           ->  ignore
- * insertValuesRep     ->  "(" columnList ")" "values" ("(" binaryArithmetic ("," binaryArithmetic)* ")") ("," "(" binaryArithmetic ("," binaryArithmetic)* ")")*
- * insertSetRep        ->  "set" assignmentList
- * insertSelectRep     ->  "(" columnList ")" select
- * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
- * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
- * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
- * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
- * onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
- * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
- * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*
+ * insert              ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))<p/>
+ * constrict           ->  ignore<p/>
+ * insertValuesRep     ->  "(" columnList ")" "values" ("(" binaryArithmetic ("," binaryArithmetic)* ")") ("," "(" binaryArithmetic ("," binaryArithmetic)* ")")*<p/>
+ * insertSetRep        ->  "set" assignmentList<p/>
+ * insertSelectRep     ->  "(" columnList ")" select<p/>
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*<p/>
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary<p/>
+ * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function<p/>
+ * function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"<p/>
+ * onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList<p/>
+ * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*<p/>
+ * columnList ↑	       ->  IDENTIFIER ("," IDENTIFIER)*<p/>
  *
  * @author addenda
  * @datetime 2021/4/3 17:50

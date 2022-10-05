@@ -13,25 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * logic               ->  condition (("or" | "and") condition)*
- * condition           ->  inCondition | comparison
- * inCondition         ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
- * comparison          ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
- * comparisonSymbol	   ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
- * isNot               ->  "is" ("not")?
- * binaryArithmetic    ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
- * unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary
- * primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
- * grouping            ->  "(" logic ")"
+ * logic               ->  condition (("or" | "and") condition)*<p/>
+ * condition           ->  inCondition | comparison<p/>
+ * inCondition         ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"<p/>
+ * comparison          ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?<p/>
+ * comparisonSymbol	   ->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot<p/>
+ * isNot               ->  "is" ("not")?<p/>
+ * binaryArithmetic    ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*<p/>
+ * unaryArithmetic     ->  ("!"|"-") unaryArithmetic | primary<p/>
+ * primary             ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function<p/>
+ * grouping            ->  "(" logic ")"<p/>
  * <p>
- * function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"
- * functionParameter   ->  condition | timeInterval | timeUnit | function
- * timeInterval        ->  "interval" INTEGER IDENTIFIER
- * timeUnit            ->  IDENTIFIER "from" primary
+ * function            ->  functionName "(" functionParameter? ("," functionParameter)* ")"<p/>
+ * functionParameter   ->  condition | timeInterval | timeUnit | function<p/>
+ * timeInterval        ->  "interval" INTEGER IDENTIFIER<p/>
+ * timeUnit            ->  IDENTIFIER "from" primary<p/>
  * <p>
- * whereSeg            ->  "where" logic
- * assignmentList      ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
- * columnList			->  IDENTIFIER ("," IDENTIFIER)*
+ * whereSeg            ->  "where" logic<p/>
+ * assignmentList      ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*<p/>
+ * columnList			->  IDENTIFIER ("," IDENTIFIER)*<p/>
  *
  * @author addenda
  * @datetime 2021/4/5 12:11

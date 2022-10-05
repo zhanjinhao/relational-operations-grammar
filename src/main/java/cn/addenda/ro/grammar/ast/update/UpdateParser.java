@@ -11,25 +11,25 @@ import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
 
 /**
- * update              ->  "update" IDENTIFIER "set" assignmentList (whereSeg)?
- * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
- * logic  ↑            ->  condition (("or" | "and") condition)*
- * condition  ↑        ->  inCondition | comparison
- * inCondition  ↑      ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
- * comparison  ↑       ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
- * comparisonSymbol ↑	->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
- * isNot ↑             ->  "is" ("not")?
- * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
- * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
- * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
- * grouping ↑          ->  "(" logic ")"
- *
- * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
- * functionParameter ↑ ->  condition | timeInterval | timeUnit | function
- * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER
- * timeUnit ↑          ->  IDENTIFIER "from" primary
- *
- * whereSeg ↑          ->  "where" logic
+ * update              ->  "update" IDENTIFIER "set" assignmentList (whereSeg)?<p/>
+ * assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*<p/>
+ * logic  ↑            ->  condition (("or" | "and") condition)*<p/>
+ * condition  ↑        ->  inCondition | comparison<p/>
+ * inCondition  ↑      ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"<p/>
+ * comparison  ↑       ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?<p/>
+ * comparisonSymbol ↑	->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot<p/>
+ * isNot ↑             ->  "is" ("not")?<p/>
+ * binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*<p/>
+ * unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary<p/>
+ * primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function<p/>
+ * grouping ↑          ->  "(" logic ")"<p/>
+ * <p/>
+ * function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"<p/>
+ * functionParameter ↑ ->  condition | timeInterval | timeUnit | function<p/>
+ * timeInterval ↑      ->  "interval" INTEGER IDENTIFIER<p/>
+ * timeUnit ↑          ->  IDENTIFIER "from" primary<p/>
+ * <p/>
+ * whereSeg ↑          ->  "where" logic<p/>
  *
  * @author addenda
  * @datetime 2021/4/5 12:03
