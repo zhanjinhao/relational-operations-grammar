@@ -14,6 +14,7 @@ public class ROException extends RuntimeException {
      * 函数错误：5xxxx
      * 运算错误：6xxxx
      * 数据类型错误：7xxxx
+     * 工具类错误：8xxxx
      * <p>
      * 启动错误：9xxxx
      */
