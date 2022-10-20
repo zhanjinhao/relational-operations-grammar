@@ -91,9 +91,9 @@ public class TokenSequence extends Sequence<List<Token>, Token> implements ROErr
         return source.stream().filter(token -> token.getLiteral() != null).map(item -> {
             TokenType type = item.getType();
             if (TokenType.STRING.equals(type)) {
-                return "'" + item.getLiteral().toString() + "'";
+                return "'" + item.printLiteral().toString() + "'";
             }
-            return item.getLiteral().toString();
+            return item.printLiteral().toString();
         }).collect(Collectors.joining(" "));
     }
 

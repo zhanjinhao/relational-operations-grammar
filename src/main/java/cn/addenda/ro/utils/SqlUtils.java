@@ -80,7 +80,7 @@ public class SqlUtils {
                     continue;
                 }
             }
-            Object literal = token.getLiteral();
+            Object literal = token.printLiteral();
             if (wherePreTokenFg && !TokenType.EOF.equals(type)) {
                 if (TokenType.STRING.equals(type)) {
                     sb.append(" '").append(literal).append("'");
@@ -108,7 +108,7 @@ public class SqlUtils {
             if (TokenType.WHERE.equals(type)) {
                 break;
             }
-            Object literal = token.getLiteral();
+            Object literal = token.printLiteral();
             if (TokenType.STRING.equals(type)) {
                 sb.append(" '").append(literal).append("'");
             } else {

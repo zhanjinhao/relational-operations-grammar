@@ -71,6 +71,13 @@ public class Token implements ROError, DeepCloneable<Token> {
         return literal;
     }
 
+    public Object printLiteral() {
+        if (isGraveFg()) {
+            return "`" + literal + "`";
+        }
+        return literal;
+    }
+
     public int getIndex() {
         return index;
     }
