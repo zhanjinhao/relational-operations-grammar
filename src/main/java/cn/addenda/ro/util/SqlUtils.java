@@ -1,4 +1,4 @@
-package cn.addenda.ro.utils;
+package cn.addenda.ro.util;
 
 import cn.addenda.ro.ROException;
 import cn.addenda.ro.grammar.lexical.scan.DefaultScanner;
