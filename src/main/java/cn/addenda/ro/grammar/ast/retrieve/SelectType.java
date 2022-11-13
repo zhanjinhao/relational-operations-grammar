@@ -6,6 +6,17 @@ package cn.addenda.ro.grammar.ast.retrieve;
  */
 public enum SelectType {
 
-    VIEW, TABLE, IN, EXIST, INSERT
+    /**
+     * 查询的结果作为视图使用：TOP TABLE INSERT
+     */
+    VIEW,
+    /**
+     * 查询的结果作为集合使用：IN EXISTS
+     */
+    LIST,
+    /**
+     * 查询的结果作为值使用：PRIMARY
+     */
+    VALUE
 
 }

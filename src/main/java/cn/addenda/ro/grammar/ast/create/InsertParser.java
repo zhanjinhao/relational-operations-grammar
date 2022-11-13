@@ -102,10 +102,7 @@ public class InsertParser extends ExpressionParser {
     private Curd insertSelectRep(List<Token> tokens) {
         InsertSelectParser insertSelectParser = new InsertSelectParser(this.tokenSequence, getFunctionEvaluator(), detectAstMetaData);
         Select select = (Select) insertSelectParser.parse();
-        InsertSelectRep insertSelectRep = new InsertSelectRep(tokens, select);
-        select.setSelectType(SelectType.INSERT);
-        saveSingleSelectContext(select, SingleSelectType.INSERT);
-        return insertSelectRep;
+        return new InsertSelectRep(tokens, select);
     }
 
     /**
@@ -181,7 +178,7 @@ public class InsertParser extends ExpressionParser {
         @Override
         public Curd parse() {
             Select select = (Select) select();
-            select.setSelectType(SelectType.INSERT);
+            saveSelectType(select, SingleSelectType.INSERT, SelectType.VIEW);
             return select;
         }
 

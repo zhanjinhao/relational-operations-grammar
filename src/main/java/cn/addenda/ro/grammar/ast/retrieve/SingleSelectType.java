@@ -6,6 +6,29 @@ package cn.addenda.ro.grammar.ast.retrieve;
  */
 public enum SingleSelectType {
 
-    TOP, PRIMARY, INSERT, UNDETERMINED
+    /**
+     * 构成返回值的一部分
+     */
+    TOP,
+    /**
+     * 具体的值，参与逻辑运算
+     */
+    PRIMARY,
+    /**
+     * InsertSelectParser
+     */
+    INSERT,
+    /**
+     * inCondition
+     */
+    IN,
+    /**
+     * existsCondition
+     */
+    EXISTS,
+    /**
+     * tableRep
+     */
+    TABLE,
 
 }

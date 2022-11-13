@@ -68,8 +68,7 @@ public class SelectParser extends ExpressionParser {
     @Override
     public Curd parse() {
         Select select = (Select) select();
-        select.setSelectType(SelectType.VIEW);
-        saveSingleSelectContext(select, SingleSelectType.TOP);
+        saveSelectType(select, SingleSelectType.TOP, SelectType.VIEW);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
         if (detectAstMetaData) {
@@ -211,7 +210,7 @@ public class SelectParser extends ExpressionParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -251,7 +250,7 @@ public class SelectParser extends ExpressionParser {
             consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_tableRep_PARSE);
             curd = select();
             Select select = (Select) curd;
-            select.setSelectType(SelectType.TABLE);
+            saveSelectType(select, SingleSelectType.TABLE, SelectType.VIEW);
             consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_tableRep_PARSE);
             flag = true;
         } else if (tokenSequence.curEqual(TokenType.IDENTIFIER)) {
@@ -275,17 +274,6 @@ public class SelectParser extends ExpressionParser {
         }
 
         return new TableRep(curd);
-    }
-
-
-    /**
-     * "where" logic
-     */
-    @Override
-    protected Curd whereSeg() {
-        Curd curd = super.whereSeg();
-        saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
-        return curd;
     }
 
 
@@ -382,6 +370,18 @@ public class SelectParser extends ExpressionParser {
     }
 
     /**
+     * condition (("or" | "and") condition)*
+     */
+    @Override
+    protected Curd logic() {
+        Curd logic = super.logic();
+        if (logic instanceof Logic) {
+            saveSelectType(logic, SingleSelectType.PRIMARY, SelectType.VALUE);
+        }
+        return logic;
+    }
+
+    /**
      * inCondition | existsCondition | comparison
      */
     @Override
@@ -413,7 +413,7 @@ public class SelectParser extends ExpressionParser {
             Select select = (Select) select();
             consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
             InCondition inCondition = new InCondition(in, identifier, select);
-            select.setSelectType(SelectType.IN);
+            saveSelectType(select, SingleSelectType.IN, SelectType.LIST);
             return inCondition;
         }
         consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
@@ -444,8 +444,8 @@ public class SelectParser extends ExpressionParser {
         Select select = (Select) select();
         consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_existsCondition_PARSE);
         ExistsCondition existsCondition = new ExistsCondition(exists, select);
-        // 存select语句的山下文。
-        select.setSelectType(SelectType.EXIST);
+        // 存select语句的上下文。
+        saveSelectType(select, SingleSelectType.EXISTS, SelectType.LIST);
 
         return existsCondition;
     }
@@ -458,7 +458,7 @@ public class SelectParser extends ExpressionParser {
     protected Curd comparison() {
         Curd curd = super.comparison();
         if (curd instanceof Comparison) {
-            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
+            saveSelectType(curd, SingleSelectType.PRIMARY, SelectType.VALUE);
         }
         return curd;
     }
@@ -471,7 +471,7 @@ public class SelectParser extends ExpressionParser {
     protected Curd binaryArithmetic() {
         Curd curd = super.binaryArithmetic();
         if (curd instanceof BinaryArithmetic) {
-            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
+            saveSelectType(curd, SingleSelectType.PRIMARY, SelectType.VALUE);
         }
         return curd;
     }
@@ -484,7 +484,7 @@ public class SelectParser extends ExpressionParser {
     protected Curd unaryArithmetic() {
         Curd curd = super.unaryArithmetic();
         if (curd instanceof UnaryArithmetic) {
-            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
+            saveSelectType(curd, SingleSelectType.PRIMARY, SelectType.VALUE);
         }
         return curd;
     }

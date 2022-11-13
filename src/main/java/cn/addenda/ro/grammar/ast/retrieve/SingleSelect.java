@@ -9,7 +9,7 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
  */
 public class SingleSelect extends Curd {
 
-    private SingleSelectType singleSelectType = SingleSelectType.UNDETERMINED;
+    private SingleSelectType singleSelectType;
 
     private Curd columnSeg;
 

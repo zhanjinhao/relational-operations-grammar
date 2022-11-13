@@ -1,6 +1,5 @@
 package cn.addenda.ro.grammar.ast.retrieve;
 
-import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 

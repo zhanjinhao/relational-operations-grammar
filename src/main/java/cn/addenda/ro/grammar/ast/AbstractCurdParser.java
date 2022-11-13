@@ -5,10 +5,7 @@ import cn.addenda.ro.grammar.Parser;
 import cn.addenda.ro.grammar.ast.create.InsertParser;
 import cn.addenda.ro.grammar.ast.delete.DeleteParser;
 import cn.addenda.ro.grammar.ast.expression.*;
-import cn.addenda.ro.grammar.ast.retrieve.Select;
-import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
-import cn.addenda.ro.grammar.ast.retrieve.SingleSelect;
-import cn.addenda.ro.grammar.ast.retrieve.SingleSelectType;
+import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.update.UpdateParser;
 import cn.addenda.ro.grammar.constant.DateConst;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
@@ -48,30 +45,34 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
         errorReporterDelegate.error(errorCode);
     }
 
-    protected void saveSingleSelectContext(Curd curd, SingleSelectType type) {
+    protected void saveSelectType(Curd curd, SingleSelectType singleSelectType, SelectType selectType) {
         if (curd instanceof SingleSelect) {
             SingleSelect singleSelect = (SingleSelect) curd;
-            if (singleSelect.getSingleSelectType() == null || singleSelect.getSingleSelectType() == SingleSelectType.UNDETERMINED) {
-                singleSelect.setSingleSelectType(type);
+            if (singleSelect.getSingleSelectType() == null) {
+                singleSelect.setSingleSelectType(singleSelectType);
             }
         } else if (curd instanceof Select) {
             Select select = (Select) curd;
-            saveSingleSelectContext(select.getLeftCurd(), type);
-            saveSingleSelectContext(select.getRightCurd(), type);
+            saveSelectType(select.getLeftCurd(), singleSelectType, selectType);
+            saveSelectType(select.getRightCurd(), singleSelectType, selectType);
+            if (select.getSelectType() == null) {
+                select.setSelectType(selectType);
+            }
         } else if (curd instanceof BinaryArithmetic) {
             BinaryArithmetic binaryArithmetic = (BinaryArithmetic) curd;
-            saveSingleSelectContext(binaryArithmetic.getLeftCurd(), type);
-            saveSingleSelectContext(binaryArithmetic.getRightCurd(), type);
+            saveSelectType(binaryArithmetic.getLeftCurd(), singleSelectType, selectType);
+            saveSelectType(binaryArithmetic.getRightCurd(), singleSelectType, selectType);
         } else if (curd instanceof UnaryArithmetic) {
             UnaryArithmetic unaryArithmetic = (UnaryArithmetic) curd;
-            saveSingleSelectContext(unaryArithmetic.getCurd(), type);
+            saveSelectType(unaryArithmetic.getCurd(), singleSelectType, selectType);
         } else if (curd instanceof Comparison) {
             Comparison comparison = (Comparison) curd;
-            saveSingleSelectContext(comparison.getLeftCurd(), type);
-            saveSingleSelectContext(comparison.getRightCurd(), type);
-        } else if (curd instanceof WhereSeg) {
-            WhereSeg whereSeg = (WhereSeg) curd;
-            saveSingleSelectContext(whereSeg.getLogic(), type);
+            saveSelectType(comparison.getLeftCurd(), singleSelectType, selectType);
+            saveSelectType(comparison.getRightCurd(), singleSelectType, selectType);
+        } else if (curd instanceof Logic) {
+            Logic logic = (Logic) curd;
+            saveSelectType(logic.getLeftCurd(), singleSelectType, selectType);
+            saveSelectType(logic.getRightCurd(), singleSelectType, selectType);
         }
     }
 

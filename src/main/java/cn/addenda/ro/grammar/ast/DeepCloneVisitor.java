@@ -18,8 +18,10 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
 
     @Override
     public Curd visitSelect(Select select) {
-        return new Select(select.getLeftCurd().accept(this), nullClone(select.getToken()),
-            nullClone(select.getAllToken()), nullAccept(select.getRightCurd()));
+        Select result = new Select(select.getLeftCurd().accept(this), nullClone(select.getToken()),
+                nullClone(select.getAllToken()), nullAccept(select.getRightCurd()));
+        result.setSelectType(select.getSelectType());
+        return result;
     }
 
     @Override
