@@ -6,6 +6,9 @@ import cn.addenda.ro.grammar.ast.expression.*;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.update.Update;
 
+import java.util.List;
+import java.util.function.BinaryOperator;
+
 /**
  * @author addenda
  * @datetime 2021/3/2 20:12
@@ -137,6 +140,33 @@ public interface CurdVisitor<R> {
             return null;
         }
         return curd.accept(this);
+    }
+
+    default void nullAccept(List<Curd> curdList) {
+        if (curdList == null) {
+            return;
+        }
+
+        for (Curd curd : curdList) {
+            curd.accept(this);
+        }
+    }
+
+    default R nullAccept(List<Curd> curdList, BinaryOperator<R> mergeFunction) {
+        if (curdList == null) {
+            return null;
+        }
+
+        R result = null;
+        for (Curd curd : curdList) {
+            R accept = curd.accept(this);
+            if (result == null) {
+                result = accept;
+            } else {
+                result = mergeFunction.apply(result, accept);
+            }
+        }
+        return result;
     }
 
 }
