@@ -46,7 +46,7 @@ comparisonSymbol ↑	->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contai
 isNot ↑             ->  "is" ("not")?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction
+primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction | windowFunction
 grouping ↑          ->  "(" logic ")"
 function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
 functionParameter ↑ ->  condition | timeInterval | timeUnit | function
@@ -70,7 +70,7 @@ insertSetRep        ->  "set" assignmentList
 insertSelectRep     ->  "(" columnList ")" select
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | STRING | IDENTIFIER | grouping | function
+primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | INTEGER | DECIMAL | STRING | IDENTIFIER | grouping | function
 function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
 onDuplicateKey      ->  "on" "duplicate" "key" "update" assignmentList
 assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*

@@ -23,6 +23,10 @@ public class CurdUtils {
     private CurdUtils() {
     }
 
+    /**
+     * <p/>key: cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator#name()
+     * <p/>value: java.util.concurrent.ConcurrentHashMap
+     */
     private static final Map<String, Map<TokenSequence, Curd>> TOKEN_SEQUENCE_CURD_MAP = new ConcurrentHashMap<>();
 
     public static Curd parse(String sql) {
