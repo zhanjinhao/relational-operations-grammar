@@ -103,6 +103,9 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         if (!(curd instanceof Literal || curd instanceof Identifier) && alias == null) {
             error(AstROErrorReporterDelegate.SELECT_columnRep_VALIDATION);
         }
+        if (curd instanceof Select) {
+            // todo 需要验证这里的返回值是否是单独的列
+        }
         curd.accept(this);
         return null;
     }
