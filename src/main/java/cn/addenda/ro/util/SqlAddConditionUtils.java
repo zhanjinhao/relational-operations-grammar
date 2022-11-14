@@ -31,21 +31,21 @@ public class SqlAddConditionUtils {
     }
 
     public static String addTableCondition(String sql, String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-        Curd parse = CurdUtils.parse(sql);
+        Curd parse = CurdUtils.parse(sql, functionEvaluator, false);
         if (parse instanceof Select) {
             Select select = (Select) parse;
-            select.accept(new SelectAddTableConditionVisitor(tableName, condition, functionEvaluator));
+            select.accept(new SelectAddTableConditionVisitor(tableName, condition));
         } else if (parse instanceof Delete) {
             Delete delete = (Delete) parse;
-            delete.accept(new DeleteAddTableConditionVisitor(tableName, condition, functionEvaluator));
+            delete.accept(new DeleteAddTableConditionVisitor(tableName, condition));
         } else if (parse instanceof Update) {
             Update update = (Update) parse;
-            update.accept(new UpdateAddTableConditionVisitor(tableName, condition, functionEvaluator));
+            update.accept(new UpdateAddTableConditionVisitor(tableName, condition));
         } else if (parse instanceof Insert) {
             Insert insert = (Insert) parse;
             Curd insertRep = insert.getInsertRep();
             if (insertRep instanceof InsertSelectRep) {
-                insert.accept(new InsertAddTableConditionVisitor(tableName, condition, functionEvaluator));
+                insert.accept(new InsertAddTableConditionVisitor(tableName, condition));
             }
         }
         return parse.toString();
@@ -56,21 +56,21 @@ public class SqlAddConditionUtils {
     }
 
     public static String addViewCondition(String sql, String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-        Curd parse = CurdUtils.parse(sql);
+        Curd parse = CurdUtils.parse(sql, functionEvaluator, false);
         if (parse instanceof Select) {
             Select select = (Select) parse;
-            select.accept(new SelectAddViewConditionVisitor(tableName, condition, functionEvaluator));
+            select.accept(new SelectAddViewConditionVisitor(tableName, condition));
         } else if (parse instanceof Delete) {
             Delete delete = (Delete) parse;
-            delete.accept(new DeleteAddViewConditionVisitor(tableName, condition, functionEvaluator));
+            delete.accept(new DeleteAddViewConditionVisitor(tableName, condition));
         } else if (parse instanceof Update) {
             Update update = (Update) parse;
-            update.accept(new UpdateAddViewConditionVisitor(tableName, condition, functionEvaluator));
+            update.accept(new UpdateAddViewConditionVisitor(tableName, condition));
         } else if (parse instanceof Insert) {
             Insert insert = (Insert) parse;
             Curd insertRep = insert.getInsertRep();
             if (insertRep instanceof InsertSelectRep) {
-                insert.accept(new InsertAddViewConditionVisitor(tableName, condition, functionEvaluator));
+                insert.accept(new InsertAddViewConditionVisitor(tableName, condition));
             }
         }
         return parse.toString();
@@ -80,18 +80,15 @@ public class SqlAddConditionUtils {
         return addViewCondition(sql, tableName, condition, DefaultFunctionEvaluator.getInstance());
     }
 
-    private static class SelectAddTableConditionVisitor extends SelectVisitor<Void> {
+    public static class SelectAddTableConditionVisitor extends SelectVisitor<Void> {
 
         protected final String tableName;
 
         protected final String condition;
 
-        protected final FunctionEvaluator<?> functionEvaluator;
-
-        public SelectAddTableConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
+        public SelectAddTableConditionVisitor(String tableName, String condition) {
             this.tableName = tableName;
             this.condition = condition;
-            this.functionEvaluator = functionEvaluator;
         }
 
         @Override
@@ -148,14 +145,14 @@ public class SqlAddConditionUtils {
                 // 存在别名的时候，curd直接替换
                 // A A1  -> "(select * from A where condition) A1"
                 if (alias != null) {
-                    Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, functionEvaluator, false);
+                    Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, false);
                     AbstractCurdParser.saveSelectType(select, SingleSelectType.TABLE, SelectType.VIEW, true);
                     ReflectUtils.setFieldValue(tableRep, "curd", select);
                 }
                 // 不存在别名的时候，使用表名作为别名
                 // A  ->  "(select * from A where condition) A"
                 else {
-                    Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, functionEvaluator, false);
+                    Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, false);
                     AbstractCurdParser.saveSelectType(select, SingleSelectType.TABLE, SelectType.VIEW, true);
                     ReflectUtils.setFieldValue(tableRep, "curd", select);
                     ReflectUtils.setFieldValue(tableRep, "alias", identifier.getName().deepClone());
@@ -338,18 +335,16 @@ public class SqlAddConditionUtils {
         }
     }
 
-    private static class DeleteAddTableConditionVisitor extends DeleteVisitor<Void> {
+    public static class DeleteAddTableConditionVisitor extends DeleteVisitor<Void> {
 
         protected final String tableName;
 
         protected final String condition;
 
-        protected final FunctionEvaluator<?> functionEvaluator;
 
-        public DeleteAddTableConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
+        public DeleteAddTableConditionVisitor(String tableName, String condition) {
             this.tableName = tableName;
             this.condition = condition;
-            this.functionEvaluator = functionEvaluator;
         }
 
         @Override
@@ -365,7 +360,7 @@ public class SqlAddConditionUtils {
             nullAccept(whereSeg);
             String tn = (String) delete.getTableName().getLiteral();
             if (tableName.equals(tn)) {
-                Delete conditionCurd = (Delete) CurdUtils.parse("delete from dual where " + condition, functionEvaluator, false);
+                Delete conditionCurd = (Delete) CurdUtils.parse("delete from dual where " + condition, false);
                 if (whereSeg == null) {
                     whereSeg = (WhereSeg) conditionCurd.getWhereSeg();
                     ReflectUtils.setFieldValue(delete, "whereSeg", whereSeg);
@@ -463,18 +458,15 @@ public class SqlAddConditionUtils {
         }
     }
 
-    private static class UpdateAddTableConditionVisitor extends UpdateVisitor<Void> {
+    public static class UpdateAddTableConditionVisitor extends UpdateVisitor<Void> {
 
         protected final String tableName;
 
         protected final String condition;
 
-        protected final FunctionEvaluator<?> functionEvaluator;
-
-        public UpdateAddTableConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
+        public UpdateAddTableConditionVisitor(String tableName, String condition) {
             this.tableName = tableName;
             this.condition = condition;
-            this.functionEvaluator = functionEvaluator;
         }
 
         @Override
@@ -492,7 +484,7 @@ public class SqlAddConditionUtils {
             nullAccept(whereSeg);
             String tn = (String) update.getTableName().getLiteral();
             if (tableName.equals(tn)) {
-                Delete conditionCurd = (Delete) CurdUtils.parse("delete from dual where " + condition, functionEvaluator, false);
+                Delete conditionCurd = (Delete) CurdUtils.parse("delete from dual where " + condition, false);
                 if (whereSeg == null) {
                     whereSeg = (WhereSeg) conditionCurd.getWhereSeg();
                     ReflectUtils.setFieldValue(update, "whereSeg", whereSeg);
@@ -590,18 +582,15 @@ public class SqlAddConditionUtils {
         }
     }
 
-    private static class InsertAddTableConditionVisitor extends InsertVisitor<Void> {
+    public static class InsertAddTableConditionVisitor extends InsertVisitor<Void> {
 
         protected final String tableName;
 
         protected final String condition;
 
-        protected final FunctionEvaluator<?> functionEvaluator;
-
-        public InsertAddTableConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
+        public InsertAddTableConditionVisitor(String tableName, String condition) {
             this.tableName = tableName;
             this.condition = condition;
-            this.functionEvaluator = functionEvaluator;
         }
 
         @Override
@@ -628,7 +617,7 @@ public class SqlAddConditionUtils {
         @Override
         public Void visitInsertSelectRep(InsertSelectRep insertSelectRep) {
             Curd select = insertSelectRep.getSelect();
-            SelectAddTableConditionVisitor visitor = new SelectAddTableConditionVisitor(tableName, condition, functionEvaluator);
+            SelectAddTableConditionVisitor visitor = new SelectAddTableConditionVisitor(tableName, condition);
             select.accept(visitor);
             return null;
         }
@@ -684,10 +673,10 @@ public class SqlAddConditionUtils {
         }
     }
 
-    private static class SelectAddViewConditionVisitor extends SelectAddTableConditionVisitor {
+    public static class SelectAddViewConditionVisitor extends SelectAddTableConditionVisitor {
 
-        public SelectAddViewConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-            super(tableName, condition, functionEvaluator);
+        public SelectAddViewConditionVisitor(String tableName, String condition) {
+            super(tableName, condition);
         }
 
         @Override
@@ -706,7 +695,7 @@ public class SqlAddConditionUtils {
                     } else {
                         // 不存在别名的时候，使用表名作为别名
                         // A  ->  "(select * from A where condition) A"
-                        Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, functionEvaluator, false);
+                        Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, false);
                         AbstractCurdParser.saveSelectType(select, SingleSelectType.TABLE, SelectType.VIEW, true);
                         ReflectUtils.setFieldValue(tableRep, "curd", select);
                         ReflectUtils.setFieldValue(tableRep, "alias", identifier.getName().deepClone());
@@ -718,7 +707,7 @@ public class SqlAddConditionUtils {
                     } else {
                         // 存在别名的时候，curd直接替换
                         // A A1  -> "(select * from A where condition) A1"
-                        Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, functionEvaluator, false);
+                        Select select = (Select) CurdUtils.parse("select * from " + tn + " where " + condition, false);
                         AbstractCurdParser.saveSelectType(select, SingleSelectType.TABLE, SelectType.VIEW, true);
                         ReflectUtils.setFieldValue(tableRep, "curd", select);
                     }
@@ -730,25 +719,57 @@ public class SqlAddConditionUtils {
 
     }
 
-    private static class DeleteAddViewConditionVisitor extends DeleteAddTableConditionVisitor {
+    public static class DeleteAddViewConditionVisitor extends DeleteAddTableConditionVisitor {
 
-        public DeleteAddViewConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-            super(tableName, condition, functionEvaluator);
+        public DeleteAddViewConditionVisitor(String tableName, String condition) {
+            super(tableName, condition);
         }
     }
 
-    private static class UpdateAddViewConditionVisitor extends UpdateAddTableConditionVisitor {
+    public static class UpdateAddViewConditionVisitor extends UpdateAddTableConditionVisitor {
 
-        public UpdateAddViewConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-            super(tableName, condition, functionEvaluator);
+        public UpdateAddViewConditionVisitor(String tableName, String condition) {
+            super(tableName, condition);
         }
     }
 
-    private static class InsertAddViewConditionVisitor extends InsertAddTableConditionVisitor {
+    public static class InsertAddViewConditionVisitor extends InsertAddTableConditionVisitor {
 
-        public InsertAddViewConditionVisitor(String tableName, String condition, FunctionEvaluator<?> functionEvaluator) {
-            super(tableName, condition, functionEvaluator);
+        public InsertAddViewConditionVisitor(String tableName, String condition) {
+            super(tableName, condition);
         }
+    }
+
+    public SelectVisitor<Void> getSelectAddTableConditionVisitor(String tableName, String condition) {
+        return new SelectAddTableConditionVisitor(tableName, condition);
+    }
+
+    public DeleteVisitor<Void> getDeleteAddTableConditionVisitor(String tableName, String condition) {
+        return new DeleteAddTableConditionVisitor(tableName, condition);
+    }
+
+    public UpdateVisitor<Void> getUpdateAddTableConditionVisitor(String tableName, String condition) {
+        return new UpdateAddTableConditionVisitor(tableName, condition);
+    }
+
+    public InsertVisitor<Void> getInsertAddTableConditionVisitor(String tableName, String condition) {
+        return new InsertAddTableConditionVisitor(tableName, condition);
+    }
+
+    public SelectVisitor<Void> getSelectAddViewConditionVisitor(String tableName, String condition) {
+        return new SelectAddViewConditionVisitor(tableName, condition);
+    }
+
+    public DeleteVisitor<Void> getDeleteAddViewConditionVisitor(String tableName, String condition) {
+        return new DeleteAddViewConditionVisitor(tableName, condition);
+    }
+
+    public UpdateVisitor<Void> getUpdateAddViewConditionVisitor(String tableName, String condition) {
+        return new UpdateAddViewConditionVisitor(tableName, condition);
+    }
+
+    public InsertVisitor<Void> getInsertAddViewConditionVisitor(String tableName, String condition) {
+        return new InsertAddViewConditionVisitor(tableName, condition);
     }
 
 }
