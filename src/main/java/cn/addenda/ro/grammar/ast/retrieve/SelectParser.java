@@ -416,18 +416,8 @@ public class SelectParser extends ExpressionParser {
             saveSelectType(select, SingleSelectType.IN, SelectType.LIST);
             return inCondition;
         }
-        consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
-        List<Curd> ranges = new ArrayList<>();
-        do {
-            Curd primary = primary();
-            if (primary instanceof Literal) {
-                ranges.add(primary);
-            } else {
-                error(AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
-            }
-        } while (tokenSequence.equalThenAdvance(TokenType.COMMA));
-        consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
-        return new InCondition(in, identifier, ranges);
+
+        return doPrimaryInCondition(identifier, in);
     }
 
 
@@ -599,13 +589,6 @@ public class SelectParser extends ExpressionParser {
     protected boolean checkGroupFunctionName(Token token) {
         return groupFunctionTypeSet.contains(token.getType());
     }
-
-    private boolean checkSelectValue(TokenSequence tokenSequence) {
-        Token cur = tokenSequence.takeCur();
-        Token next = tokenSequence.takeNext();
-        return TokenType.LEFT_PAREN.equals(cur.getType()) && TokenType.SELECT.equals(next.getType());
-    }
-
 
     protected static Set<TokenType> windowFunctionTypeSet = new HashSet<>();
 

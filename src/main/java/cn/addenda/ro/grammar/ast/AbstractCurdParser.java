@@ -45,34 +45,38 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
         errorReporterDelegate.error(errorCode);
     }
 
-    protected void saveSelectType(Curd curd, SingleSelectType singleSelectType, SelectType selectType) {
+    public static void saveSelectType(Curd curd, SingleSelectType singleSelectType, SelectType selectType) {
+        saveSelectType(curd, singleSelectType, selectType, false);
+    }
+
+    public static void saveSelectType(Curd curd, SingleSelectType singleSelectType, SelectType selectType, boolean force) {
         if (curd instanceof SingleSelect) {
             SingleSelect singleSelect = (SingleSelect) curd;
-            if (singleSelect.getSingleSelectType() == null) {
+            if (force || singleSelect.getSingleSelectType() == null) {
                 singleSelect.setSingleSelectType(singleSelectType);
             }
         } else if (curd instanceof Select) {
             Select select = (Select) curd;
-            saveSelectType(select.getLeftCurd(), singleSelectType, selectType);
-            saveSelectType(select.getRightCurd(), singleSelectType, selectType);
-            if (select.getSelectType() == null) {
+            saveSelectType(select.getLeftCurd(), singleSelectType, selectType, force);
+            saveSelectType(select.getRightCurd(), singleSelectType, selectType, force);
+            if (force || select.getSelectType() == null) {
                 select.setSelectType(selectType);
             }
         } else if (curd instanceof BinaryArithmetic) {
             BinaryArithmetic binaryArithmetic = (BinaryArithmetic) curd;
-            saveSelectType(binaryArithmetic.getLeftCurd(), singleSelectType, selectType);
-            saveSelectType(binaryArithmetic.getRightCurd(), singleSelectType, selectType);
+            saveSelectType(binaryArithmetic.getLeftCurd(), singleSelectType, selectType, force);
+            saveSelectType(binaryArithmetic.getRightCurd(), singleSelectType, selectType, force);
         } else if (curd instanceof UnaryArithmetic) {
             UnaryArithmetic unaryArithmetic = (UnaryArithmetic) curd;
-            saveSelectType(unaryArithmetic.getCurd(), singleSelectType, selectType);
+            saveSelectType(unaryArithmetic.getCurd(), singleSelectType, selectType, force);
         } else if (curd instanceof Comparison) {
             Comparison comparison = (Comparison) curd;
-            saveSelectType(comparison.getLeftCurd(), singleSelectType, selectType);
-            saveSelectType(comparison.getRightCurd(), singleSelectType, selectType);
+            saveSelectType(comparison.getLeftCurd(), singleSelectType, selectType, force);
+            saveSelectType(comparison.getRightCurd(), singleSelectType, selectType, force);
         } else if (curd instanceof Logic) {
             Logic logic = (Logic) curd;
-            saveSelectType(logic.getLeftCurd(), singleSelectType, selectType);
-            saveSelectType(logic.getRightCurd(), singleSelectType, selectType);
+            saveSelectType(logic.getLeftCurd(), singleSelectType, selectType, force);
+            saveSelectType(logic.getRightCurd(), singleSelectType, selectType, force);
         }
     }
 
