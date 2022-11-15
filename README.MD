@@ -53,3 +53,5 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 12、InCondition 作为 Expression 的语法。 √
 
 13、增加ExpressionVisitor，不用于Delegate。 √
+
+14、提供过滤表数据的工具类。 √

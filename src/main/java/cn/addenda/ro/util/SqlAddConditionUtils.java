@@ -740,35 +740,35 @@ public class SqlAddConditionUtils {
         }
     }
 
-    public SelectVisitor<Void> getSelectAddTableConditionVisitor(String tableName, String condition) {
+    public static SelectVisitor<Void> getSelectAddTableConditionVisitor(String tableName, String condition) {
         return new SelectAddTableConditionVisitor(tableName, condition);
     }
 
-    public DeleteVisitor<Void> getDeleteAddTableConditionVisitor(String tableName, String condition) {
+    public static DeleteVisitor<Void> getDeleteAddTableConditionVisitor(String tableName, String condition) {
         return new DeleteAddTableConditionVisitor(tableName, condition);
     }
 
-    public UpdateVisitor<Void> getUpdateAddTableConditionVisitor(String tableName, String condition) {
+    public static UpdateVisitor<Void> getUpdateAddTableConditionVisitor(String tableName, String condition) {
         return new UpdateAddTableConditionVisitor(tableName, condition);
     }
 
-    public InsertVisitor<Void> getInsertAddTableConditionVisitor(String tableName, String condition) {
+    public static InsertVisitor<Void> getInsertAddTableConditionVisitor(String tableName, String condition) {
         return new InsertAddTableConditionVisitor(tableName, condition);
     }
 
-    public SelectVisitor<Void> getSelectAddViewConditionVisitor(String tableName, String condition) {
+    public static SelectVisitor<Void> getSelectAddViewConditionVisitor(String tableName, String condition) {
         return new SelectAddViewConditionVisitor(tableName, condition);
     }
 
-    public DeleteVisitor<Void> getDeleteAddViewConditionVisitor(String tableName, String condition) {
+    public static DeleteVisitor<Void> getDeleteAddViewConditionVisitor(String tableName, String condition) {
         return new DeleteAddViewConditionVisitor(tableName, condition);
     }
 
-    public UpdateVisitor<Void> getUpdateAddViewConditionVisitor(String tableName, String condition) {
+    public static UpdateVisitor<Void> getUpdateAddViewConditionVisitor(String tableName, String condition) {
         return new UpdateAddViewConditionVisitor(tableName, condition);
     }
 
-    public InsertVisitor<Void> getInsertAddViewConditionVisitor(String tableName, String condition) {
+    public static InsertVisitor<Void> getInsertAddViewConditionVisitor(String tableName, String condition) {
         return new InsertAddViewConditionVisitor(tableName, condition);
     }
 
