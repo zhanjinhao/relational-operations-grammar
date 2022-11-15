@@ -55,3 +55,5 @@ cn.addenda.ro.test.ast.retrieve.SelectParserTest
 13、增加ExpressionVisitor，不用于Delegate。 √
 
 14、提供过滤表数据的工具类。 √
+
+15、Delete、Update支持 in select。
