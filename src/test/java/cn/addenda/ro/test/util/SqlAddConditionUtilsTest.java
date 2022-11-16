@@ -12,6 +12,10 @@ public class SqlAddConditionUtilsTest {
 
         String[] sqls = new String[]{
 
+                "insert  into table_listnames ( name, address, tele )  " +
+                        "select *  from  (  select 'rupert', 'somewhere', '022' from dual   )  tmp  " +
+                        "where  not exists  (  select name  from t_week_flight   where name  = 'rupert'  )  limit 1",
+
                 "select a, b"
                         + "  from tab2 t cross join tab3 left join tab3 on tab4.e = tab2.e, (select * from tab5) t5\n"
                         + " where t.m = ?\n"

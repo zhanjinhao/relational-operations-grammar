@@ -19,11 +19,6 @@ import cn.addenda.ro.grammar.ast.update.Update;
 public abstract class InsertVisitor<R> extends AbstractCurdVisitor<R> {
 
     @Override
-    public final R visitSelect(Select select) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public final R visitSingleSelect(SingleSelect singleSelect) {
         throw new UnsupportedOperationException();
     }

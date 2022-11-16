@@ -23,6 +23,12 @@ public class InsertGrammarValidator extends InsertVisitorWithDelegate<Void> {
     }
 
     @Override
+    public Void visitSelect(Select select) {
+        select.accept(new SelectGrammarValidator(this));
+        return null;
+    }
+
+    @Override
     public Void visitInsert(Insert insert) {
 
         Curd curd = insert.getInsertRep();
@@ -93,7 +99,7 @@ public class InsertGrammarValidator extends InsertVisitorWithDelegate<Void> {
         if (select == null) {
             error(AstROErrorReporterDelegate.INSERT_insertSelectRep_VALIDATION);
         } else {
-            select.accept(new SelectGrammarValidator(this));
+            nullAccept(select);
         }
         return null;
     }

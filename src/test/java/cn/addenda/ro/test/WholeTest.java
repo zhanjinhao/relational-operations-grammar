@@ -8,6 +8,7 @@ import cn.addenda.ro.test.ast.create.InsertParserTest;
 import cn.addenda.ro.test.ast.delete.DeleteParserTest;
 import cn.addenda.ro.test.ast.retrieve.SelectParserTest;
 import cn.addenda.ro.test.ast.update.UpdateParserTest;
+import cn.addenda.ro.test.util.SqlAddConditionUtilsTest;
 
 import java.util.Set;
 
@@ -25,6 +26,7 @@ public class WholeTest {
         DeepCloneTest.main(args);
         IdentifierFillTNVisitorTest.main(args);
         ResetAstMetaDataTest.main(args);
+        SqlAddConditionUtilsTest.main(args);
 
         Set<Class<?>> literalClassSet = Token.LITERAL_CLASS_SET;
         for (Class<?> c : literalClassSet) {

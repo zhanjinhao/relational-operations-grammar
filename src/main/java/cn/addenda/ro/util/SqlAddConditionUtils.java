@@ -349,8 +349,12 @@ public class SqlAddConditionUtils {
 
         @Override
         public Void visitInCondition(InCondition inCondition) {
-            nullAccept(inCondition.getSelect());
-            nullAccept(inCondition.getRange());
+            Curd select = inCondition.getSelect();
+            if (select != null) {
+                select.accept(getSelectAddTableConditionVisitor(tableName, condition));
+            } else {
+                nullAccept(inCondition.getRange());
+            }
             return null;
         }
 
@@ -594,6 +598,12 @@ public class SqlAddConditionUtils {
         }
 
         @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddTableConditionVisitor(tableName, condition));
+            return null;
+        }
+
+        @Override
         public Void visitInsert(Insert insert) {
             nullAccept(insert.getInsertRep());
             return null;
@@ -616,9 +626,7 @@ public class SqlAddConditionUtils {
 
         @Override
         public Void visitInsertSelectRep(InsertSelectRep insertSelectRep) {
-            Curd select = insertSelectRep.getSelect();
-            SelectAddTableConditionVisitor visitor = new SelectAddTableConditionVisitor(tableName, condition);
-            select.accept(visitor);
+            nullAccept(insertSelectRep.getSelect());
             return null;
         }
 

@@ -7,6 +7,7 @@ import cn.addenda.ro.grammar.ast.create.*;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.List;
@@ -33,6 +34,12 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
             }
         }
         return detector;
+    }
+
+    @Override
+    public AstMetaData visitSelect(Select select) {
+         select.detectAstMetaData();
+         return select.getAstMetaData();
     }
 
     @Override
@@ -113,6 +120,8 @@ public class InsertAstMetaDataDetector extends InsertVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitInsertSelectRep(InsertSelectRep insertSelectRep) {
         InsertAstMetaData astMetaData = (InsertAstMetaData) insertSelectRep.getAstMetaData();
+
+        nullAccept(insertSelectRep.getSelect());
 
         List<Token> columnList = insertSelectRep.getColumnList();
         columnList.forEach(token -> astMetaData.getInsertColumnList().add(token));
