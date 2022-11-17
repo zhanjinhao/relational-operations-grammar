@@ -11,6 +11,15 @@ public class SqlAddConditionUtilsTest {
     public static void main(String[] args) {
 
         String[] sqls = new String[]{
+                "delete from runoob_tbl where id in ( select outer_id from t1 t_week_flight)",
+
+                "update runoob_tbl set runoob_title=replace(runoob_title,'c++','python') where id in ( select outer_id from t_week_flight)",
+                "update runoob_tbl set runoob_title=replace(runoob_title,'c++','python') where id in ( select outer_id from t1 t_week_flight)",
+
+                "delete from runoob_tbl where id in ( select outer_id from t_week_flight)",
+
+                "insert  into table_listnames ( name, address, tele )  " +
+                        "select *  from  (  select 'rupert', 'somewhere', '022' from t1 t_week_flight   )  t_week_flight",
 
                 "insert  into table_listnames ( name, address, tele )  " +
                         "select *  from  (  select 'rupert', 'somewhere', '022' from dual   )  tmp  " +

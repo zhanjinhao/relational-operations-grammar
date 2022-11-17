@@ -4,6 +4,11 @@ import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.delete.visitor.DeleteGrammarValidator;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
+import cn.addenda.ro.grammar.ast.expression.InCondition;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
+import cn.addenda.ro.grammar.ast.retrieve.SelectType;
+import cn.addenda.ro.grammar.ast.retrieve.SingleSelectType;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 import cn.addenda.ro.grammar.lexical.token.Token;
@@ -68,5 +73,41 @@ public class DeleteParser extends ExpressionParser {
         return new Delete(tableName, null);
     }
 
+    @Override
+    protected Curd inCondition() {
+        Token identifier = tokenSequence.takeCur();
+        tokenSequence.advance();
+        Token in = tokenSequence.takeCur();
+        if (tokenSequence.curEqual(TokenType.NOT)) {
+            tokenSequence.advance();
+        }
+        tokenSequence.advance();
+
+        if (checkSelectValue(tokenSequence)) {
+            consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+            Select select = (Select) new DeleteSelectParser(tokenSequence, getFunctionEvaluator(), false).parse();
+            consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+            InCondition inCondition = new InCondition(in, identifier, select);
+            saveSelectType(select, SingleSelectType.IN, SelectType.LIST);
+            return inCondition;
+        }
+
+        return doPrimaryInCondition(identifier, in);
+    }
+
+    private static class DeleteSelectParser extends SelectParser {
+
+        public DeleteSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+            super(tokenSequence, functionEvaluator, detectAstMetaData);
+        }
+
+        @Override
+        public Curd parse() {
+            Select select = (Select) select();
+            saveSelectType(select, SingleSelectType.DELETE, SelectType.LIST);
+            return select;
+        }
+
+    }
 
 }

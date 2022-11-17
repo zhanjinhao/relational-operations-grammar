@@ -6,6 +6,7 @@ import cn.addenda.ro.grammar.ast.delete.Delete;
 import cn.addenda.ro.grammar.ast.delete.DeleteAstMetaData;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 /**
@@ -30,6 +31,12 @@ public class DeleteAstMetaDataDetector extends DeleteVisitorWithDelegate<AstMeta
             }
         }
         return detector;
+    }
+
+    @Override
+    public AstMetaData visitSelect(Select select) {
+        select.detectAstMetaData();
+        return select.getAstMetaData();
     }
 
     @Override

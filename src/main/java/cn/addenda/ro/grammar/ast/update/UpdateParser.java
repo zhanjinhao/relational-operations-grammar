@@ -4,6 +4,11 @@ import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.ExpressionParser;
+import cn.addenda.ro.grammar.ast.expression.InCondition;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
+import cn.addenda.ro.grammar.ast.retrieve.SelectType;
+import cn.addenda.ro.grammar.ast.retrieve.SingleSelectType;
 import cn.addenda.ro.grammar.ast.update.visitor.UpdateGrammarValidator;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
@@ -81,6 +86,44 @@ public class UpdateParser extends ExpressionParser {
             return new Update(tableName, curd, whereSeg);
         }
         return new Update(tableName, curd, null);
+    }
+
+
+    @Override
+    protected Curd inCondition() {
+        Token identifier = tokenSequence.takeCur();
+        tokenSequence.advance();
+        Token in = tokenSequence.takeCur();
+        if (tokenSequence.curEqual(TokenType.NOT)) {
+            tokenSequence.advance();
+        }
+        tokenSequence.advance();
+
+        if (checkSelectValue(tokenSequence)) {
+            consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+            Select select = (Select) new UpdateSelectParser(tokenSequence, getFunctionEvaluator(), false).parse();
+            consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.EXPRESSION_inCondition_PARSE);
+            InCondition inCondition = new InCondition(in, identifier, select);
+            saveSelectType(select, SingleSelectType.IN, SelectType.LIST);
+            return inCondition;
+        }
+
+        return doPrimaryInCondition(identifier, in);
+    }
+
+    private static class UpdateSelectParser extends SelectParser {
+
+        public UpdateSelectParser(TokenSequence tokenSequence, FunctionEvaluator<?> functionEvaluator, boolean detectAstMetaData) {
+            super(tokenSequence, functionEvaluator, detectAstMetaData);
+        }
+
+        @Override
+        public Curd parse() {
+            Select select = (Select) select();
+            saveSelectType(select, SingleSelectType.DELETE, SelectType.LIST);
+            return select;
+        }
+
     }
 
 }

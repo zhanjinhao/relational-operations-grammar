@@ -11,7 +11,7 @@ import cn.addenda.ro.test.SqlReader;
 public class DeleteParserTest {
 
     static String[] sqls = new String[]{
-            "delete from A where id in (1, 2, 3)"
+
     };
 
     public static void main(String[] args) {

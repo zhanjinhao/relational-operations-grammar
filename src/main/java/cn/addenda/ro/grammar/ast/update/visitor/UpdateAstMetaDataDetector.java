@@ -5,6 +5,7 @@ import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.expression.AssignmentList;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionAstMetaDataDetector;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
 import cn.addenda.ro.grammar.ast.update.Update;
 import cn.addenda.ro.grammar.ast.update.UpdateAstMetaData;
 import cn.addenda.ro.grammar.lexical.token.Token;
@@ -33,6 +34,12 @@ public class UpdateAstMetaDataDetector extends UpdateVisitorWithDelegate<AstMeta
             }
         }
         return detector;
+    }
+
+    @Override
+    public AstMetaData visitSelect(Select select) {
+        select.detectAstMetaData();
+        return select.getAstMetaData();
     }
 
     @Override

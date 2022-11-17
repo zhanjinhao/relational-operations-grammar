@@ -19,6 +19,14 @@ public enum SingleSelectType {
      */
     INSERT,
     /**
+     * DeleteSelectParser
+     */
+    DELETE,
+    /**
+     * UpdateSelectParser
+     */
+    UPDATE,
+    /**
      * inCondition
      */
     IN,

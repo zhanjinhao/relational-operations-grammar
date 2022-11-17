@@ -12,11 +12,6 @@ import cn.addenda.ro.grammar.ast.retrieve.*;
 public abstract class UpdateVisitor<R> extends AbstractCurdVisitor<R> {
 
     @Override
-    public final R visitSelect(Select select) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public final R visitSLock(SLock sLock) {
         throw new UnsupportedOperationException();
     }

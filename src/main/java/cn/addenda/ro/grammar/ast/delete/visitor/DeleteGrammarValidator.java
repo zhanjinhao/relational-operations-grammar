@@ -5,6 +5,8 @@ import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.delete.Delete;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionGrammarValidator;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.retrieve.visitor.SelectGrammarValidator;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 /**
@@ -16,6 +18,12 @@ public class DeleteGrammarValidator extends DeleteVisitorWithDelegate<Void> {
     public DeleteGrammarValidator(ROErrorReporter roErrorReporter) {
         super.init(new ExpressionGrammarValidator(this, roErrorReporter));
         setErrorReporter(roErrorReporter);
+    }
+
+    @Override
+    public Void visitSelect(Select select) {
+        select.accept(new SelectGrammarValidator(this));
+        return null;
     }
 
     @Override

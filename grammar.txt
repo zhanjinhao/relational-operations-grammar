@@ -80,7 +80,7 @@ DeleteParser
 delete              ->  "delete" "from" IDENTIFIER (whereSeg)?
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑         ->  inCondition | comparison
-inCondition ↑       ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
+inCondition ↑+      ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"
 comparison ↑        ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
 comparisonSymbol ↑	->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
 isNot ↑             ->  "is" ("not")?
@@ -101,7 +101,7 @@ update              ->  "update" IDENTIFIER "set" assignmentList (whereSeg)?
 assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑         ->  inCondition | comparison
-inCondition ↑       ->  IDENTIFIER ("not")? "in" "(" (primary ("," primary)*) ")"
+inCondition ↑+      ->  IDENTIFIER ("not")? "in" "(" select | (primary ("," primary)*) ")"
 comparison ↑        ->  binaryArithmetic (comparisonSymbol binaryArithmetic)?
 comparisonSymbol ↑	->  ">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains" | isNot
 isNot ↑             ->  "is" ("not")?

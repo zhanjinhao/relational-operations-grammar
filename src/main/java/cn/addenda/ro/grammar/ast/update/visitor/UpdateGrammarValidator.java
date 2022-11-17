@@ -4,6 +4,8 @@ import cn.addenda.ro.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionGrammarValidator;
+import cn.addenda.ro.grammar.ast.retrieve.Select;
+import cn.addenda.ro.grammar.ast.retrieve.visitor.SelectGrammarValidator;
 import cn.addenda.ro.grammar.ast.update.Update;
 
 /**
@@ -15,6 +17,12 @@ public class UpdateGrammarValidator extends UpdateVisitorWithDelegate<Void> {
     public UpdateGrammarValidator(ROErrorReporter roErrorReporter) {
         super.init(new ExpressionGrammarValidator(this, roErrorReporter));
         setErrorReporter(roErrorReporter);
+    }
+
+    @Override
+    public Void visitSelect(Select select) {
+        select.accept(new SelectGrammarValidator(this));
+        return null;
     }
 
     @Override

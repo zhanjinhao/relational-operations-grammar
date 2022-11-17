@@ -348,13 +348,15 @@ public class SqlAddConditionUtils {
         }
 
         @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddTableConditionVisitor(tableName, condition));
+            return null;
+        }
+
+        @Override
         public Void visitInCondition(InCondition inCondition) {
-            Curd select = inCondition.getSelect();
-            if (select != null) {
-                select.accept(getSelectAddTableConditionVisitor(tableName, condition));
-            } else {
-                nullAccept(inCondition.getRange());
-            }
+            nullAccept(inCondition.getSelect());
+            nullAccept(inCondition.getRange());
             return null;
         }
 
@@ -471,6 +473,12 @@ public class SqlAddConditionUtils {
         public UpdateAddTableConditionVisitor(String tableName, String condition) {
             this.tableName = tableName;
             this.condition = condition;
+        }
+
+        @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddTableConditionVisitor(tableName, condition));
+            return null;
         }
 
         @Override
@@ -732,6 +740,12 @@ public class SqlAddConditionUtils {
         public DeleteAddViewConditionVisitor(String tableName, String condition) {
             super(tableName, condition);
         }
+
+        @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddViewConditionVisitor(tableName, condition));
+            return null;
+        }
     }
 
     public static class UpdateAddViewConditionVisitor extends UpdateAddTableConditionVisitor {
@@ -739,12 +753,26 @@ public class SqlAddConditionUtils {
         public UpdateAddViewConditionVisitor(String tableName, String condition) {
             super(tableName, condition);
         }
+
+
+        @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddViewConditionVisitor(tableName, condition));
+            return null;
+        }
+
     }
 
     public static class InsertAddViewConditionVisitor extends InsertAddTableConditionVisitor {
 
         public InsertAddViewConditionVisitor(String tableName, String condition) {
             super(tableName, condition);
+        }
+
+        @Override
+        public Void visitSelect(Select select) {
+            select.accept(getSelectAddViewConditionVisitor(tableName, condition));
+            return null;
         }
     }
 
