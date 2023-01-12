@@ -375,6 +375,11 @@ public class DeepCloneVisitor implements CurdVisitor<Curd> {
     }
 
     @Override
+    public Curd visitAttachment(Attachment attachment) {
+        return new Attachment(attachment.getAttachment().deepClone());
+    }
+
+    @Override
     public Curd visitIsNot(IsNot isNot) {
         Token notToken = isNot.getNotToken();
         Token isToken = isNot.getIsToken();
