@@ -23,17 +23,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class Curd implements DeepCloneable<Curd> {
 
+    private static final DeepCloneVisitor DEEP_CLONE_VISITOR = new DeepCloneVisitor();
+
+    private static final ClearAstMetaDataVisitor CLEAR_AST_META_DATA_VISITOR = new ClearAstMetaDataVisitor();
+
+    private static final Map<String, FieldAddPrefixVisitor> FIELD_ADD_PREFIX_VISITOR_MAP = new ConcurrentHashMap<>();
+
     private AstMetaData astMetaData;
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
 
-    private static final DeepCloneVisitor DEEP_CLONE_VISITOR = new DeepCloneVisitor();
-
     private final CurdVisitor<AstMetaData> detector;
-
-    private static final ClearAstMetaDataVisitor CLEAR_AST_META_DATA_VISITOR = new ClearAstMetaDataVisitor();
-
-    private static final Map<String, IdentifierFillTNVisitor> T_N_TO_IDENTIFIER_FILL_TN_MAP = new ConcurrentHashMap<>();
 
     protected Curd() {
         this.astMetaData = new AstMetaData();
@@ -90,10 +90,10 @@ public abstract class Curd implements DeepCloneable<Curd> {
         return deepClone(true);
     }
 
-    public void fillTableName(String tableName) {
-        IdentifierFillTNVisitor identifierFillTNVisitor =
-                T_N_TO_IDENTIFIER_FILL_TN_MAP.computeIfAbsent(tableName, s -> new IdentifierFillTNVisitor(tableName));
-        this.accept(identifierFillTNVisitor);
+    public void fieldAddPrefix(String prefix) {
+        FieldAddPrefixVisitor fieldAddPrefixVisitor =
+                FIELD_ADD_PREFIX_VISITOR_MAP.computeIfAbsent(prefix, s -> new FieldAddPrefixVisitor(prefix));
+        this.accept(fieldAddPrefixVisitor);
     }
 
     public void setAstMetaData(AstMetaData astMetaData) {

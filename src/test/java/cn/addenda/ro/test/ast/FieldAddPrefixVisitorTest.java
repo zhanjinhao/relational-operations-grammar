@@ -8,7 +8,7 @@ import cn.addenda.ro.test.SqlReader;
  * @Author ISJINHAO
  * @Date 2022/2/1 14:24
  */
-public class IdentifierFillTNVisitorTest {
+public class FieldAddPrefixVisitorTest {
 
     static String[] sqls = new String[]{
 
@@ -27,16 +27,19 @@ public class IdentifierFillTNVisitorTest {
 
             String tableName = "HAHAHAHAHAHA";
 
-            deepClone.fillTableName(tableName);
+            deepClone.fieldAddPrefix(tableName);
             String s1 = curd.toString().replaceAll("\\s+", "");
-            String s2 = deepClone.toString().replaceAll("\\s+", "").replaceAll(tableName + ".", "");
+            String after = deepClone.toString().replaceAll("\\s+", "");
+            String s2 = after.replaceAll(tableName + ".", "");
 
             if (s1.equals(s2)) {
                 System.out.println(s1);
                 System.out.println(s2);
+                System.out.println(after);
             } else {
                 System.err.println(s1);
                 System.err.println(s2);
+                System.out.println(after);
             }
 
         }

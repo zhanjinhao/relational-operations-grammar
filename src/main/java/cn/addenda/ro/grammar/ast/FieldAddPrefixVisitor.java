@@ -14,21 +14,18 @@ import java.util.List;
  * @author addenda
  * @datetime 2022/2/1 13:10
  */
-public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
+public class FieldAddPrefixVisitor implements CurdVisitor<Void> {
 
-    private final String tableName;
+    private final String prefix;
 
-    public IdentifierFillTNVisitor(String tableName) {
-        this.tableName = tableName;
+    public FieldAddPrefixVisitor(String prefix) {
+        this.prefix = prefix;
     }
 
     @Override
     public Void visitSelect(Select select) {
         select.getLeftCurd().accept(this);
-        Curd rightCurd = select.getRightCurd();
-        if (rightCurd != null) {
-            rightCurd.accept(this);
-        }
+        nullAccept(select.getRightCurd());
         return null;
     }
 
@@ -36,33 +33,21 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     public Void visitSingleSelect(SingleSelect singleSelect) {
         singleSelect.getColumnSeg().accept(this);
         singleSelect.getTableSeg().accept(this);
-        Curd whereSeg = singleSelect.getWhereSeg();
-        if (whereSeg != null) {
-            whereSeg.accept(this);
-        }
-        Curd groupBySeg = singleSelect.getGroupBySeg();
-        if (groupBySeg != null) {
-            groupBySeg.accept(this);
-        }
-        Curd orderBySeg = singleSelect.getOrderBySeg();
-        if (orderBySeg != null) {
-            orderBySeg.accept(this);
-        }
+        nullAccept(singleSelect.getWhereSeg());
+        nullAccept(singleSelect.getGroupBySeg());
+        nullAccept(singleSelect.getOrderBySeg());
         return null;
     }
 
     @Override
     public Void visitColumnSeg(ColumnSeg columnSeg) {
-        List<Curd> columnRepList = columnSeg.getColumnRepList();
-        if (columnRepList != null) {
-            columnRepList.forEach(item -> item.accept(this));
-        }
+        nullAccept(columnSeg.getColumnRepList());
         return null;
     }
 
     @Override
     public Void visitColumnRep(ColumnRep columnRep) {
-        // 不处理别名
+        // 别名不是字段
         columnRep.getCurd().accept(this);
         return null;
     }
@@ -70,67 +55,47 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     @Override
     public Void visitTableSeg(TableSeg tableSeg) {
         tableSeg.getLeftCurd().accept(this);
-        Curd rightCurd = tableSeg.getRightCurd();
-        if (rightCurd != null) {
-            rightCurd.accept(this);
-        }
-        Curd condition = tableSeg.getCondition();
-        if (condition != null) {
-            condition.accept(this);
-        }
+        nullAccept(tableSeg.getRightCurd());
+        nullAccept(tableSeg.getCondition());
         return null;
     }
 
     @Override
     public Void visitTableRep(TableRep tableRep) {
-        tableRep.getCurd().accept(this);
+        Curd curd = tableRep.getCurd();
+        // 表名不是字段
+        if (curd instanceof Select) {
+            curd.accept(this);
+        }
         return null;
     }
 
     @Override
     public Void visitInCondition(InCondition inCondition) {
         Token identifier = inCondition.getIdentifier();
-        addTableName(identifier);
-
-        Curd curd = inCondition.getSelect();
-        if (curd != null) {
-            curd.accept(this);
-        }
-
-        List<Curd> range = inCondition.getRange();
-        if (range != null) {
-            range.forEach(item -> item.accept(this));
-        }
+        addPrefix(identifier);
+        nullAccept(inCondition.getSelect());
+        nullAccept(inCondition.getRange());
         return null;
     }
 
     @Override
     public Void visitExistsCondition(ExistsCondition existsCondition) {
-        Curd curd = existsCondition.getCurd();
-        if (curd != null) {
-            curd.accept(this);
-        }
+        nullAccept(existsCondition.getCurd());
         return null;
     }
 
     @Override
     public Void visitGroupBySeg(GroupBySeg groupBySeg) {
         List<Token> columnList = groupBySeg.getColumnList();
-        columnList.forEach(this::addTableName);
-        Curd having = groupBySeg.getHaving();
-        if (having != null) {
-            having.accept(this);
-        }
+        columnList.forEach(this::addPrefix);
+        nullAccept(groupBySeg.getHaving());
         return null;
     }
 
     @Override
     public Void visitOrderBySeg(OrderBySeg orderBySeg) {
-        List<Curd> columnList = orderBySeg.getColumnList();
-        for (Curd curd : columnList) {
-            OrderItem orderItem = (OrderItem) curd;
-            orderItem.getColumn().accept(this);
-        }
+        nullAccept(orderBySeg.getColumnList());
         return null;
     }
 
@@ -147,38 +112,23 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitGroupFunction(GroupFunction groupFunction) {
-        Curd curd = groupFunction.getCurd();
-        curd.accept(this);
+        groupFunction.getCurd().accept(this);
         return null;
     }
 
     @Override
     public Void visitGroupConcat(GroupConcat groupConcat) {
-        final List<Curd> resultList = groupConcat.getResultList();
-        for (Curd curd : resultList) {
-            curd.accept(this);
-        }
-
-        final List<Curd> orderItemList = groupConcat.getOrderItemList();
-        if (orderItemList != null) {
-            for (Curd curd : orderItemList) {
-                curd.accept(this);
-            }
-        }
-
+        nullAccept(groupConcat.getResultList());
+        nullAccept(groupConcat.getOrderItemList());
         return null;
     }
 
     @Override
     public Void visitCaseWhen(CaseWhen caseWhen) {
-        Curd value = caseWhen.getValue();
-        if (value != null) {
-            value.accept(this);
-        }
-        List<Curd> conditionList = caseWhen.getConditionList();
-        conditionList.forEach(item -> item.accept(this));
-        List<Curd> resultList = caseWhen.getResultList();
-        resultList.forEach(item -> item.accept(this));
+        nullAccept(caseWhen.getValue());
+        nullAccept(caseWhen.getConditionList());
+        nullAccept(caseWhen.getResultList());
+        nullAccept(caseWhen.getDefaultValue());
         return null;
     }
 
@@ -212,12 +162,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitWindow(Window window) {
-        List<Curd> partitionByList = window.getPartitionByList();
-        if (partitionByList != null && !partitionByList.isEmpty()) {
-            for (Curd curd : partitionByList) {
-                curd.accept(this);
-            }
-        }
+        nullAccept(window.getPartitionByList());
         nullAccept(window.getOrderBySeg());
         nullAccept(window.getDynamicFrame());
         return null;
@@ -225,12 +170,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitWindowFunction(WindowFunction windowFunction) {
-        List<Curd> parameterList = windowFunction.getParameterList();
-        if (parameterList != null && !parameterList.isEmpty()) {
-            for (Curd curd : parameterList) {
-                nullAccept(curd);
-            }
-        }
+        nullAccept(windowFunction.getParameterList());
         nullAccept(windowFunction.getWindow());
         return null;
     }
@@ -238,10 +178,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
     @Override
     public Void visitInsert(Insert insert) {
         insert.getInsertRep().accept(this);
-        Curd onDuplicateUpdate = insert.getOnDuplicateUpdate();
-        if (onDuplicateUpdate != null) {
-            onDuplicateUpdate.accept(this);
-        }
+        nullAccept(insert.getOnDuplicateUpdate());
         return null;
     }
 
@@ -258,10 +195,7 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitOnDuplicateKey(OnDuplicateKey onDuplicateKey) {
-        Curd curd = onDuplicateKey.getAssignmentList();
-        if (curd != null) {
-            curd.accept(this);
-        }
+        nullAccept(onDuplicateKey.getAssignmentList());
         return null;
     }
 
@@ -273,23 +207,14 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitUpdate(Update update) {
-        Curd assignmentList = update.getAssignmentList();
-        if (assignmentList != null) {
-            assignmentList.accept(this);
-        }
-        Curd whereSeg = update.getWhereSeg();
-        if (whereSeg != null) {
-            whereSeg.accept(this);
-        }
+        nullAccept(update.getAssignmentList());
+        nullAccept(update.getWhereSeg());
         return null;
     }
 
     @Override
     public Void visitDelete(Delete delete) {
-        Curd whereSeg = delete.getWhereSeg();
-        if (whereSeg != null) {
-            whereSeg.accept(this);
-        }
+        nullAccept(delete.getWhereSeg());
         return null;
     }
 
@@ -301,32 +226,25 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitLogic(Logic logic) {
-        logic.getLeftCurd().accept(this);
-        Curd rightCurd = logic.getRightCurd();
-        if (rightCurd != null) {
-            rightCurd.accept(this);
-        }
+        visitBinary(logic);
         return null;
     }
 
     @Override
     public Void visitComparison(Comparison comparison) {
-        comparison.getLeftCurd().accept(this);
-        Curd rightCurd = comparison.getRightCurd();
-        if (rightCurd != null) {
-            rightCurd.accept(this);
-        }
+        visitBinary(comparison);
         return null;
     }
 
     @Override
     public Void visitBinaryArithmetic(BinaryArithmetic binaryArithmetic) {
-        binaryArithmetic.getLeftCurd().accept(this);
-        Curd rightCurd = binaryArithmetic.getRightCurd();
-        if (rightCurd != null) {
-            rightCurd.accept(this);
-        }
+        visitBinary(binaryArithmetic);
         return null;
+    }
+
+    private void visitBinary(Binary binary) {
+        binary.getLeftCurd().accept(this);
+        nullAccept(binary.getRightCurd());
     }
 
     @Override
@@ -348,17 +266,13 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
 
     @Override
     public Void visitIdentifier(Identifier identifier) {
-        Token name = identifier.getName();
-        addTableName(name);
+        addPrefix(identifier.getName());
         return null;
     }
 
     @Override
     public Void visitFunction(Function function) {
-        List<Curd> parameterList = function.getParameterList();
-        if (parameterList != null) {
-            parameterList.forEach(item -> item.accept(this));
-        }
+        nullAccept(function.getParameterList());
         return null;
     }
 
@@ -367,16 +281,16 @@ public class IdentifierFillTNVisitor implements CurdVisitor<Void> {
         List<AssignmentList.Entry> entryList = assignmentList.getEntryList();
         for (AssignmentList.Entry entry : entryList) {
             entry.getValue().accept(this);
-            Token columnName = entry.getColumn();
-            addTableName(columnName);
+
+            addPrefix(entry.getColumn());
         }
         return null;
     }
 
-    private void addTableName(Token columnName) {
-        String literal = (String) columnName.getLiteral();
+    private void addPrefix(Token field) {
+        String literal = (String) field.getLiteral();
         if (!"*".equals(literal)) {
-            ReflectUtils.setFieldValue(columnName, "literal", tableName + "." + literal);
+            ReflectUtils.setFieldValue(field, "literal", prefix + "." + literal);
         }
     }
 
