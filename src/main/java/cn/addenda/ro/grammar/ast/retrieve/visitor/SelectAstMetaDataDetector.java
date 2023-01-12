@@ -441,8 +441,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         return visitBinary(binaryArithmetic);
     }
 
-    @Override
-    public AstMetaData visitBinary(Binary binary) {
+    private AstMetaData visitBinary(Binary binary) {
         AstMetaData astMetaDataCur = binary.getAstMetaData();
 
         Curd leftCurd = binary.getLeftCurd();

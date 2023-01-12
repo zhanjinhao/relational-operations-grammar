@@ -61,16 +61,6 @@ public abstract class InsertVisitorWithDelegate<R> extends InsertVisitor<R> {
     }
 
     @Override
-    public R visitBinary(Binary binary) {
-        return binary.accept(delegate);
-    }
-
-    @Override
-    public R visitUnary(Unary unary) {
-        return unary.accept(delegate);
-    }
-
-    @Override
     public R visitIsNot(IsNot isNot) {
         return isNot.accept(delegate);
     }

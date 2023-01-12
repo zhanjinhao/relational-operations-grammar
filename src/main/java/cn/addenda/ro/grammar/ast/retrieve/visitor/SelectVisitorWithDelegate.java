@@ -71,16 +71,6 @@ public abstract class SelectVisitorWithDelegate<R> extends SelectVisitor<R> {
     }
 
     @Override
-    public R visitBinary(Binary binary) {
-        return binary.accept(delegate);
-    }
-
-    @Override
-    public R visitUnary(Unary unary) {
-        return unary.accept(delegate);
-    }
-
-    @Override
     public R visitIsNot(IsNot isNot) {
         return isNot.accept(delegate);
     }

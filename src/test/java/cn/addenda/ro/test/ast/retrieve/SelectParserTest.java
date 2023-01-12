@@ -13,6 +13,7 @@ public class SelectParserTest {
 
     static String[] sqls = new String[]{
 
+            "select timestampdiff(day, '2010-01-01', '2010-06-01') as result from dual",
             "select a from A where (select c from C) and (select d from D)",
             "select a, b, (select c from C) as c from AB",
             "insert  into table_listnames ( name, address, tele )   select *  from  (  select 'rupert', 'somewhere', '022' from dual   )  tmp  where  not exists  (  select name  from table_listnames   where name  = 'rupert'  )  limit 1"

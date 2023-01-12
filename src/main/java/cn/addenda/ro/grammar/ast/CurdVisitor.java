@@ -119,18 +119,6 @@ public interface CurdVisitor<R> {
 
     R visitIsNot(IsNot isNot);
 
-    // ----------------------------------------------------------
-    // 抽象类 的观察方法
-    // ----------------------------------------------------------
-
-    default R visitBinary(Binary binary) {
-        return null;
-    }
-
-    default R visitUnary(Unary unary) {
-        return null;
-    }
-
     default R visitAttachment(Attachment attachment) {
         return attachment.getAttachment().accept(this);
     }
