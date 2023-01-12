@@ -84,7 +84,9 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
     protected void doFunctionStaticCheck(Function function) {
         Class<? extends AbstractCurdParser> aClass = this.getClass();
 
-        if (aClass.isAssignableFrom(SelectParser.class)) {
+        if (aClass.isAssignableFrom(ExpressionParser.class)) {
+            functionEvaluator.staticCheck(function, CurdType.EXPRESSION);
+        } else if (aClass.isAssignableFrom(SelectParser.class)) {
             functionEvaluator.staticCheck(function, CurdType.SELECT);
         } else if (aClass.isAssignableFrom(UpdateParser.class)) {
             functionEvaluator.staticCheck(function, CurdType.UPDATE);
@@ -92,8 +94,6 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
             functionEvaluator.staticCheck(function, CurdType.INSERT);
         } else if (aClass.isAssignableFrom(DeleteParser.class)) {
             functionEvaluator.staticCheck(function, CurdType.DELETE);
-        } else if (aClass.isAssignableFrom(ExpressionParser.class)) {
-            functionEvaluator.staticCheck(function, CurdType.EXPRESSION);
         }
 
     }
