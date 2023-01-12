@@ -119,10 +119,6 @@ public interface CurdVisitor<R> {
 
     R visitIsNot(IsNot isNot);
 
-    default R visitAttachment(Attachment attachment) {
-        return attachment.getAttachment().accept(this);
-    }
-
     default R nullAccept(Curd curd) {
         if (curd == null) {
             return null;

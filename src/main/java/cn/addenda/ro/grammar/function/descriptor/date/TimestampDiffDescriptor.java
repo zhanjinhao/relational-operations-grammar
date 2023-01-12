@@ -1,7 +1,10 @@
 package cn.addenda.ro.grammar.function.descriptor.date;
 
 import cn.addenda.ro.data.DataTypeConst;
-import cn.addenda.ro.grammar.ast.expression.*;
+import cn.addenda.ro.grammar.ast.expression.Curd;
+import cn.addenda.ro.grammar.ast.expression.CurdType;
+import cn.addenda.ro.grammar.ast.expression.Function;
+import cn.addenda.ro.grammar.ast.expression.Identifier;
 import cn.addenda.ro.grammar.function.descriptor.AbstractFunctionDescriptor;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 
@@ -39,9 +42,6 @@ public class TimestampDiffDescriptor extends AbstractFunctionDescriptor {
         checkType(parameterList.get(0), function, Identifier.class);
         checkDate(parameterList.get(1), function);
         checkDate(parameterList.get(2), function);
-
-        parameterList.set(0, new Attachment(parameterList.get(0)));
-
     }
 
 }
