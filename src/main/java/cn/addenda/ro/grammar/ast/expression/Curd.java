@@ -1,5 +1,6 @@
 package cn.addenda.ro.grammar.ast.expression;
 
+import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.DeepCloneable;
 import cn.addenda.ro.grammar.ast.*;
 import cn.addenda.ro.grammar.ast.create.InsertAstMetaData;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author addenda
  * @datetime 2021/3/1 11:35
  */
-public abstract class Curd implements DeepCloneable<Curd> {
+public abstract class Curd implements DeepCloneable<Curd>, ROError {
 
     private static final DeepCloneVisitor DEEP_CLONE_VISITOR = new DeepCloneVisitor();
 

@@ -7,10 +7,6 @@ import cn.addenda.ro.grammar.function.FunctionException;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 /**
- * AstROErrorReporterDelegate 和 FunctionROErrorReporterDelegate 区别：
- * 一个SQL语句对应一个Ast，所以，将tokenSequence传入到AstROErrorReporterDelegate中，就可以将Ast当ROError用。
- * FunctionHandler会在多个Ast中被使用，所以不能将Function传入FunctionROErrorReporterDelegate，即无法将FunctionHandler当ROError用。
- *
  * @author addenda
  * @datetime 2021/7/27 22:23
  */
@@ -28,11 +24,6 @@ public class FunctionDescriptorROErrorReporterDelegate extends AbstractROErrorRe
             return "Current method is: " + method.getLiteral() + ", and current index is: " + method.getIndex() + ".";
         });
 
-        addSuffixFunction(FunctionDescriptor.class, (error) -> {
-            FunctionDescriptor functionDescriptor = (FunctionDescriptor) error;
-            return "Current functionHandler is: " + functionDescriptor.functionName() + ".";
-        });
-
     }
 
     @Override
@@ -41,13 +32,8 @@ public class FunctionDescriptorROErrorReporterDelegate extends AbstractROErrorRe
     }
 
     @Override
-    public void error(int errorCode, ROError attachment) {
-        throw new FunctionException(errorCode, getErrorMsg(errorCode) + SEPARATOR + getSuffix(attachment));
-    }
-
-    @Override
-    public void error(int errorCode, Throwable throwable) {
-        throw new FunctionException(errorCode, getErrorMsg(errorCode), throwable);
+    public void error(int errorCode, ROError roError) {
+        throw new FunctionException(errorCode, getErrorMsg(errorCode) + SEPARATOR + getSuffix(roError));
     }
 
     public static final int FUNCTION_parameter_PARSE = 50001;

@@ -14,7 +14,7 @@ import cn.addenda.ro.grammar.lexical.token.TokenTypeLexemeMapping;
  */
 public abstract class AbstractScanner implements Scanner<TokenSequence>, ROErrorReporter {
 
-    private ROErrorReporter roErrorReporter = new ScanErrorReporterDelegate();
+    private final ROErrorReporter roErrorReporter = new ScanErrorReporterDelegate();
 
     private int index = 0;
 
@@ -22,7 +22,7 @@ public abstract class AbstractScanner implements Scanner<TokenSequence>, ROError
 
     protected CharSequence charSequence;
 
-    public AbstractScanner(String source) {
+    protected AbstractScanner(String source) {
         charSequence = new CharSequence(source);
         tokenSequence = new TokenSequence();
     }
@@ -62,7 +62,7 @@ public abstract class AbstractScanner implements Scanner<TokenSequence>, ROError
     }
 
     @Override
-    public void error(int errorCode, ROError attachment) {
-        roErrorReporter.error(errorCode, attachment);
+    public void error(int errorCode, ROError roError) {
+        roErrorReporter.error(errorCode, roError);
     }
 }

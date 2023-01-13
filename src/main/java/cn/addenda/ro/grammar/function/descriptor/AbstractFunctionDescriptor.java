@@ -34,7 +34,7 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
         return -1;
     }
 
-    protected void checkDate(Curd date, ROError attachment) {
+    protected void checkDate(Curd date, ROError roError) {
         if (date instanceof Identifier) {
             return;
         }
@@ -46,22 +46,22 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
             }
         }
         if (!(date instanceof Function)) {
-            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, roError);
             return;
         }
 
         Function dateFunction = (Function) date;
         FunctionDescriptor functionDescriptor = functionEvaluator.getFunction((String) dateFunction.getMethod().getLiteral());
         if (functionDescriptor.innerType() != DataTypeConst.DATE) {
-            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, roError);
         }
     }
 
-    protected void checkType(Curd curd, ROError attachment, Class<?>... clazz) {
+    protected void checkType(Curd curd, ROError roError, Class<?>... clazz) {
 
         int length = clazz.length;
         if (length < 1) {
-            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, roError);
             return;
         }
 
@@ -71,7 +71,7 @@ public abstract class AbstractFunctionDescriptor extends ErrorReportableFunction
             }
         }
 
-        error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, attachment);
+        error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE, roError);
     }
 
 }

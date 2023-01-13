@@ -22,7 +22,7 @@ public abstract class AbstractROErrorReporterDelegate implements ROErrorReporter
 
     protected Map<Integer, String> digitizedErrorMsg = new HashMap<>();
 
-    public AbstractROErrorReporterDelegate() {
+    protected AbstractROErrorReporterDelegate() {
         fillErrorMsg();
     }
 
@@ -44,15 +44,15 @@ public abstract class AbstractROErrorReporterDelegate implements ROErrorReporter
     }
 
 
-    protected String getSuffix(ROError attachment) {
-        if (attachment == null) {
+    protected String getSuffix(ROError roError) {
+        if (roError == null) {
             return "";
         }
-        Function<? super ROError, String> stringFunction = msgSuffix.get(attachment);
+        Function<? super ROError, String> stringFunction = msgSuffix.get(roError);
         if (stringFunction == null) {
             return "";
         }
-        return stringFunction.apply(attachment);
+        return stringFunction.apply(roError);
     }
 
 

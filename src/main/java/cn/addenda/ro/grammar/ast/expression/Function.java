@@ -1,6 +1,5 @@
 package cn.addenda.ro.grammar.ast.expression;
 
-import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * @author addenda
  * @datetime 2021/3/29 20:21
  */
-public class Function extends Curd implements ROError {
+public class Function extends Curd {
 
     private Token method;
 

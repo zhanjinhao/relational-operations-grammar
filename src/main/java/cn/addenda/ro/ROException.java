@@ -7,16 +7,12 @@ package cn.addenda.ro;
 public class ROException extends RuntimeException {
 
     /**
-     * 词法错误：1xxxx
-     * 语法错误：2xxxx
-     * 实体错误：3xxxx
-     * 脚本错误：4xxxx
-     * 函数错误：5xxxx
-     * 运算错误：6xxxx
-     * 数据类型错误：7xxxx
-     * 工具类错误：8xxxx
-     * <p>
-     * 启动错误：9xxxx
+     * 词法错误：1xxxx<p>
+     * 语法错误：2xxxx<p>
+     * 实体错误：3xxxx<p>
+     * 脚本错误：4xxxx<p>
+     * 函数错误：5xxxx<p>
+     * 启动错误：9xxxx<p>
      */
     private final int errorCode;
 
@@ -29,7 +25,7 @@ public class ROException extends RuntimeException {
     }
 
     public ROException(int errorCode, String errorMsg, Throwable cause) {
-        super("errorCode : " + errorCode + ". " + errorMsg);
+        super("errorCode : " + errorCode + ". " + errorMsg, cause);
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }

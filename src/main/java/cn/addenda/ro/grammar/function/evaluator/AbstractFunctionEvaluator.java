@@ -4,6 +4,7 @@ import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.expression.CurdType;
 import cn.addenda.ro.grammar.ast.expression.Function;
+import cn.addenda.ro.grammar.function.FunctionException;
 import cn.addenda.ro.grammar.function.descriptor.AbstractFunctionDescriptor;
 import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptor;
 import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptorROErrorReporterDelegate;
@@ -44,7 +45,7 @@ public abstract class AbstractFunctionEvaluator implements FunctionEvaluator<Fun
             }
             functionDescriptorMap.put(functionDescriptor.functionName(), functionDescriptor);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_HANDLER_INSTANTIATION_PARSE, e);
+            throw new FunctionException(FunctionDescriptorROErrorReporterDelegate.FUNCTION_HANDLER_INSTANTIATION_PARSE, "Failed to instantiate functionDescriptor.", e);
         }
     }
 
@@ -77,12 +78,8 @@ public abstract class AbstractFunctionEvaluator implements FunctionEvaluator<Fun
     }
 
     @Override
-    public void error(int errorCode, ROError attachment) {
-        errorReporterDelegate.error(errorCode, attachment);
+    public void error(int errorCode, ROError roError) {
+        errorReporterDelegate.error(errorCode, roError);
     }
 
-    @Override
-    public void error(int errorCode, Throwable throwable) {
-        errorReporterDelegate.error(errorCode, throwable);
-    }
 }
