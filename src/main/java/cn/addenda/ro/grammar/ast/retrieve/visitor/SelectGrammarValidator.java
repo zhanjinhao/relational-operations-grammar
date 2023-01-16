@@ -151,10 +151,12 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
 
     @Override
     public Void visitFrameEdge(FrameEdge frameEdge) {
-        if (TokenType.CURRENT.equals(frameEdge.getEdge().getType()) && !TokenType.ROW.equals(frameEdge.getTowards().getType())) {
+        Curd edge = frameEdge.getEdge();
+        Token towards = frameEdge.getTowards();
+        if (edge instanceof Identifier && TokenType.CURRENT.equals(((Identifier) edge).getName().getType()) && !TokenType.ROW.equals(towards.getType())) {
             error(AstROErrorReporterDelegate.SELECT_frameEdge_VALIDATION);
         }
-        if (!TokenType.CURRENT.equals(frameEdge.getEdge().getType()) && TokenType.ROW.equals(frameEdge.getTowards().getType())) {
+        if (edge instanceof Identifier && !TokenType.CURRENT.equals(((Identifier) edge).getName().getType()) && TokenType.ROW.equals(towards.getType())) {
             error(AstROErrorReporterDelegate.SELECT_frameEdge_VALIDATION);
         }
         return null;

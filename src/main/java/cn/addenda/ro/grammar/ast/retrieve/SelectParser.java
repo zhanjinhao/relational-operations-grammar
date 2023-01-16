@@ -700,16 +700,20 @@ public class SelectParser extends ExpressionParser {
 
 
     /**
-     * (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
+     * (INTEGER | "unbounded" | "current" | timeInterval) ("preceding" | "following" | "row")
      */
     private Curd frameEdge() {
-        Token edge;
+        Curd edge;
         Token towards;
-        if (tokenSequence.equalThenAdvance(TokenType.INTEGER, TokenType.UNBOUNDED, TokenType.CURRENT)) {
-            edge = tokenSequence.takePre();
+        if (tokenSequence.curEqual(TokenType.INTERVAL)) {
+            edge = timeInterval();
         } else {
-            error(AstROErrorReporterDelegate.SELECT_frameEdge_PARSE);
-            return null;
+            if (tokenSequence.equalThenAdvance(TokenType.INTEGER, TokenType.UNBOUNDED, TokenType.CURRENT)) {
+                edge = new Identifier(tokenSequence.takePre());
+            } else {
+                error(AstROErrorReporterDelegate.SELECT_frameEdge_PARSE);
+                return null;
+            }
         }
 
         if (tokenSequence.equalThenAdvance(TokenType.PRECEDING, TokenType.FOLLOWING, TokenType.ROW)) {
