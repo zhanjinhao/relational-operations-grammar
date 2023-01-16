@@ -3,6 +3,7 @@ package cn.addenda.ro.grammar.ast.expression;
 import cn.addenda.ro.grammar.ast.AbstractCurdParser;
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.expression.visitor.ExpressionGrammarValidator;
+import cn.addenda.ro.grammar.constant.DateConst;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 import cn.addenda.ro.grammar.lexical.token.Token;
@@ -258,7 +259,7 @@ public class ExpressionParser extends AbstractCurdParser {
             return null;
         }
 
-        if (tokenSequence.curEqual(TokenType.IDENTIFIER)) {
+        if (tokenSequence.curEqual(TokenType.IDENTIFIER) && DateConst.checkTimeUnitValid(tokenSequence.takeCur())) {
             token = tokenSequence.takeCur();
             tokenSequence.advance();
         } else {
