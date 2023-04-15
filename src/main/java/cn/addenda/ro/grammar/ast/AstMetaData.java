@@ -14,6 +14,9 @@ public class AstMetaData {
 
     public static final String UNDETERMINED_TABLE = "UNDETERMINED";
 
+    /**
+     * AstMetaData和CURD是一对一绑定
+     */
     private Curd curd;
 
     private AstMetaData parent;
@@ -118,12 +121,12 @@ public class AstMetaData {
     @Override
     public String toString() {
         return "AstMetaData{" +
-            "curd=" + curd +
-            ", children=" + children +
-            ", conditionColumnReference=" + conditionColumnReference +
-            ", hashMarkCount=" + hashMarkCount +
-            ", parameterCount=" + parameterCount +
-            '}';
+                "curd=" + curd +
+                ", children=" + children +
+                ", conditionColumnReference=" + conditionColumnReference +
+                ", hashMarkCount=" + hashMarkCount +
+                ", parameterCount=" + parameterCount +
+                '}';
     }
 
     public void createTable(String tableName) {

@@ -30,6 +30,9 @@ public abstract class Curd implements DeepCloneable<Curd>, ROError {
 
     private static final Map<String, FieldAddPrefixVisitor> FIELD_ADD_PREFIX_VISITOR_MAP = new ConcurrentHashMap<>();
 
+    /**
+     * AstMetaData 和 CURD 是一对一绑定
+     */
     private AstMetaData astMetaData;
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
@@ -86,9 +89,12 @@ public abstract class Curd implements DeepCloneable<Curd>, ROError {
         return accept;
     }
 
+    /**
+     * 克隆默认不detectAstMetaData，使用者自己调用detectAstMetaData()
+     */
     @Override
     public Curd deepClone() {
-        return deepClone(true);
+        return deepClone(false);
     }
 
     public void fieldAddPrefix(String prefix) {
@@ -122,7 +128,7 @@ public abstract class Curd implements DeepCloneable<Curd>, ROError {
         this.accept(detector);
     }
 
-    public void reSetAstMetaData() {
+    public void reDetectAstMetaData() {
         this.accept(CLEAR_AST_META_DATA_VISITOR);
         this.accept(detector);
     }

@@ -9,11 +9,9 @@ import cn.addenda.ro.test.SqlReader;
  * @author addenda
  * @datetime 2022/8/16 13:42
  */
-public class ResetAstMetaDataTest {
-
+public class ReDetectAstMetaDataTest {
 
     static String[] sqls = new String[]{
-        "insert ignore into score set SNO='1387398', CNO=#{cno}, DEGREE=?"
     };
 
     public static void main(String[] args) {
@@ -30,7 +28,7 @@ public class ResetAstMetaDataTest {
             final AstMetaData astMetaData1 = curd.getAstMetaData();
             String astStr1 = astMetaData1.toString();
 
-            curd.reSetAstMetaData();
+            curd.reDetectAstMetaData();
             final AstMetaData astMetaData2 = curd.getAstMetaData();
             String astStr2 = astMetaData2.toString();
 

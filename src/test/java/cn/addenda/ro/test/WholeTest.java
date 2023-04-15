@@ -3,7 +3,7 @@ package cn.addenda.ro.test;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.test.ast.DeepCloneTest;
 import cn.addenda.ro.test.ast.FieldAddPrefixVisitorTest;
-import cn.addenda.ro.test.ast.ResetAstMetaDataTest;
+import cn.addenda.ro.test.ast.ReDetectAstMetaDataTest;
 import cn.addenda.ro.test.ast.create.InsertParserTest;
 import cn.addenda.ro.test.ast.delete.DeleteParserTest;
 import cn.addenda.ro.test.ast.retrieve.SelectParserTest;
@@ -25,7 +25,7 @@ public class WholeTest {
         InsertParserTest.main(args);
         DeepCloneTest.main(args);
         FieldAddPrefixVisitorTest.main(args);
-        ResetAstMetaDataTest.main(args);
+        ReDetectAstMetaDataTest.main(args);
         SqlAddConditionUtilsTest.main(args);
 
         Set<Class<?>> literalClassSet = Token.LITERAL_CLASS_SET;
