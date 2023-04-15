@@ -95,12 +95,12 @@ public class Token implements ROError, DeepCloneable<Token> {
             return false;
         }
         Token token = (Token) o;
-        return type == token.type && Objects.equals(literal, token.literal);
+        return graveFg == token.graveFg && type == token.type && Objects.equals(literal, token.literal);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, literal);
+        return Objects.hash(type, literal, graveFg);
     }
 
     @Override
