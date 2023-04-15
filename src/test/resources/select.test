@@ -1,6 +1,8 @@
-  select a, b, (select c from C) as c from AB
   select timestampdiff(day, '2010-01-01', '2010-06-01') as result from dual
   select a from A where (select c from C) and (select d from D)
+  select a, b, (select c from C) as c from AB
+  insert  into table_listnames ( name, address, tele )   select *  from  (  select 'rupert', 'somewhere', '022' from dual   )  tmp  where  not exists  (  select name  from table_listnames   where name  = 'rupert'  )  limit 1
+  select employee_name , `count` , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between interval 30 second preceding and unbounded following    )   as second_highest_salary from basic_pays
   select employee_name , `count` , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
   select employee_name , department , salary , nth_value ( employee_name  , 2  ) OVER ( PARTITION BY DEPARTMENT  order by salary  desc range BETWEEN unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays
   select employee_name , department , salary , nth_value ( employee_name  , 2  ) over ( partition by department  order by salary  desc range between unbounded preceding  and unbounded following    )   as second_highest_salary from basic_pays

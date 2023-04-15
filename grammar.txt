@@ -60,7 +60,7 @@ windowFunction      ->  IDENTIFIER "(" binaryArithmetic? ")" window
 window              ->  "over" "(" "partition" "by" binaryArithmetic ("," binaryArithmetic)* orderBySeg? dynamicFrame? ")"
 dynamicFrame        ->  ("rows" | "range") (frameBetween | frameEdge)
 frameBetween        ->  "between" frameEdge "and" frameEdge
-frameEdge           ->  (INTEGER | "unbounded" | "current") ("preceding" | "following" | "row")
+frameEdge           ->  (INTEGER | "unbounded" | "current" | timeInterval) ("preceding" | "following" | "row")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 InsertParser
 insert              ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))

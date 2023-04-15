@@ -530,7 +530,7 @@ public class CurdPrinter implements CurdVisitor<String> {
 
     @Override
     public String visitFrameEdge(FrameEdge frameEdge) {
-        return frameEdge.getEdge().printLiteral() + separator
+        return frameEdge.getEdge().accept(this) + separator
                 + frameEdge.getTowards().printLiteral() + separator;
     }
 

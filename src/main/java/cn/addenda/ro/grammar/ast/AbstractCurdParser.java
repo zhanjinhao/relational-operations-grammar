@@ -113,9 +113,7 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
         if (current == null || next == null) {
             return false;
         }
-        return (DateConst.YEAR.equals(current) || DateConst.MONTH.equals(current) || DateConst.DAY.equals(current)
-                || DateConst.HOUR.equals(current) || DateConst.MINUTE.equals(current)
-                || DateConst.SECOND.equals(current) || DateConst.MICROSECOND.equals(current)) && TokenType.FROM.equals(next.getType());
+        return DateConst.checkTimeUnitValid(current) && TokenType.FROM.equals(next.getType());
     }
 
     private boolean checkFunctionName(Token token) {

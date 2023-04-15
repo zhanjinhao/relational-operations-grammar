@@ -13,14 +13,14 @@ public class FrameEdge extends Curd {
     /**
      * 可选值：INTEGER | "unbounded" | "current"
      */
-    private Token edge;
+    private Curd edge;
 
     /**
      * 可选值："preceding" | "following" | "row"
      */
     private Token towards;
 
-    public FrameEdge(Token edge, Token towards) {
+    public FrameEdge(Curd edge, Token towards) {
         super(new SingleSelectAstMetaData());
         this.edge = edge;
         this.towards = towards;
@@ -31,7 +31,7 @@ public class FrameEdge extends Curd {
         return curdVisitor.visitFrameEdge(this);
     }
 
-    public Token getEdge() {
+    public Curd getEdge() {
         return edge;
     }
 

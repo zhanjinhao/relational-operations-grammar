@@ -5,7 +5,9 @@ import cn.addenda.ro.grammar.ast.expression.Curd;
 import cn.addenda.ro.grammar.ast.expression.CurdType;
 import cn.addenda.ro.grammar.ast.expression.Function;
 import cn.addenda.ro.grammar.ast.expression.Identifier;
+import cn.addenda.ro.grammar.constant.DateConst;
 import cn.addenda.ro.grammar.function.descriptor.AbstractFunctionDescriptor;
+import cn.addenda.ro.grammar.function.descriptor.FunctionDescriptorROErrorReporterDelegate;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public class TimestampDiffDescriptor extends AbstractFunctionDescriptor {
         checkParameterSize(function, 3);
         List<Curd> parameterList = function.getParameterList();
         checkType(parameterList.get(0), function, Identifier.class);
+        if (!DateConst.checkTimeUnitValid(((Identifier) parameterList.get(0)).getName())) {
+            error(FunctionDescriptorROErrorReporterDelegate.FUNCTION_parameter_PARSE);
+        }
         checkDate(parameterList.get(1), function);
         checkDate(parameterList.get(2), function);
     }

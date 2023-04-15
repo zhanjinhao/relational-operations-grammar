@@ -1,3 +1,4 @@
+update A set a = 1 where id in (1, 2, 3)
 update runoob_tbl set runoob_title= replace( runoob_title , 'c++', 'python' ) where id in (select outer_id from A)
 update runoob_tbl set runoob_title=replace( runoob_title , 'c++', 'python' ) , a=?  + 1 , b=?
 update runoob_tbl set runoob_title=replace( runoob_title , 'c++', 'python' )  where runoob_id  = 3

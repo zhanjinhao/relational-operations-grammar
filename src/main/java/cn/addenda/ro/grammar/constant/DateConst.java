@@ -92,4 +92,10 @@ public class DateConst {
         return patternToToken.get(pattern);
     }
 
+    public static boolean checkTimeUnitValid(Token token) {
+        return DateConst.YEAR.equals(token) || DateConst.MONTH.equals(token) || DateConst.DAY.equals(token)
+            || DateConst.HOUR.equals(token) || DateConst.MINUTE.equals(token)
+            || DateConst.SECOND.equals(token) || DateConst.MICROSECOND.equals(token);
+    }
+
 }
