@@ -26,6 +26,8 @@ public class CurdUtils {
     /**
      * <p/>key: cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator#name()
      * <p/>value: java.util.concurrent.ConcurrentHashMap
+     * <p/>
+     * 缓存的CURD都不detectAstMetaData
      */
     private static final Map<String, Map<TokenSequence, Curd>> TOKEN_SEQUENCE_CURD_MAP = new ConcurrentHashMap<>();
 
@@ -37,7 +39,8 @@ public class CurdUtils {
         return parse(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Curd parse(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Curd parse(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parse(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -46,11 +49,17 @@ public class CurdUtils {
         return parse(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Curd parse(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Curd parse(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Curd curd = TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createCurdParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createCurdParser(tokenSequence, functionEvaluator, false).parse())
                 .deepClone();
+        if (detectAstMetaData) {
+            curd.detectAstMetaData();
+        }
+        return curd;
     }
 
     public static Curd parseExpression(String sql) {
@@ -61,7 +70,8 @@ public class CurdUtils {
         return parseExpression(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Curd parseExpression(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Curd parseExpression(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseExpression(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -70,11 +80,17 @@ public class CurdUtils {
         return parseExpression(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Curd parseExpression(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return TOKEN_SEQUENCE_CURD_MAP
+    public static Curd parseExpression(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Curd curd = TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createExpressionParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createExpressionParser(tokenSequence, functionEvaluator, false).parse())
                 .deepClone();
+        if (detectAstMetaData) {
+            curd.detectAstMetaData();
+        }
+        return curd;
     }
 
     public static Insert parseInsert(String sql) {
@@ -85,7 +101,8 @@ public class CurdUtils {
         return parseInsert(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Insert parseInsert(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Insert parseInsert(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseInsert(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -94,11 +111,17 @@ public class CurdUtils {
         return parseInsert(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Insert parseInsert(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return (Insert) TOKEN_SEQUENCE_CURD_MAP
+    public static Insert parseInsert(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Insert insert = (Insert) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createInsertParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
-                .deepClone(detectAstMetaData);
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createInsertParser(tokenSequence, functionEvaluator, false).parse())
+                .deepClone();
+        if (detectAstMetaData) {
+            insert.detectAstMetaData();
+        }
+        return insert;
     }
 
     public static Update parseUpdate(String sql) {
@@ -109,7 +132,8 @@ public class CurdUtils {
         return parseUpdate(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Update parseUpdate(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Update parseUpdate(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseUpdate(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -118,11 +142,17 @@ public class CurdUtils {
         return parseUpdate(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Update parseUpdate(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return (Update) TOKEN_SEQUENCE_CURD_MAP
+    public static Update parseUpdate(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Update update = (Update) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createUpdateParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
-                .deepClone(detectAstMetaData);
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createUpdateParser(tokenSequence, functionEvaluator, false).parse())
+                .deepClone();
+        if (detectAstMetaData) {
+            update.detectAstMetaData();
+        }
+        return update;
     }
 
     public static Delete parseDelete(String sql) {
@@ -133,7 +163,8 @@ public class CurdUtils {
         return parseDelete(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Delete parseDelete(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Delete parseDelete(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseDelete(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -142,11 +173,17 @@ public class CurdUtils {
         return parseDelete(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Delete parseDelete(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return (Delete) TOKEN_SEQUENCE_CURD_MAP
+    public static Delete parseDelete(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Delete delete = (Delete) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createDeleteParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
-                .deepClone(detectAstMetaData);
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createDeleteParser(tokenSequence, functionEvaluator, false).parse())
+                .deepClone();
+        if (detectAstMetaData) {
+            delete.detectAstMetaData();
+        }
+        return delete;
     }
 
     public static Select parseSelect(String sql) {
@@ -157,7 +194,8 @@ public class CurdUtils {
         return parseSelect(sql, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Select parseSelect(String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+    public static Select parseSelect(
+            String sql, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
         TokenSequence tokenSequence = new DefaultScanner(sql).scanTokens();
         return parseSelect(tokenSequence, functionEvaluator, detectAstMetaData);
     }
@@ -166,11 +204,17 @@ public class CurdUtils {
         return parseSelect(tokenSequence, DefaultFunctionEvaluator.getInstance(), detectAstMetaData);
     }
 
-    public static Select parseSelect(TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
-        return (Select) TOKEN_SEQUENCE_CURD_MAP
+    public static Select parseSelect(
+            TokenSequence tokenSequence, FunctionEvaluator<? extends FunctionDescriptor> functionEvaluator, boolean detectAstMetaData) {
+        Select select = (Select) TOKEN_SEQUENCE_CURD_MAP
                 .computeIfAbsent(functionEvaluator.name(), s -> new ConcurrentHashMap<>())
-                .computeIfAbsent(tokenSequence, s -> CurdParserFactory.createSelectParser(tokenSequence, functionEvaluator, detectAstMetaData).parse())
-                .deepClone(detectAstMetaData);
+                .computeIfAbsent(tokenSequence,
+                        s -> CurdParserFactory.createSelectParser(tokenSequence, functionEvaluator, false).parse())
+                .deepClone();
+        if (detectAstMetaData) {
+            select.detectAstMetaData();
+        }
+        return select;
     }
 
 }
